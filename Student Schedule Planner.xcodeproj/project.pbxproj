@@ -3,27 +3,47 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		383879C0AE500539D45E3F18 /* Pods_Student_Schedule_Planner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */; };
 		3F383E5C2486B25E00D2A5D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E5B2486B25E00D2A5D1 /* AppDelegate.swift */; };
 		3F383E5E2486B25E00D2A5D1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E5D2486B25E00D2A5D1 /* SceneDelegate.swift */; };
-		3F383E602486B25E00D2A5D1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E5F2486B25E00D2A5D1 /* ViewController.swift */; };
 		3F383E632486B25E00D2A5D1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F383E612486B25E00D2A5D1 /* Main.storyboard */; };
 		3F383E652486B26100D2A5D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F383E642486B26100D2A5D1 /* Assets.xcassets */; };
 		3F383E682486B26100D2A5D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F383E662486B26100D2A5D1 /* LaunchScreen.storyboard */; };
+		3F383E732486B2EE00D2A5D1 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E722486B2EE00D2A5D1 /* TimelineViewController.swift */; };
+		3F383E752486B32700D2A5D1 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E742486B32700D2A5D1 /* CalendarView.swift */; };
+		3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E772486B45B00D2A5D1 /* Extensions.swift */; };
+		3F383E7A2486BD0600D2A5D1 /* Factories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E792486BD0600D2A5D1 /* Factories.swift */; };
+		3F67BBF124872A4C00BFD6E5 /* AddTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */; };
+		3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */; };
+		3F67BBF724892BB400BFD6E5 /* TaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF624892BB400BFD6E5 /* TaskService.swift */; };
+		3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFB24893AF100BFD6E5 /* Task.swift */; };
+		3F67BBFE24893C4800BFD6E5 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFD24893C4800BFD6E5 /* Day.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3F383E582486B25E00D2A5D1 /* Student Schedule Planner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Student Schedule Planner.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F383E5B2486B25E00D2A5D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F383E5D2486B25E00D2A5D1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		3F383E5F2486B25E00D2A5D1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		3F383E622486B25E00D2A5D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3F383E642486B26100D2A5D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3F383E672486B26100D2A5D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3F383E692486B26100D2A5D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F383E722486B2EE00D2A5D1 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
+		3F383E742486B32700D2A5D1 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		3F383E772486B45B00D2A5D1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		3F383E792486BD0600D2A5D1 /* Factories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factories.swift; sourceTree = "<group>"; };
+		3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskViewController.swift; sourceTree = "<group>"; };
+		3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
+		3F67BBF624892BB400BFD6E5 /* TaskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskService.swift; sourceTree = "<group>"; };
+		3F67BBFB24893AF100BFD6E5 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		3F67BBFD24893C4800BFD6E5 /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
+		8E06086E3544786A6DA9157B /* Pods-Student Schedule Planner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.release.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.release.xcconfig"; sourceTree = "<group>"; };
+		9318D2EFB62EA01CADAC290D /* Pods-Student Schedule Planner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.debug.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.debug.xcconfig"; sourceTree = "<group>"; };
+		9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Student_Schedule_Planner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				383879C0AE500539D45E3F18 /* Pods_Student_Schedule_Planner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +63,8 @@
 			children = (
 				3F383E5A2486B25E00D2A5D1 /* Student Schedule Planner */,
 				3F383E592486B25E00D2A5D1 /* Products */,
+				EB51BD14A51AC2E3C68B29D5 /* Pods */,
+				CA6EC8394D26E05789761C8F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,15 +79,80 @@
 		3F383E5A2486B25E00D2A5D1 /* Student Schedule Planner */ = {
 			isa = PBXGroup;
 			children = (
+				3F383E762486B44800D2A5D1 /* Utilities */,
+				3F383E6F2486B26C00D2A5D1 /* Model */,
+				3F383E702486B27700D2A5D1 /* View */,
+				3F383E712486B29100D2A5D1 /* Controller */,
+				3F67BBF82489389900BFD6E5 /* DataModel */,
 				3F383E5B2486B25E00D2A5D1 /* AppDelegate.swift */,
 				3F383E5D2486B25E00D2A5D1 /* SceneDelegate.swift */,
-				3F383E5F2486B25E00D2A5D1 /* ViewController.swift */,
 				3F383E612486B25E00D2A5D1 /* Main.storyboard */,
 				3F383E642486B26100D2A5D1 /* Assets.xcassets */,
 				3F383E662486B26100D2A5D1 /* LaunchScreen.storyboard */,
 				3F383E692486B26100D2A5D1 /* Info.plist */,
 			);
 			path = "Student Schedule Planner";
+			sourceTree = "<group>";
+		};
+		3F383E6F2486B26C00D2A5D1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3F67BBF624892BB400BFD6E5 /* TaskService.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		3F383E702486B27700D2A5D1 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3F383E742486B32700D2A5D1 /* CalendarView.swift */,
+				3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3F383E712486B29100D2A5D1 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3F383E722486B2EE00D2A5D1 /* TimelineViewController.swift */,
+				3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3F383E762486B44800D2A5D1 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				3F383E772486B45B00D2A5D1 /* Extensions.swift */,
+				3F383E792486BD0600D2A5D1 /* Factories.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		3F67BBF82489389900BFD6E5 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				3F67BBFB24893AF100BFD6E5 /* Task.swift */,
+				3F67BBFD24893C4800BFD6E5 /* Day.swift */,
+			);
+			path = DataModel;
+			sourceTree = "<group>";
+		};
+		CA6EC8394D26E05789761C8F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EB51BD14A51AC2E3C68B29D5 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9318D2EFB62EA01CADAC290D /* Pods-Student Schedule Planner.debug.xcconfig */,
+				8E06086E3544786A6DA9157B /* Pods-Student Schedule Planner.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,9 +162,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3F383E6C2486B26100D2A5D1 /* Build configuration list for PBXNativeTarget "Student Schedule Planner" */;
 			buildPhases = (
+				CDFA78004CD7BEE36F399C4A /* [CP] Check Pods Manifest.lock */,
 				3F383E542486B25E00D2A5D1 /* Sources */,
 				3F383E552486B25E00D2A5D1 /* Frameworks */,
 				3F383E562486B25E00D2A5D1 /* Resources */,
+				9469DA5965599EDF95BE894F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -133,14 +223,64 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		9469DA5965599EDF95BE894F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CDFA78004CD7BEE36F399C4A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Student Schedule Planner-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		3F383E542486B25E00D2A5D1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F383E602486B25E00D2A5D1 /* ViewController.swift in Sources */,
+				3F67BBF724892BB400BFD6E5 /* TaskService.swift in Sources */,
+				3F383E7A2486BD0600D2A5D1 /* Factories.swift in Sources */,
+				3F383E752486B32700D2A5D1 /* CalendarView.swift in Sources */,
+				3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */,
+				3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */,
+				3F383E732486B2EE00D2A5D1 /* TimelineViewController.swift in Sources */,
+				3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */,
+				3F67BBFE24893C4800BFD6E5 /* Day.swift in Sources */,
 				3F383E5C2486B25E00D2A5D1 /* AppDelegate.swift in Sources */,
 				3F383E5E2486B25E00D2A5D1 /* SceneDelegate.swift in Sources */,
+				3F67BBF124872A4C00BFD6E5 /* AddTaskViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +422,7 @@
 		};
 		3F383E6D2486B26100D2A5D1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9318D2EFB62EA01CADAC290D /* Pods-Student Schedule Planner.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -300,6 +441,7 @@
 		};
 		3F383E6E2486B26100D2A5D1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8E06086E3544786A6DA9157B /* Pods-Student Schedule Planner.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
