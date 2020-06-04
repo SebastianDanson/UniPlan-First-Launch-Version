@@ -9,12 +9,12 @@
 import UIKit
 import RealmSwift
 
+var taskIndex: Int?
 class AddTaskViewController: UIViewController {
-    let realm = try! Realm()
     
+    let realm = try! Realm()
     var hour:Int = 0
     var minutes:Int = 0
-    var date: Date = Date()
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -33,7 +33,7 @@ class AddTaskViewController: UIViewController {
     let durationHeading = makeHeading(withText: "Duration")
     let durationPickerView = UIPickerView()
     let saveButton = makeSaveButton()
-    
+    let deleteButton = makeDeleteButton()
     
     //MARK: - setup UI
     func setupViews() {
@@ -49,6 +49,7 @@ class AddTaskViewController: UIViewController {
         
         topView.addSubview(titleLabel)
         topView.addSubview(backButton)
+        topView.addSubview(deleteButton)
         
         topView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
         
@@ -57,6 +58,11 @@ class AddTaskViewController: UIViewController {
         
         backButton.anchor(left: topView.leftAnchor, paddingLeft: 20)
         backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        
+        deleteButton.anchor(right: topView.rightAnchor, paddingRight: 20)
+        deleteButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        deleteButton.addTarget(self, action: #selector(deleteTask), for: .touchUpInside)
         
         titleHeading.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
         titleTextField.centerX(in: view)
@@ -71,7 +77,25 @@ class AddTaskViewController: UIViewController {
         
         saveButton.centerX(in: view)
         saveButton.anchor(top: durationPickerView.bottomAnchor, paddingTop: 80)
-        saveButton.addTarget(self, action: #selector(saveData), for: .touchUpInside)
+        saveButton.addTarget(self, action: #selector(saveTask), for: .touchUpInside)
+        
+        if let taskIndex = taskIndex {
+            let task = tasks[taskIndex]
+            titleTextField.text = task.title
+            startDatePicker.date = task.startDate
+            
+            let calendar = Calendar.current
+            let timeComponents = calendar.dateComponents([.hour, .minute], from: task.endDate)
+            let nowComponents = calendar.dateComponents([.hour, .minute], from: startDatePicker.date)
+            
+            let difference = calendar.dateComponents([.minute], from: nowComponents, to: timeComponents).minute!
+            print(difference)
+            let hours = difference / 60
+            let minutes = difference - (hours * 60)
+            durationPickerView.selectRow(hours, inComponent:0, animated: false)
+            durationPickerView.selectRow(minutes, inComponent:3, animated: false)
+            
+        }
     }
     
     func setUpDurationPickerView() {
@@ -86,30 +110,52 @@ class AddTaskViewController: UIViewController {
     }
     
     //MARK: - Actions
-    @objc func saveData() {
+    @objc func saveTask() {
         
         if let title = titleTextField.text {
-        
             let duration = hour*3600 + minutes * 60
             var endDate = startDatePicker.date
             endDate.addTimeInterval(TimeInterval(duration))
-          
+            
             let task = Task()
             task.title = title
             task.startDate = startDatePicker.date
             task.endDate = endDate
             
             do {
-                try realm.write {
-                    realm.add(task)
+                if taskIndex != nil {
+                    let updatedTask = realm.objects(Task.self).filter("startDate == \(task.startDate)").first
+                    try realm.write {
+                        updatedTask?.title = task.title
+                        updatedTask?.startDate = startDatePicker.date
+                        updatedTask?.endDate = endDate
+                    }
+                } else {
+                    try realm.write {
+                        realm.add(task)
+                    }
                 }
             } catch {
                 print("Error writing task to realm")
             }
-            //let task = Task(title: title, startDate: startDatePicker.date, endDate: endDate)
-            TaskService.shared.createTask(task: task)
             dismiss(animated: true)
         }
+    }
+    
+    @objc func deleteTask() {
+        do {
+            try realm.write {
+                if let taskIndex = taskIndex {
+                    realm.delete(tasks[taskIndex])
+                }
+            }
+        } catch {
+            print("Error writing task to realm")
+        }
+        dismiss(animated: true)
+    }
+    @objc func backButtonPressed() {
+        dismiss(animated: true)
     }
 }
 //MARK: - Pickerview delegate and datasource

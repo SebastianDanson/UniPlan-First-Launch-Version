@@ -8,7 +8,7 @@
 
 import UIKit
 
-
+//MARK: - Timeline View Controller
 func makeTopView(height: CGFloat) -> UIView {
     let topView = UIView()
     topView.backgroundColor = .mainBlue
@@ -100,6 +100,14 @@ func makeSaveButton() -> UIButton{
     saveButton.backgroundColor = .mainBlue
        
     return saveButton
+}
+
+func makeDeleteButton() -> UIButton {
+    let deleteButton = UIButton()
+    deleteButton.setImage(UIImage(systemName: "trash"), for: .normal)
+    deleteButton.tintColor = .backgroundColor
+    
+    return deleteButton
 }
 
 //MARK: - Task Cell

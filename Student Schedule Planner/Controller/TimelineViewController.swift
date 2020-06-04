@@ -10,10 +10,10 @@ import UIKit
 import RealmSwift
 
 let reuseIdentifer = "TaskCell"
+var tasks: Results<Task>!
 class TimelineViewController: UIViewController {
     let realm = try! Realm()
-    var tasks: Results<Task>!
-    
+
     //MARK: - Properties
        var numSection = 1
        let tableView = UITableView()
@@ -35,7 +35,7 @@ class TimelineViewController: UIViewController {
     
     //MARK: - setup UI
     func setupViews() {
-        
+        taskIndex = nil
         view.backgroundColor = .backgroundColor
         
         view.addSubview(topView)
@@ -95,9 +95,11 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
          let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell") as! TaskCell
         cell.update(task: tasks[indexPath.row])
             return cell
+    }
     
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell") as! TaskCell
-//        cell.update(task: TaskService.shared.getTask(index: indexPath.row))
-//        return cell
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        taskIndex = indexPath.row
+        print(taskIndex)
+        addButtonTapped()
     }
 }

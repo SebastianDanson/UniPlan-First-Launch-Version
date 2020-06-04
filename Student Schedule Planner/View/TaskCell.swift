@@ -8,7 +8,7 @@
 
 import UIKit
 
-   var taskName: String = ""
+var taskName: String = ""
 class TaskCell: UITableViewCell {
     
  
@@ -27,7 +27,7 @@ class TaskCell: UITableViewCell {
     
     //MARK: - Properties
     let taskLabel = makeTaskLabel()
-    
+    let nextIcon = UIImage(named: "nextMenuButton")
     private let durationLabel: UILabel = {
         let durationLabel = UILabel()
         durationLabel.text = "10:00AM - 12:00PM"
@@ -53,19 +53,23 @@ class TaskCell: UITableViewCell {
     
     //MARK: - setupUI
     func setupViews() {
+        let nextImage = UIImageView(image: nextIcon!)
         taskLabel.text = taskName
         backgroundColor = .backgroundColor
         addSubview(taskView)
         taskView.addSubview(taskLabel)
         taskView.addSubview(durationLabel)
+        taskView.addSubview(nextImage)
         
         taskLabel.centerY(in: taskView)
         taskLabel.anchor(left: taskView.leftAnchor, paddingLeft: 30)
         
         durationLabel.centerYAnchor.constraint(equalTo: taskLabel.centerYAnchor).isActive = true
-        durationLabel.anchor(right: taskView.rightAnchor, paddingRight:  30)
+        durationLabel.anchor(right: nextImage.leftAnchor, paddingRight:  20)
         
         taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 5, paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
+        nextImage.centerYAnchor.constraint(equalTo: taskLabel.centerYAnchor).isActive = true
+        nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
     }
     
     //MARK: - Actions
