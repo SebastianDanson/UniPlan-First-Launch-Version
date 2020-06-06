@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FSCalendar
 
 //MARK: - Timeline View Controller
 func makeTopView(height: CGFloat) -> UIView {
@@ -17,6 +18,27 @@ func makeTopView(height: CGFloat) -> UIView {
     
     return topView
 }
+
+func makeCalendar() -> FSCalendar{
+    
+    let calendar = FSCalendar(frame: CGRect(x: 0, y: 20, width: UIScreen.main.bounds.width, height: 250))
+    
+    calendar.scope = .week
+    calendar.appearance.headerDateFormat = "MMMM"
+    calendar.appearance.weekdayTextColor = UIColor.backgroundColor
+    calendar.appearance.headerTitleColor = UIColor.backgroundColor
+    calendar.appearance.titleDefaultColor = UIColor.backgroundColor
+    calendar.appearance.headerTitleFont = UIFont.systemFont(ofSize: 24, weight: .bold)
+    calendar.appearance.titleFont = UIFont.systemFont(ofSize: 16, weight: .bold)
+    calendar.appearance.weekdayFont = UIFont.systemFont(ofSize: 16, weight: .bold)
+    calendar.appearance.titleTodayColor = .mainBlue
+    calendar.appearance.todayColor = .backgroundColor
+    calendar.firstWeekday = 2
+    calendar.headerHeight = 80
+    calendar.appearance.headerMinimumDissolvedAlpha = 0
+    return calendar
+}
+
 func makeTitleLabel(withText text: String) -> UILabel{
     let label = UILabel()
     label.text = text
@@ -98,7 +120,7 @@ func makeSaveButton() -> UIButton{
     saveButton.setDimensions(width: 200, height: 50)
     saveButton.layer.cornerRadius = 25
     saveButton.backgroundColor = .mainBlue
-       
+    
     return saveButton
 }
 
@@ -112,9 +134,9 @@ func makeDeleteButton() -> UIButton {
 
 //MARK: - Task Cell
 func makeTaskLabel() -> UILabel {
-       let taskLabel = UILabel()
-       taskLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
-       taskLabel.textColor = .darkBlue
-       
-       return taskLabel
-   }
+    let taskLabel = UILabel()
+    taskLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
+    taskLabel.textColor = .darkBlue
+    
+    return taskLabel
+}

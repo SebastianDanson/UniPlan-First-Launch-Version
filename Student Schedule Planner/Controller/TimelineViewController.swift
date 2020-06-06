@@ -9,19 +9,18 @@
 import UIKit
 import RealmSwift
 import SwipeCellKit
+import FSCalendar
 
 let reuseIdentifer = "TaskCell"
 var tasks: Results<Task>!
-class TimelineViewController: UIViewController {
+class TimelineViewController: UIViewController  {
     let realm = try! Realm()
     
     //MARK: - Properties
-    var numSection = 1
     let tableView = UITableView()
-    let titleLabel = makeTitleLabel(withText: "Today")
     let topView = makeTopView(height: 160)
-    let datebox = CalendarView()
     let addButton = makeAddButton()
+    let calendar = makeCalendar()
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -36,25 +35,23 @@ class TimelineViewController: UIViewController {
     
     //MARK: - setup UI
     func setupViews() {
-        taskIndex = nil
+        
         view.backgroundColor = .backgroundColor
         
         view.addSubview(topView)
+        topView.addSubview(calendar)
+        calendar.calendarHeaderView.addSubview(addButton)
         
-        topView.addSubview(datebox)
-        topView.addSubview(titleLabel)
-        topView.addSubview(addButton)
+        calendar.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        calendar.delegate = self
+        calendar.dataSource = self
         
-        topView.anchor(top: view.topAnchor)
-        topView.centerX(in: view)
+        topView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        topView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        topView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
-        titleLabel.anchor(top: topView.topAnchor, paddingTop: 40)
-        titleLabel.centerX(in: topView)
-        
-        datebox.anchor(top: titleLabel.bottomAnchor, left: topView.leftAnchor, right: topView.rightAnchor, paddingTop: 20, paddingLeft: 12, paddingRight: -12)
-        
-        addButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         addButton.anchor(right: topView.rightAnchor, paddingRight: 20)
+        addButton.centerYAnchor.constraint(equalTo: calendar.calendarHeaderView.centerYAnchor).isActive = true
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         setupTableView()
@@ -98,7 +95,7 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         cell.delegate = self
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         taskIndex = indexPath.row
         addButtonTapped()
@@ -113,10 +110,10 @@ extension TimelineViewController: SwipeTableViewCellDelegate {
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
             do {
                 try self.realm.write {
-                
+                    
                     self.realm.delete(tasks[indexPath.row])
                     tableView.reloadData()
-                    }
+                }
                 
             } catch {
                 print("Error writing task to realm")
@@ -126,4 +123,9 @@ extension TimelineViewController: SwipeTableViewCellDelegate {
         
         return [deleteAction]
     }
+}
+
+//MARK: - FSCalendar Delegate and Datasource
+extension TimelineViewController: FSCalendarDelegate, FSCalendarDataSource {
+    
 }
