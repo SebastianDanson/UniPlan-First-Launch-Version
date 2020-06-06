@@ -8,19 +8,20 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
 let reuseIdentifer = "TaskCell"
 var tasks: Results<Task>!
 class TimelineViewController: UIViewController {
     let realm = try! Realm()
-
+    
     //MARK: - Properties
-       var numSection = 1
-       let tableView = UITableView()
-       let titleLabel = makeTitleLabel(withText: "Today")
-       let topView = makeTopView(height: 160)
-       let datebox = CalendarView()
-       let addButton = makeAddButton()
+    var numSection = 1
+    let tableView = UITableView()
+    let titleLabel = makeTitleLabel(withText: "Today")
+    let topView = makeTopView(height: 160)
+    let datebox = CalendarView()
+    let addButton = makeAddButton()
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -29,9 +30,9 @@ class TimelineViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-         super.viewWillAppear(animated)
-         loadTasks()
-     }
+        super.viewWillAppear(animated)
+        loadTasks()
+    }
     
     //MARK: - setup UI
     func setupViews() {
@@ -50,7 +51,7 @@ class TimelineViewController: UIViewController {
         titleLabel.anchor(top: topView.topAnchor, paddingTop: 40)
         titleLabel.centerX(in: topView)
         
-        datebox.anchor(top: titleLabel.bottomAnchor, left: topView.leftAnchor, right: topView.rightAnchor, paddingTop: 20,paddingLeft: 12, paddingRight: -12)
+        datebox.anchor(top: titleLabel.bottomAnchor, left: topView.leftAnchor, right: topView.rightAnchor, paddingTop: 20, paddingLeft: 12, paddingRight: -12)
         
         addButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         addButton.anchor(right: topView.rightAnchor, paddingRight: 20)
@@ -80,7 +81,7 @@ class TimelineViewController: UIViewController {
     
     //MARK: - Helper Functions
     func loadTasks() {
-        tasks = realm.objects(Task.self)
+        tasks = realm.objects(Task.self).sorted(byKeyPath: "startDate", ascending: true)
         tableView.reloadData()
     }
 }
@@ -92,14 +93,37 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-         let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell") as! TaskCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! TaskCell
         cell.update(task: tasks[indexPath.row])
-            return cell
+        cell.delegate = self
+        return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         taskIndex = indexPath.row
-        print(taskIndex)
         addButtonTapped()
+    }
+}
+
+//MARK: - Swipe Cell Delegate Methods
+extension TimelineViewController: SwipeTableViewCellDelegate {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+        
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            do {
+                try self.realm.write {
+                
+                    self.realm.delete(tasks[indexPath.row])
+                    tableView.reloadData()
+                    }
+                
+            } catch {
+                print("Error writing task to realm")
+            }
+        }
+        deleteAction.image = UIImage(named: "Trash")
+        
+        return [deleteAction]
     }
 }

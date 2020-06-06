@@ -7,10 +7,10 @@
 //
 
 import UIKit
+import SwipeCellKit
 
 var taskName: String = ""
-class TaskCell: UITableViewCell {
-    
+class TaskCell: SwipeTableViewCell {
  
     //MARK: - lifecycle
     
@@ -30,7 +30,7 @@ class TaskCell: UITableViewCell {
     let nextIcon = UIImage(named: "nextMenuButton")
     private let durationLabel: UILabel = {
         let durationLabel = UILabel()
-        durationLabel.text = "10:00AM - 12:00PM"
+//        durationLabel.text = "10:00AM - 12:00PM"
         durationLabel.font = UIFont.systemFont(ofSize: 18)
         durationLabel.textColor = .darkBlue
         
@@ -70,6 +70,7 @@ class TaskCell: UITableViewCell {
         taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 5, paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
         nextImage.centerYAnchor.constraint(equalTo: taskLabel.centerYAnchor).isActive = true
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
+        taskLabel.text = taskName
     }
     
     //MARK: - Actions

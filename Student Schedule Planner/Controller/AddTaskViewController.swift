@@ -88,7 +88,7 @@ class AddTaskViewController: UIViewController {
             let timeComponents = calendar.dateComponents([.hour, .minute], from: task.endDate)
             let nowComponents = calendar.dateComponents([.hour, .minute], from: startDatePicker.date)
             
-            let difference = calendar.dateComponents([.minute], from: nowComponents, to: timeComponents).minute!
+            let difference = abs(calendar.dateComponents([.minute], from: nowComponents, to: timeComponents).minute!)
             print(difference)
             let hours = difference / 60
             let minutes = difference - (hours * 60)
@@ -121,24 +121,25 @@ class AddTaskViewController: UIViewController {
             task.title = title
             task.startDate = startDatePicker.date
             task.endDate = endDate
-            
-            do {
-                if taskIndex != nil {
-                    let updatedTask = realm.objects(Task.self).filter("startDate == \(task.startDate)").first
-                    try realm.write {
-                        updatedTask?.title = task.title
-                        updatedTask?.startDate = startDatePicker.date
-                        updatedTask?.endDate = endDate
+            if !checkForTimeConflict(startTime: task.startDate, endDateTime: task.endDate) {
+                do {
+                    if taskIndex != nil {
+                        let updatedTask = realm.objects(Task.self).filter("startDate == \(task.startDate)").first
+                        try realm.write {
+                            updatedTask?.title = task.title
+                            updatedTask?.startDate = startDatePicker.date
+                            updatedTask?.endDate = endDate
+                        }
+                    } else {
+                        try realm.write {
+                            realm.add(task)
+                        }
                     }
-                } else {
-                    try realm.write {
-                        realm.add(task)
-                    }
+                } catch {
+                    print("Error writing task to realm")
                 }
-            } catch {
-                print("Error writing task to realm")
+                dismiss(animated: true)
             }
-            dismiss(animated: true)
         }
     }
     
@@ -152,10 +153,54 @@ class AddTaskViewController: UIViewController {
         } catch {
             print("Error writing task to realm")
         }
-        dismiss(animated: true)
+        dismiss(animated: true) {
+            taskIndex = nil
+        }
     }
     @objc func backButtonPressed() {
-        dismiss(animated: true)
+        dismiss(animated: true) {
+            taskIndex = nil
+        }
+    }
+    
+    //MARK: - Helper methods
+    func checkForTimeConflict(startTime: Date, endDateTime: Date) -> Bool{
+       
+        //1) pStart time is in between cStart and end -> pStart > cStart cEnd>pStart
+        let conflictCheck1 = realm.objects(Task.self).filter("startDate > %@ AND startDate < %@", startTime, endDateTime)
+        if conflictCheck1.count > 0 {
+            showAlert()
+            return true
+        }
+        
+        //2) pEnd time is in between cStart and end -> pEnd > cStart cEnd>pEnd
+        let conflictCheck2 = realm.objects(Task.self).filter("endDate > %@ AND endDate < %@", startTime, endDateTime)
+        if conflictCheck2.count > 0 {
+            showAlert()
+            return true
+        }
+        
+        //3) cStart time is in between pStart and end -> cStart > pStart pEnd>cStart
+        let conflictCheck3 = realm.objects(Task.self).filter("startDate < %@ AND endDate > %@", startTime, startTime)
+        if conflictCheck3.count > 0 {
+            showAlert()
+            return true
+        }
+        
+        //4) cEnd time is in between pStart and end -> cEnd > pStart pEnd>cEnd
+        let conflictCheck4 = realm.objects(Task.self).filter("startDate < %@ AND endDate > %@", endDateTime, endDateTime)
+        if conflictCheck4.count > 0 {
+            showAlert()
+            return true
+        }
+        
+        return false
+    }
+    
+    func showAlert() {
+        let alert = UIAlertController(title: "Schedule Conflict", message: "You have another event that overlaps. Please change the time of either this event or the other conflicting one", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true)
     }
 }
 //MARK: - Pickerview delegate and datasource

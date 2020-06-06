@@ -13,4 +13,5 @@ class Task: Object {
     @objc dynamic var title: String = ""
     @objc dynamic var startDate: Date = Date()
     @objc dynamic var endDate: Date = Date()
+    var day = LinkingObjects(fromType: Day.self, property: "items")
 }

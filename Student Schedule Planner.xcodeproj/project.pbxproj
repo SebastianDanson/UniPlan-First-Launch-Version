@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -21,6 +21,7 @@
 		3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */; };
 		3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFB24893AF100BFD6E5 /* Task.swift */; };
 		3F67BBFE24893C4800BFD6E5 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFD24893C4800BFD6E5 /* Day.swift */; };
+		3F67BC012489AB6E00BFD6E5 /* SwipeCellKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3F67BC002489AB6E00BFD6E5 /* SwipeCellKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F67BC012489AB6E00BFD6E5 /* SwipeCellKit in Frameworks */,
 				383879C0AE500539D45E3F18 /* Pods_Student_Schedule_Planner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -170,6 +172,9 @@
 			dependencies = (
 			);
 			name = "Student Schedule Planner";
+			packageProductDependencies = (
+				3F67BC002489AB6E00BFD6E5 /* SwipeCellKit */,
+			);
 			productName = "Student Schedule Planner";
 			productReference = 3F383E582486B25E00D2A5D1 /* Student Schedule Planner.app */;
 			productType = "com.apple.product-type.application";
@@ -198,6 +203,9 @@
 				Base,
 			);
 			mainGroup = 3F383E4F2486B25E00D2A5D1;
+			packageReferences = (
+				3F67BBFF2489AB6E00BFD6E5 /* XCRemoteSwiftPackageReference "SwipeCellKit" */,
+			);
 			productRefGroup = 3F383E592486B25E00D2A5D1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -476,6 +484,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3F67BBFF2489AB6E00BFD6E5 /* XCRemoteSwiftPackageReference "SwipeCellKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwipeCellKit/SwipeCellKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3F67BC002489AB6E00BFD6E5 /* SwipeCellKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F67BBFF2489AB6E00BFD6E5 /* XCRemoteSwiftPackageReference "SwipeCellKit" */;
+			productName = SwipeCellKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3F383E502486B25E00D2A5D1 /* Project object */;
 }
