@@ -11,5 +11,5 @@ import RealmSwift
 
 class Day: Object {
     @objc dynamic var date = Date()
-    let tasks = List<Task>()
+    var tasks = List<Task>()
 }

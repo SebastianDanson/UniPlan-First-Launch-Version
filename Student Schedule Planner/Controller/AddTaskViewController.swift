@@ -121,6 +121,7 @@ class AddTaskViewController: UIViewController {
             task.title = title
             task.startDate = startDatePicker.date
             task.endDate = endDate
+             
             if !checkForTimeConflict(startTime: task.startDate, endDateTime: task.endDate) {
                 do {
                     if taskIndex != nil {
@@ -132,6 +133,10 @@ class AddTaskViewController: UIViewController {
                         }
                     } else {
                         try realm.write {
+                            let day = Day()
+                            day.date = task.startDate
+                            day.tasks.append(task)
+                            realm.add(day)
                             realm.add(task)
                         }
                     }

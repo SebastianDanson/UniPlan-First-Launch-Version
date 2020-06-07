@@ -13,6 +13,7 @@ import FSCalendar
 
 let reuseIdentifer = "TaskCell"
 var tasks: Results<Task>!
+var day = Date()
 class TimelineViewController: UIViewController  {
     let realm = try! Realm()
     
@@ -40,7 +41,7 @@ class TimelineViewController: UIViewController  {
         
         view.addSubview(topView)
         topView.addSubview(calendar)
-        calendar.calendarHeaderView.addSubview(addButton)
+        topView.addSubview(addButton)
         
         calendar.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         calendar.delegate = self
@@ -71,6 +72,7 @@ class TimelineViewController: UIViewController  {
     
     //MARK: - Actions
     @objc func addButtonTapped() {
+        print("tapped")
         let vc = AddTaskViewController()
         vc.modalPresentationStyle = .fullScreen 
         self.present(vc, animated: true, completion: nil)
@@ -78,7 +80,13 @@ class TimelineViewController: UIViewController  {
     
     //MARK: - Helper Functions
     func loadTasks() {
-        tasks = realm.objects(Task.self).sorted(byKeyPath: "startDate", ascending: true)
+        day = Calendar.current.startOfDay(for: day)
+       let endOfDay: Date = {
+         let components = DateComponents(day: 1, second: -1)
+         return Calendar.current.date(byAdding: components, to: day)!
+       }()
+       tasks = realm.objects(Task.self).filter("startDate BETWEEN %@", [day, endOfDay])
+        
         tableView.reloadData()
     }
 }
@@ -127,5 +135,8 @@ extension TimelineViewController: SwipeTableViewCellDelegate {
 
 //MARK: - FSCalendar Delegate and Datasource
 extension TimelineViewController: FSCalendarDelegate, FSCalendarDataSource {
-    
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        day = date
+        loadTasks()
+    }
 }
