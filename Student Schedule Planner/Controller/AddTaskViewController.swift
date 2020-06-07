@@ -9,7 +9,6 @@
 import UIKit
 import RealmSwift
 
-var taskIndex: Int?
 class AddTaskViewController: UIViewController {
     
     let realm = try! Realm()
@@ -68,33 +67,33 @@ class AddTaskViewController: UIViewController {
         titleTextField.centerX(in: view)
         titleTextField.anchor(top: titleHeading.bottomAnchor, paddingTop: 5)
         
-        startDateHeading.anchor(top: titleTextField.bottomAnchor, left: view.leftAnchor, paddingTop: 40, paddingLeft: 20)
+        startDateHeading.anchor(top: titleTextField.bottomAnchor, left: view.leftAnchor, paddingTop: 30, paddingLeft: 20)
         startDatePicker.centerX(in: view)
-        startDatePicker.anchor(top: startDateHeading.bottomAnchor, paddingTop: 5)
+        startDatePicker.anchor(top: startDateHeading.bottomAnchor)
         
-        durationHeading.anchor(top: startDatePicker.bottomAnchor, left: view.leftAnchor, paddingTop: 40, paddingLeft: 20)
+        durationHeading.anchor(top: startDatePicker.bottomAnchor, left: view.leftAnchor, paddingTop: 30, paddingLeft: 20)
         setUpDurationPickerView()
         
         saveButton.centerX(in: view)
-        saveButton.anchor(top: durationPickerView.bottomAnchor, paddingTop: 80)
+        saveButton.anchor(top: durationPickerView.bottomAnchor, paddingTop: 50)
         saveButton.addTarget(self, action: #selector(saveTask), for: .touchUpInside)
         
-        if let taskIndex = taskIndex {
-            let task = tasks[taskIndex]
-            titleTextField.text = task.title
-            startDatePicker.date = task.startDate
-            
-            let calendar = Calendar.current
-            let timeComponents = calendar.dateComponents([.hour, .minute], from: task.endDate)
-            let nowComponents = calendar.dateComponents([.hour, .minute], from: startDatePicker.date)
-            
-            let difference = abs(calendar.dateComponents([.minute], from: nowComponents, to: timeComponents).minute!)
-            print(difference)
-            let hours = difference / 60
-            let minutes = difference - (hours * 60)
-            durationPickerView.selectRow(hours, inComponent:0, animated: false)
-            durationPickerView.selectRow(minutes, inComponent:3, animated: false)
-            
+        if let taskIndex = TaskService.shared.getTaskIndex() {
+            if let task = TaskService.shared.getTask(atIndex: taskIndex) {
+                titleTextField.text = task.title
+                startDatePicker.date = task.startDate
+                
+                let calendar = Calendar.current
+                let timeComponents = calendar.dateComponents([.hour, .minute], from: task.endDate)
+                let nowComponents = calendar.dateComponents([.hour, .minute], from: startDatePicker.date)
+                
+                let difference = abs(calendar.dateComponents([.minute], from: nowComponents, to: timeComponents).minute!)
+                print(difference)
+                let hours = difference / 60
+                let minutes = difference - (hours * 60)
+                durationPickerView.selectRow(hours, inComponent:0, animated: false)
+                durationPickerView.selectRow(minutes, inComponent:3, animated: false)
+            }
         }
     }
     
@@ -105,34 +104,32 @@ class AddTaskViewController: UIViewController {
         
         durationPickerView.anchor(top: durationHeading.bottomAnchor, paddingTop: 5)
         durationPickerView.centerX(in: view)
-        durationPickerView.setDimensions(width: UIScreen.main.bounds.width-140, height: 150)
+        durationPickerView.setDimensions(width: UIScreen.main.bounds.width-140, height: 120)
         durationPickerView.backgroundColor = .backgroundColor
     }
     
     //MARK: - Actions
     @objc func saveTask() {
         
-        if let title = titleTextField.text {
             let duration = hour*3600 + minutes * 60
             var endDate = startDatePicker.date
             endDate.addTimeInterval(TimeInterval(duration))
             
             let task = Task()
-            task.title = title
+            task.title = titleTextField.text ?? ""
             task.startDate = startDatePicker.date
             task.endDate = endDate
-             
+            
             if !checkForTimeConflict(startTime: task.startDate, endDateTime: task.endDate) {
                 do {
-                    if taskIndex != nil {
+                    try realm.write {
+                        if TaskService.shared.getTaskIndex() != nil {
+                        
                         let updatedTask = realm.objects(Task.self).filter("startDate == \(task.startDate)").first
-                        try realm.write {
                             updatedTask?.title = task.title
                             updatedTask?.startDate = startDatePicker.date
                             updatedTask?.endDate = endDate
-                        }
-                    } else {
-                        try realm.write {
+                    } else{
                             let day = Day()
                             day.date = task.startDate
                             day.tasks.append(task)
@@ -141,64 +138,67 @@ class AddTaskViewController: UIViewController {
                         }
                     }
                 } catch {
-                    print("Error writing task to realm")
+                    print("Error writing task to realm, \(error.localizedDescription)")
                 }
+                TaskService.shared.updateTasks()
                 dismiss(animated: true)
             }
-        }
     }
     
     @objc func deleteTask() {
         do {
             try realm.write {
-                if let taskIndex = taskIndex {
-                    realm.delete(tasks[taskIndex])
+                if let taskIndex = TaskService.shared.getTaskIndex() {
+                    if let taskToDelete = TaskService.shared.getTask(atIndex: taskIndex) {
+                        realm.delete(taskToDelete)
+                        TaskService.shared.updateTasks()
+                    }
                 }
             }
         } catch {
             print("Error writing task to realm")
         }
         dismiss(animated: true) {
-            taskIndex = nil
+            TaskService.shared.setTaskIndex(index: nil)
         }
     }
+    
     @objc func backButtonPressed() {
         dismiss(animated: true) {
-            taskIndex = nil
+             TaskService.shared.setTaskIndex(index: nil)
         }
     }
     
     //MARK: - Helper methods
     func checkForTimeConflict(startTime: Date, endDateTime: Date) -> Bool{
-       
-        //1) pStart time is in between cStart and end -> pStart > cStart cEnd>pStart
+        
+        //1) A previous tasks start time is in between the current tasks start and end times
         let conflictCheck1 = realm.objects(Task.self).filter("startDate > %@ AND startDate < %@", startTime, endDateTime)
         if conflictCheck1.count > 0 {
             showAlert()
             return true
         }
         
-        //2) pEnd time is in between cStart and end -> pEnd > cStart cEnd>pEnd
+        //2) A previous tasks end time is in between the current tasks start and end times
         let conflictCheck2 = realm.objects(Task.self).filter("endDate > %@ AND endDate < %@", startTime, endDateTime)
         if conflictCheck2.count > 0 {
             showAlert()
             return true
         }
         
-        //3) cStart time is in between pStart and end -> cStart > pStart pEnd>cStart
+        //3) The current tasks start time is in between a previous taks start and end time
         let conflictCheck3 = realm.objects(Task.self).filter("startDate < %@ AND endDate > %@", startTime, startTime)
         if conflictCheck3.count > 0 {
             showAlert()
             return true
         }
         
-        //4) cEnd time is in between pStart and end -> cEnd > pStart pEnd>cEnd
+        //4) The current tasks end time is in between a previous taks start and end time
         let conflictCheck4 = realm.objects(Task.self).filter("startDate < %@ AND endDate > %@", endDateTime, endDateTime)
         if conflictCheck4.count > 0 {
             showAlert()
             return true
         }
-        
         return false
     }
     
@@ -268,6 +268,5 @@ extension AddTaskViewController:UIPickerViewDelegate, UIPickerViewDataSource {
         default:
             break;
         }
-        
     }
 }

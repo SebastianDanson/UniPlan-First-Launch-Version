@@ -21,7 +21,7 @@ func makeTopView(height: CGFloat) -> UIView {
 
 func makeCalendar() -> FSCalendar{
     
-    let calendar = FSCalendar(frame: CGRect(x: 0, y: 20, width: UIScreen.main.bounds.width, height: 250))
+    let calendar = FSCalendar(frame: CGRect(x: 0, y: 15, width: UIScreen.main.bounds.width, height: 225))
     
     calendar.scope = .week
     calendar.appearance.headerDateFormat = "MMMM"
@@ -34,7 +34,7 @@ func makeCalendar() -> FSCalendar{
     calendar.appearance.titleTodayColor = .mainBlue
     calendar.appearance.todayColor = .backgroundColor
     calendar.firstWeekday = 2
-    calendar.headerHeight = 80
+    calendar.headerHeight = 70
     calendar.appearance.headerMinimumDissolvedAlpha = 0
     return calendar
 }
@@ -64,26 +64,6 @@ func makeBackButton() -> UIButton {
     return addButton
 }
 
-//MARK: - dateBox Functions
-func makeDateLabel(withText text: String) -> UILabel{
-    let label = UILabel()
-    label.text = text
-    label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-    label.textColor = .mainBlue
-    
-    return label
-}
-
-func makeDateStackView() -> UIStackView {
-    let stackView = UIStackView()
-    stackView.translatesAutoresizingMaskIntoConstraints = false
-    stackView.axis = .horizontal
-    stackView.distribution = .fill
-    stackView.alignment = .fill
-    stackView.spacing = 7
-    
-    return stackView
-}
 
 //MARK: - addTask functions
 func makeHeading(withText text: String) -> UILabel{
@@ -97,7 +77,7 @@ func makeHeading(withText text: String) -> UILabel{
 
 func makeDatePicker() -> UIDatePicker{
     let startDatePicker = UIDatePicker()
-    startDatePicker.setDimensions(width: UIScreen.main.bounds.width - 40, height: 150)
+    startDatePicker.setDimensions(width: UIScreen.main.bounds.width - 40, height: 120)
     startDatePicker.backgroundColor = .backgroundColor
     startDatePicker.minimumDate = Date()
     

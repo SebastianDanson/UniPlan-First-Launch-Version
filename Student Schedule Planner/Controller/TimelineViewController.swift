@@ -12,14 +12,13 @@ import SwipeCellKit
 import FSCalendar
 
 let reuseIdentifer = "TaskCell"
-var tasks: Results<Task>!
-var day = Date()
+
 class TimelineViewController: UIViewController  {
     let realm = try! Realm()
     
     //MARK: - Properties
     let tableView = UITableView()
-    let topView = makeTopView(height: 160)
+    let topView = makeTopView(height: 135)
     let addButton = makeAddButton()
     let calendar = makeCalendar()
     
@@ -29,10 +28,11 @@ class TimelineViewController: UIViewController  {
         setupViews()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        loadTasks()
-    }
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            TaskService.shared.loadTasks()
+            tableView.reloadData()
+        }
     
     //MARK: - setup UI
     func setupViews() {
@@ -72,40 +72,29 @@ class TimelineViewController: UIViewController  {
     
     //MARK: - Actions
     @objc func addButtonTapped() {
-        print("tapped")
         let vc = AddTaskViewController()
         vc.modalPresentationStyle = .fullScreen 
         self.present(vc, animated: true, completion: nil)
-    }
-    
-    //MARK: - Helper Functions
-    func loadTasks() {
-        day = Calendar.current.startOfDay(for: day)
-       let endOfDay: Date = {
-         let components = DateComponents(day: 1, second: -1)
-         return Calendar.current.date(byAdding: components, to: day)!
-       }()
-       tasks = realm.objects(Task.self).filter("startDate BETWEEN %@", [day, endOfDay])
-        
-        tableView.reloadData()
     }
 }
 
 //MARK: - Tableview Delegate and Datasource
 extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tasks.count
+        return TaskService.shared.getTasks()?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! TaskCell
-        cell.update(task: tasks[indexPath.row])
-        cell.delegate = self
+        if let task = TaskService.shared.getTask(atIndex: indexPath.row) {
+            cell.update(task: task)
+            cell.delegate = self
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        taskIndex = indexPath.row
+        TaskService.shared.setTaskIndex(index: indexPath.row)
         addButtonTapped()
     }
 }
@@ -118,9 +107,10 @@ extension TimelineViewController: SwipeTableViewCellDelegate {
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
             do {
                 try self.realm.write {
-                    
-                    self.realm.delete(tasks[indexPath.row])
-                    tableView.reloadData()
+                    if let taskToDelete = TaskService.shared.getTask(atIndex: indexPath.row) {
+                        self.realm.delete(taskToDelete)
+                        tableView.reloadData()
+                    }
                 }
                 
             } catch {
@@ -136,7 +126,8 @@ extension TimelineViewController: SwipeTableViewCellDelegate {
 //MARK: - FSCalendar Delegate and Datasource
 extension TimelineViewController: FSCalendarDelegate, FSCalendarDataSource {
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        day = date
-        loadTasks()
+        TaskService.shared.setDateSelected(date: date)
+        TaskService.shared.loadTasks()
+        tableView.reloadData()
     }
 }

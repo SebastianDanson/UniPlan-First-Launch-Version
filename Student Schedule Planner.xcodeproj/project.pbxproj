@@ -21,6 +21,7 @@
 		3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFB24893AF100BFD6E5 /* Task.swift */; };
 		3F67BBFE24893C4800BFD6E5 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFD24893C4800BFD6E5 /* Day.swift */; };
 		3F67BC012489AB6E00BFD6E5 /* SwipeCellKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3F67BC002489AB6E00BFD6E5 /* SwipeCellKit */; };
+		3F67BC05248C7B9E00BFD6E5 /* TaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BC04248C7B9E00BFD6E5 /* TaskService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,8 +37,9 @@
 		3F383E792486BD0600D2A5D1 /* Factories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factories.swift; sourceTree = "<group>"; };
 		3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskViewController.swift; sourceTree = "<group>"; };
 		3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
-		3F67BBFB24893AF100BFD6E5 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		3F67BBFB24893AF100BFD6E5 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Task.swift; path = ../DataModel/Task.swift; sourceTree = "<group>"; };
 		3F67BBFD24893C4800BFD6E5 /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
+		3F67BC04248C7B9E00BFD6E5 /* TaskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskService.swift; sourceTree = "<group>"; };
 		8E06086E3544786A6DA9157B /* Pods-Student Schedule Planner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.release.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.release.xcconfig"; sourceTree = "<group>"; };
 		9318D2EFB62EA01CADAC290D /* Pods-Student Schedule Planner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.debug.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.debug.xcconfig"; sourceTree = "<group>"; };
 		9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Student_Schedule_Planner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,7 +83,6 @@
 				3F383E6F2486B26C00D2A5D1 /* Model */,
 				3F383E702486B27700D2A5D1 /* View */,
 				3F383E712486B29100D2A5D1 /* Controller */,
-				3F67BBF82489389900BFD6E5 /* DataModel */,
 				3F383E5B2486B25E00D2A5D1 /* AppDelegate.swift */,
 				3F383E5D2486B25E00D2A5D1 /* SceneDelegate.swift */,
 				3F383E612486B25E00D2A5D1 /* Main.storyboard */,
@@ -95,6 +96,9 @@
 		3F383E6F2486B26C00D2A5D1 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3F67BBFB24893AF100BFD6E5 /* Task.swift */,
+				3F67BBFD24893C4800BFD6E5 /* Day.swift */,
+				3F67BC04248C7B9E00BFD6E5 /* TaskService.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -123,15 +127,6 @@
 				3F383E792486BD0600D2A5D1 /* Factories.swift */,
 			);
 			path = Utilities;
-			sourceTree = "<group>";
-		};
-		3F67BBF82489389900BFD6E5 /* DataModel */ = {
-			isa = PBXGroup;
-			children = (
-				3F67BBFB24893AF100BFD6E5 /* Task.swift */,
-				3F67BBFD24893C4800BFD6E5 /* Day.swift */,
-			);
-			path = DataModel;
 			sourceTree = "<group>";
 		};
 		CA6EC8394D26E05789761C8F /* Frameworks */ = {
@@ -272,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F67BC05248C7B9E00BFD6E5 /* TaskService.swift in Sources */,
 				3F383E7A2486BD0600D2A5D1 /* Factories.swift in Sources */,
 				3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */,
 				3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */,
