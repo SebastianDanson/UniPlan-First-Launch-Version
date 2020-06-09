@@ -8,31 +8,37 @@
 
 import UIKit
 import RealmSwift
+import UserNotifications
 
-class AddTaskViewController: UIViewController {
+class AddTaskViewController: PickerViewController {
     
     let realm = try! Realm()
-    var hour:Int = 0
-    var minutes:Int = 0
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        TaskService.shared.setCheckForTimeConflict(bool: true)
         setupViews()
     }
     
     //MARK: - Properties
+    //topView
     let topView = makeTopView(height: 90)
     let titleLabel = makeTitleLabel(withText: "Add Task")
     let backButton = makeBackButton()
+    let deleteButton = makeDeleteButton()
+    
+    //Not topView
     let titleHeading = makeHeading(withText: "Title")
-    let startDatePicker = makeDatePicker()
+    let startDatePicker = makeDatePicker(height: 120)
     let titleTextField = makeTextField(withPlaceholder: "Title")
     let startDateHeading = makeHeading(withText: "Start Date")
     let durationHeading = makeHeading(withText: "Duration")
     let durationPickerView = UIPickerView()
+    let reminderHeading = makeHeading(withText: "Reminder:")
+    let reminderButton = makeRemindersButton()
+    let reminderSwitch = UISwitch()
     let saveButton = makeSaveButton()
-    let deleteButton = makeDeleteButton()
     
     //MARK: - setup UI
     func setupViews() {
@@ -45,7 +51,11 @@ class AddTaskViewController: UIViewController {
         view.addSubview(startDatePicker)
         view.addSubview(durationHeading)
         view.addSubview(saveButton)
+        view.addSubview(reminderHeading)
+        view.addSubview(reminderButton)
+        view.addSubview(reminderSwitch)
         
+        //topView
         topView.addSubview(titleLabel)
         topView.addSubview(backButton)
         topView.addSubview(deleteButton)
@@ -63,6 +73,7 @@ class AddTaskViewController: UIViewController {
         deleteButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         deleteButton.addTarget(self, action: #selector(deleteTask), for: .touchUpInside)
         
+        //Not topView
         titleHeading.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
         titleTextField.centerX(in: view)
         titleTextField.anchor(top: titleHeading.bottomAnchor, paddingTop: 5)
@@ -72,10 +83,20 @@ class AddTaskViewController: UIViewController {
         startDatePicker.anchor(top: startDateHeading.bottomAnchor)
         
         durationHeading.anchor(top: startDatePicker.bottomAnchor, left: view.leftAnchor, paddingTop: 30, paddingLeft: 20)
-        setUpDurationPickerView()
+        setupDurationPickerView()
+        
+        reminderHeading.anchor(top: durationPickerView.bottomAnchor, left: view.leftAnchor, paddingTop: 30, paddingLeft: 20)
+        reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
+        reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
+        reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
+        
+        reminderButton.centerX(in: view)
+        reminderButton.anchor(top: reminderHeading.bottomAnchor, paddingTop: 10)
+        reminderButton.isHidden = true
+        reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
         
         saveButton.centerX(in: view)
-        saveButton.anchor(top: durationPickerView.bottomAnchor, paddingTop: 50)
+        saveButton.anchor(top: reminderButton.bottomAnchor, paddingTop: 50)
         saveButton.addTarget(self, action: #selector(saveTask), for: .touchUpInside)
         
         if let taskIndex = TaskService.shared.getTaskIndex() {
@@ -97,52 +118,63 @@ class AddTaskViewController: UIViewController {
         }
     }
     
-    func setUpDurationPickerView() {
+    func setupDurationPickerView() {
         view.addSubview(durationPickerView)
         durationPickerView.delegate = self
         durationPickerView.dataSource = self
         
         durationPickerView.anchor(top: durationHeading.bottomAnchor, paddingTop: 5)
         durationPickerView.centerX(in: view)
-        durationPickerView.setDimensions(width: UIScreen.main.bounds.width-140, height: 120)
+        durationPickerView.setDimensions(width: UIScreen.main.bounds.width - 100, height: 120)
         durationPickerView.backgroundColor = .backgroundColor
     }
     
     //MARK: - Actions
     @objc func saveTask() {
         
-            let duration = hour*3600 + minutes * 60
-            var endDate = startDatePicker.date
-            endDate.addTimeInterval(TimeInterval(duration))
-            
-            let task = Task()
-            task.title = titleTextField.text ?? ""
-            task.startDate = startDatePicker.date
-            task.endDate = endDate
-            
-            if !checkForTimeConflict(startTime: task.startDate, endDateTime: task.endDate) {
-                do {
-                    try realm.write {
-                        if TaskService.shared.getTaskIndex() != nil {
+        let duration = hour*3600 + minutes*60
+        var endDate = startDatePicker.date
+        endDate.addTimeInterval(TimeInterval(duration))
+        
+        let task = Task()
+        task.title = titleTextField.text ?? ""
+        task.startDate = startDatePicker.date
+        task.endDate = endDate
+        
+        if !checkForTimeConflict(startTime: task.startDate, endDateTime: task.endDate, check: TaskService.shared.getCheckForTimeConflict()) {
+            do {
+                try realm.write {
+                    if TaskService.shared.getTaskIndex() != nil {
                         
                         let updatedTask = realm.objects(Task.self).filter("startDate == \(task.startDate)").first
-                            updatedTask?.title = task.title
-                            updatedTask?.startDate = startDatePicker.date
-                            updatedTask?.endDate = endDate
+                        updatedTask?.title = task.title
+                        updatedTask?.startDate = startDatePicker.date
+                        updatedTask?.endDate = endDate
                     } else{
-                            let day = Day()
-                            day.date = task.startDate
+                        let dateOfTask = Calendar.current.startOfDay(for: startDatePicker.date)
+                        let endOfDay: Date = {
+                            let components = DateComponents(day: 1, second: -1)
+                            return Calendar.current.date(byAdding: components, to: dateOfTask)!
+                        }()
+                        
+                        //Check if there is already a date object for the day of the task
+                        let day = realm.objects(Day.self).filter("date BETWEEN %@", [dateOfTask, endOfDay]).first
+                        if let day = day {
                             day.tasks.append(task)
-                            realm.add(day)
-                            realm.add(task)
+                        } else {
+                            let newDay = Day()
+                            newDay.tasks.append(task)
+                            realm.add(newDay)
                         }
+                        realm.add(task)
                     }
-                } catch {
-                    print("Error writing task to realm, \(error.localizedDescription)")
                 }
-                TaskService.shared.updateTasks()
-                dismiss(animated: true)
+            } catch {
+                print("Error writing task to realm, \(error.localizedDescription)")
             }
+            TaskService.shared.updateTasks()
+            dismiss(animated: true)
+        }
     }
     
     @objc func deleteTask() {
@@ -165,12 +197,64 @@ class AddTaskViewController: UIViewController {
     
     @objc func backButtonPressed() {
         dismiss(animated: true) {
-             TaskService.shared.setTaskIndex(index: nil)
+            TaskService.shared.setTaskIndex(index: nil)
         }
     }
     
+    @objc func reminderButtonPressed() {
+        let vc = SetReminderViewController()
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func reminderSwitchToggled() {
+        if reminderSwitch.isOn {
+            reminderButton.isHidden = false
+        } else {
+            reminderButton.isHidden = true
+        }
+    }
+    
+    //MARK: - Push notification methods
+    @objc func registerLocal() {
+        let center = UNUserNotificationCenter.current()
+        
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+            if granted {
+                print("Yay!")
+            } else {
+                print("D'oh")
+            }
+        }
+    }
+    
+    @objc func scheduleLocal() {
+        let center = UNUserNotificationCenter.current()
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Late wake up call"
+        content.body = "The early bird catches the worm, but the second mouse gets the cheese."
+        content.categoryIdentifier = "alarm"
+        content.userInfo = ["customData": "fizzbuzz"]
+        content.sound = UNNotificationSound.default
+        
+        var dateComponents = DateComponents()
+        dateComponents.hour = 10
+        dateComponents.minute = 30
+        // let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        center.add(request)
+    }
+    
     //MARK: - Helper methods
-    func checkForTimeConflict(startTime: Date, endDateTime: Date) -> Bool{
+    func checkForTimeConflict(startTime: Date, endDateTime: Date, check: Bool) -> Bool{
+        //If the user does not care about the time conflict
+        if !check {
+            return false
+        }
         
         //1) A previous tasks start time is in between the current tasks start and end times
         let conflictCheck1 = realm.objects(Task.self).filter("startDate > %@ AND startDate < %@", startTime, endDateTime)
@@ -204,69 +288,11 @@ class AddTaskViewController: UIViewController {
     
     func showAlert() {
         let alert = UIAlertController(title: "Schedule Conflict", message: "You have another event that overlaps. Please change the time of either this event or the other conflicting one", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Set Anyways", style: .default, handler: { _ in
+            TaskService.shared.setCheckForTimeConflict(bool: false)
+            self.saveTask()
+        }))
         present(alert, animated: true)
-    }
-}
-//MARK: - Pickerview delegate and datasource
-extension AddTaskViewController:UIPickerViewDelegate, UIPickerViewDataSource {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 6
-    }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        switch component {
-        case 0:
-            return 25
-        case 1, 4:
-            return 1
-        case 3:
-            return 60
-        default:
-            return 0
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-        switch component {
-        case 0:
-            return pickerView.frame.size.width/6
-        case 1:
-            return pickerView.frame.size.width/4
-        case 2:
-            return pickerView.frame.size.width/8
-        case 3:
-            return pickerView.frame.size.width/6
-        case 4:
-            return pickerView.frame.size.width/4
-        default:
-            return 0
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch component {
-        case 0:
-            return "\(row)"
-        case 1:
-            return "hours"
-        case 3:
-            return "\(row)"
-        case 4:
-            return "min"
-        default:
-            return ""
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
-        switch component {
-        case 0:
-            hour = row
-        case 3:
-            minutes = row
-        default:
-            break;
-        }
     }
 }

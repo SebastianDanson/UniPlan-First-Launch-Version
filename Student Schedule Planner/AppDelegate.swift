@@ -12,12 +12,11 @@ import RealmSwift
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+         //print(Realm.Configuration.defaultConfiguration.fileURL)
+
         do {
-        let _ = try Realm()
+            let _ = try Realm()
         } catch {
             print("ERROR initializing new realm \(error.localizedDescription)")
         }

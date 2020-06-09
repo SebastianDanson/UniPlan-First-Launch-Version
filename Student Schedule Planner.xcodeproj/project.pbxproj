@@ -22,6 +22,8 @@
 		3F67BBFE24893C4800BFD6E5 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFD24893C4800BFD6E5 /* Day.swift */; };
 		3F67BC012489AB6E00BFD6E5 /* SwipeCellKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3F67BC002489AB6E00BFD6E5 /* SwipeCellKit */; };
 		3F67BC05248C7B9E00BFD6E5 /* TaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BC04248C7B9E00BFD6E5 /* TaskService.swift */; };
+		3F67BC27248EDE4200BFD6E5 /* SetReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BC26248EDE4100BFD6E5 /* SetReminderViewController.swift */; };
+		3F67BC29248EE6AA00BFD6E5 /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BC28248EE6AA00BFD6E5 /* PickerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +42,8 @@
 		3F67BBFB24893AF100BFD6E5 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Task.swift; path = ../DataModel/Task.swift; sourceTree = "<group>"; };
 		3F67BBFD24893C4800BFD6E5 /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
 		3F67BC04248C7B9E00BFD6E5 /* TaskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskService.swift; sourceTree = "<group>"; };
+		3F67BC26248EDE4100BFD6E5 /* SetReminderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetReminderViewController.swift; sourceTree = "<group>"; };
+		3F67BC28248EE6AA00BFD6E5 /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
 		8E06086E3544786A6DA9157B /* Pods-Student Schedule Planner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.release.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.release.xcconfig"; sourceTree = "<group>"; };
 		9318D2EFB62EA01CADAC290D /* Pods-Student Schedule Planner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.debug.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.debug.xcconfig"; sourceTree = "<group>"; };
 		9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Student_Schedule_Planner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,6 +120,8 @@
 			children = (
 				3F383E722486B2EE00D2A5D1 /* TimelineViewController.swift */,
 				3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */,
+				3F67BC26248EDE4100BFD6E5 /* SetReminderViewController.swift */,
+				3F67BC28248EE6AA00BFD6E5 /* PickerViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -267,11 +273,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F67BC27248EDE4200BFD6E5 /* SetReminderViewController.swift in Sources */,
 				3F67BC05248C7B9E00BFD6E5 /* TaskService.swift in Sources */,
 				3F383E7A2486BD0600D2A5D1 /* Factories.swift in Sources */,
 				3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */,
 				3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */,
 				3F383E732486B2EE00D2A5D1 /* TimelineViewController.swift in Sources */,
+				3F67BC29248EE6AA00BFD6E5 /* PickerViewController.swift in Sources */,
 				3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */,
 				3F67BBFE24893C4800BFD6E5 /* Day.swift in Sources */,
 				3F383E5C2486B25E00D2A5D1 /* AppDelegate.swift in Sources */,

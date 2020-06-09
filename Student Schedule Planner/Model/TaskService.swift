@@ -14,6 +14,8 @@ class TaskService {
     private var tasks: Results<Task>?
     private var dateSelected = Date()
     private var taskIndex: Int?
+    //If the user does cares about time conflicts between tasks
+    private var checkForTimeConflict = true
     
     let realm =  try! Realm()
     
@@ -30,7 +32,7 @@ class TaskService {
         }()
         tasks = realm.objects(Task.self).filter("startDate BETWEEN %@", [dateSelected, endOfDay])
     }
-   
+   //MARK: - tasks
     func getTasks() -> Results<Task>?{
         return tasks
     }
@@ -38,7 +40,20 @@ class TaskService {
     func getTask(atIndex index: Int) -> Task?{
         return tasks?[index]
     }
+    func updateTasks() {
+          tasks = realm.objects(Task.self)
+    }
     
+    
+    //MARK: - taskIndex
+    func getTaskIndex() -> Int? {
+        return taskIndex
+    }
+    func setTaskIndex(index: Int?) {
+        taskIndex = index
+    }
+    
+    //MARK: - dateSelected
     func setDateSelected(date: Date) {
         dateSelected = date
     }
@@ -47,14 +62,12 @@ class TaskService {
         return dateSelected
     }
     
-    func updateTasks() {
-        tasks = realm.objects(Task.self)
+    //MARK: - checkForTimeConflict
+    func getCheckForTimeConflict() -> Bool {
+        return checkForTimeConflict
     }
     
-    func getTaskIndex() -> Int? {
-        return taskIndex
-    }
-    func setTaskIndex(index: Int?) {
-        taskIndex = index
+    func setCheckForTimeConflict(bool: Bool) {
+        checkForTimeConflict = bool
     }
 }

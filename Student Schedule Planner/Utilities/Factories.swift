@@ -36,6 +36,7 @@ func makeCalendar() -> FSCalendar{
     calendar.firstWeekday = 2
     calendar.headerHeight = 70
     calendar.appearance.headerMinimumDissolvedAlpha = 0
+    
     return calendar
 }
 
@@ -75,9 +76,9 @@ func makeHeading(withText text: String) -> UILabel{
     return heading
 }
 
-func makeDatePicker() -> UIDatePicker{
+func makeDatePicker(height: CGFloat) -> UIDatePicker{
     let startDatePicker = UIDatePicker()
-    startDatePicker.setDimensions(width: UIScreen.main.bounds.width - 40, height: 120)
+    startDatePicker.setDimensions(width: UIScreen.main.bounds.width - 40, height: height)
     startDatePicker.backgroundColor = .backgroundColor
     startDatePicker.minimumDate = Date()
     
@@ -110,6 +111,22 @@ func makeDeleteButton() -> UIButton {
     deleteButton.tintColor = .backgroundColor
     
     return deleteButton
+}
+
+func makeRemindersButton() -> UIButton {
+    let reminderButton = UIButton()
+    reminderButton.setTitle("None", for: .normal)
+    reminderButton.setTitleColor(.darkBlue, for: .normal)
+    reminderButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+    reminderButton.titleLabel?.alpha = 0.5
+    reminderButton.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+    reminderButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: UIScreen.main.bounds.width - 60, bottom: 0, right: 0)
+    reminderButton.setDimensions(width: UIScreen.main.bounds.width - 40, height: 35)
+    reminderButton.backgroundColor = .lightBlue
+    let nextIcon = UIImage(named: "nextMenuButton")
+    reminderButton.setImage(nextIcon, for: .normal)
+    
+    return reminderButton
 }
 
 //MARK: - Task Cell
