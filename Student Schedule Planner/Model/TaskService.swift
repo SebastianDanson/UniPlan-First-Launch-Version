@@ -14,6 +14,10 @@ class TaskService {
     private var tasks: Results<Task>?
     private var dateSelected = Date()
     private var taskIndex: Int?
+    private var reminderTime = [0, 0] //First index is hours, second is minutes
+    private var reminderDate = Date()
+    private var dateOrTime = 0 //0 means time was selected, non zero means date was selected
+    private var hideReminder = true
     //If the user does cares about time conflicts between tasks
     private var checkForTimeConflict = true
     
@@ -42,6 +46,7 @@ class TaskService {
     }
     func updateTasks() {
           tasks = realm.objects(Task.self)
+        //print(tasks)
     }
     
     
@@ -54,12 +59,47 @@ class TaskService {
     }
     
     //MARK: - dateSelected
+    func getDateSelected() -> Date {
+        return dateSelected
+    }
+    
     func setDateSelected(date: Date) {
         dateSelected = date
     }
     
-    func getDateSelected() -> Date {
-        return dateSelected
+    //MARK: - reminderTime
+    func getReminderTime() -> [Int] {
+        return reminderTime
+    }
+    
+    func setReminderTime(_ time: [Int]) {
+        reminderTime = time
+    }
+    
+    //MARK: - reminderDate
+      func getReminderDate() -> Date {
+          return reminderDate
+      }
+      
+      func setReminderDate(date: Date) {
+          reminderDate = date
+      }
+    
+    //MARK: - dateOrTime
+    func getDateOrTime() -> Int {
+        return dateOrTime
+    }
+    
+    func setDateOrTime(scIndex: Int) {
+        dateOrTime = scIndex
+    }
+    //MARK: - hideReminder
+    func getHideReminder() -> Bool {
+          return hideReminder
+      }
+      
+    func setHideReminder(bool: Bool) {
+        hideReminder = bool
     }
     
     //MARK: - checkForTimeConflict

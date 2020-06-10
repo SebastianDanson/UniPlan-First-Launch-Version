@@ -28,11 +28,18 @@ class TimelineViewController: UIViewController  {
         setupViews()
     }
     
-        override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            TaskService.shared.loadTasks()
-            tableView.reloadData()
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+        TaskService.shared.loadTasks()
+        TaskService.shared.setDateSelected(date: Date())
+        TaskService.shared.setTaskIndex(index: nil)
+        TaskService.shared.setReminderTime([0, 0]) //First index is hours, second is minutes
+        TaskService.shared.setReminderDate(date: Date())
+        TaskService.shared.setDateOrTime(scIndex: 0) //0 means time was selected, non zero means date was selected
+        TaskService.shared.setHideReminder(bool: true)
+        TaskService.shared.setCheckForTimeConflict(bool: true)
+    }
     
     //MARK: - setup UI
     func setupViews() {
@@ -112,7 +119,6 @@ extension TimelineViewController: SwipeTableViewCellDelegate {
                         tableView.reloadData()
                     }
                 }
-                
             } catch {
                 print("Error writing task to realm")
             }

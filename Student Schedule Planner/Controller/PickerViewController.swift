@@ -35,15 +35,15 @@ class PickerViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
         switch component {
         case 0:
-            return pickerView.frame.size.width/6
+            return pickerView.frame.size.width/7
         case 1:
-            return pickerView.frame.size.width/4
+            return pickerView.frame.size.width/3
         case 2:
-            return pickerView.frame.size.width/8
+            return pickerView.frame.size.width/21
         case 3:
-            return pickerView.frame.size.width/6
+            return pickerView.frame.size.width/7
         case 4:
-            return pickerView.frame.size.width/4
+            return pickerView.frame.size.width/3
         default:
             return 0
         }

@@ -11,30 +11,39 @@ import SwipeCellKit
 
 var taskName: String = ""
 class TaskCell: SwipeTableViewCell {
- 
+    
     //MARK: - lifecycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-
+        
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
-  
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-   
+    
     
     //MARK: - Properties
     let taskLabel = makeTaskLabel()
     let nextIcon = UIImage(named: "nextMenuButton")
+    
+    
     private let durationLabel: UILabel = {
         let durationLabel = UILabel()
-//        durationLabel.text = "10:00AM - 12:00PM"
         durationLabel.font = UIFont.systemFont(ofSize: 18)
         durationLabel.textColor = .darkBlue
         
         return durationLabel
+    }()
+    
+    private let reminderLabel: UILabel = {
+        let reminderLabel = UILabel()
+        reminderLabel.font = UIFont.systemFont(ofSize: 12)
+        reminderLabel.textColor = .darkBlue
+        reminderLabel.text = ""
+        return reminderLabel
     }()
     
     private let taskView: UIView = {
@@ -47,7 +56,7 @@ class TaskCell: SwipeTableViewCell {
         taskView.layer.borderColor = UIColor.lightGray.cgColor
         taskView.backgroundColor = .lightBlue
         taskView.layer.cornerRadius = 10
-
+        
         return taskView
     }()
     
@@ -60,6 +69,7 @@ class TaskCell: SwipeTableViewCell {
         taskView.addSubview(taskLabel)
         taskView.addSubview(durationLabel)
         taskView.addSubview(nextImage)
+        taskView.addSubview(reminderLabel)
         
         taskLabel.centerY(in: taskView)
         taskLabel.anchor(left: taskView.leftAnchor, paddingLeft: 30)
@@ -71,6 +81,8 @@ class TaskCell: SwipeTableViewCell {
         nextImage.centerYAnchor.constraint(equalTo: taskLabel.centerYAnchor).isActive = true
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
         taskLabel.text = taskName
+        
+        reminderLabel.anchor(left: taskLabel.leftAnchor, bottom: taskView.bottomAnchor, paddingBottom: 10)
     }
     
     //MARK: - Actions
@@ -80,6 +92,23 @@ class TaskCell: SwipeTableViewCell {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mma"
         durationLabel.text = "\(dateFormatter.string(from: task.startDate))-\(dateFormatter.string(from: task.endDate))"
+        
+        if task.reminder {
+            if task.dateOrTime == 0 {
+                let reminderTime: [Int] = [task.reminderTime[0], task.reminderTime[1]]
+                let hourString = reminderTime[0] == 1 ? "Hour" : "Hours"
+
+                reminderLabel.text = "Reminder: \(reminderTime[0]) \(hourString), \(reminderTime[1]) min before"
+            } else {
+                let dateFormat = DateFormatter()
+                dateFormat.dateFormat = "E MMM d, h:mm a"
+                let date = dateFormat.string(from: task.reminderDate)
+                reminderLabel.text = "Reminder: \(date)"
+            }
+        } else {
+            reminderLabel.text = ""
+        }
+        
     }
     
 }
