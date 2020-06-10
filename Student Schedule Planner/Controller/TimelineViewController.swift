@@ -18,7 +18,7 @@ class TimelineViewController: UIViewController  {
     
     //MARK: - Properties
     let tableView = UITableView()
-    let topView = makeTopView(height: 135)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/5.5)
     let addButton = makeAddButton()
     let calendar = makeCalendar()
     
@@ -30,8 +30,8 @@ class TimelineViewController: UIViewController  {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadData()
         TaskService.shared.loadTasks()
+        tableView.reloadData()
         TaskService.shared.setDateSelected(date: Date())
         TaskService.shared.setTaskIndex(index: nil)
         TaskService.shared.setReminderTime([0, 0]) //First index is hours, second is minutes
@@ -75,6 +75,7 @@ class TimelineViewController: UIViewController  {
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
         tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height)
+        tableView.isScrollEnabled = true
     }
     
     //MARK: - Actions
@@ -88,6 +89,7 @@ class TimelineViewController: UIViewController  {
 //MARK: - Tableview Delegate and Datasource
 extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("YUUUUHHH\(TaskService.shared.getTasks()?.count)")
         return TaskService.shared.getTasks()?.count ?? 0
     }
     

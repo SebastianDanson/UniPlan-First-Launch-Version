@@ -21,20 +21,19 @@ func makeTopView(height: CGFloat) -> UIView {
 
 func makeCalendar() -> FSCalendar{
     
-    let calendar = FSCalendar(frame: CGRect(x: 0, y: 15, width: UIScreen.main.bounds.width, height: 225))
-    
+    let calendar = FSCalendar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height/35, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height/3))
     calendar.scope = .week
     calendar.appearance.headerDateFormat = "MMMM"
     calendar.appearance.weekdayTextColor = UIColor.backgroundColor
     calendar.appearance.headerTitleColor = UIColor.backgroundColor
     calendar.appearance.titleDefaultColor = UIColor.backgroundColor
-    calendar.appearance.headerTitleFont = UIFont.systemFont(ofSize: 24, weight: .bold)
+    calendar.appearance.headerTitleFont = UIFont.systemFont(ofSize: 28, weight: .bold)
     calendar.appearance.titleFont = UIFont.systemFont(ofSize: 16, weight: .bold)
     calendar.appearance.weekdayFont = UIFont.systemFont(ofSize: 16, weight: .bold)
     calendar.appearance.titleTodayColor = .mainBlue
     calendar.appearance.todayColor = .backgroundColor
     calendar.firstWeekday = 2
-    calendar.headerHeight = 70
+    calendar.headerHeight = UIScreen.main.bounds.height/13
     calendar.appearance.headerMinimumDissolvedAlpha = 0
     
     return calendar
@@ -64,7 +63,6 @@ func makeBackButton() -> UIButton {
     
     return addButton
 }
-
 
 //MARK: - addTask functions
 func makeHeading(withText text: String) -> UILabel{
@@ -130,9 +128,9 @@ func makeRemindersButton() -> UIButton {
 }
 
 //MARK: - Task Cell
-func makeTaskLabel() -> UILabel {
+func makeTaskLabel(ofSize size: CGFloat, weight: UIFont.Weight) -> UILabel {
     let taskLabel = UILabel()
-    taskLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
+    taskLabel.font = UIFont.systemFont(ofSize: size, weight: weight)
     taskLabel.textColor = .darkBlue
     
     return taskLabel

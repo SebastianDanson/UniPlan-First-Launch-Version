@@ -20,9 +20,8 @@ class TaskService {
     private var hideReminder = true
     //If the user does cares about time conflicts between tasks
     private var checkForTimeConflict = true
-    
+
     let realm =  try! Realm()
-    
     private init() {
         updateTasks()
     }
@@ -36,7 +35,8 @@ class TaskService {
         }()
         tasks = realm.objects(Task.self).filter("startDate BETWEEN %@", [dateSelected, endOfDay])
     }
-   //MARK: - tasks
+    
+    //MARK: - tasks
     func getTasks() -> Results<Task>?{
         return tasks
     }
@@ -45,10 +45,8 @@ class TaskService {
         return tasks?[index]
     }
     func updateTasks() {
-          tasks = realm.objects(Task.self)
-        //print(tasks)
+        tasks = realm.objects(Task.self)
     }
-    
     
     //MARK: - taskIndex
     func getTaskIndex() -> Int? {
@@ -77,13 +75,13 @@ class TaskService {
     }
     
     //MARK: - reminderDate
-      func getReminderDate() -> Date {
-          return reminderDate
-      }
-      
-      func setReminderDate(date: Date) {
-          reminderDate = date
-      }
+    func getReminderDate() -> Date {
+        return reminderDate
+    }
+    
+    func setReminderDate(date: Date) {
+        reminderDate = date
+    }
     
     //MARK: - dateOrTime
     func getDateOrTime() -> Int {
@@ -95,9 +93,9 @@ class TaskService {
     }
     //MARK: - hideReminder
     func getHideReminder() -> Bool {
-          return hideReminder
-      }
-      
+        return hideReminder
+    }
+    
     func setHideReminder(bool: Bool) {
         hideReminder = bool
     }
@@ -109,5 +107,46 @@ class TaskService {
     
     func setCheckForTimeConflict(bool: Bool) {
         checkForTimeConflict = bool
+    }
+    
+    //MARK: - ReminderString
+    func setupReminderString() -> String {
+        if TaskService.shared.getDateOrTime() == 0 {
+            let reminderTime = TaskService.shared.getReminderTime()
+            return formatReminderString(reminderTime: reminderTime)
+        } else {
+            let date = formatDate(from: TaskService.shared.getReminderDate())
+            return "\(date)"
+        }
+    }
+    
+    func setupReminderString(task: Task) -> String {
+        if task.reminder {
+            if task.dateOrTime == 0 {
+                let reminderTime: [Int] = [task.reminderTime[0], task.reminderTime[1]]
+                return formatReminderString(reminderTime: reminderTime)
+            } else {
+                let date = formatDate(from: task.reminderDate)
+                return "Reminder: \(date)"
+            }
+        } else {
+            return ""
+        }
+    }
+    
+    func formatReminderString(reminderTime: [Int]) -> String{
+        let hourString = reminderTime[0] == 1 ? "Hour" : "Hours"
+        if reminderTime == [0,0] {
+            return "Reminder: When Task Starts"
+        } else {
+            return "Reminder: \(reminderTime[0]) \(hourString), \(reminderTime[1]) min before"
+        }
+    }
+    
+    func formatDate(from date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E MMM d, h:mm a"
+        let date = dateFormatter.string(from: date)
+        return date
     }
 }
