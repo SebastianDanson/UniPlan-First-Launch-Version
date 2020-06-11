@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import RealmSwift
+import SwipeCellKit
 
-class CoursesViewController: UIViewController {
-
+class CoursesViewController: SwipeViewController {
+    
+    let realm = try! Realm()
     //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,10 +21,10 @@ class CoursesViewController: UIViewController {
     
     //MARK: - Properties
     let topView = makeTopView(height: UIScreen.main.bounds.height/8)
-    let titleLabel = makeTitleLabel(withText: "Classes")
+    let titleLabel = makeTitleLabel(withText: "Courses")
     let addButton = makeAddButton()
     let tableView = makeTableView()
-
+    
     //MARK: - UI setup
     func setupViews() {
         view.backgroundColor = .backgroundColor
@@ -38,6 +41,7 @@ class CoursesViewController: UIViewController {
         
         addButton.anchor(right: topView.rightAnchor, paddingRight: 20)
         addButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
@@ -45,28 +49,85 @@ class CoursesViewController: UIViewController {
         tableView.register(CourseCell.self, forCellReuseIdentifier: courseReuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = 90
+        tableView.rowHeight = 100
+    }
+    //What happens when user tries to delete course
+    override func updateModel(index: Int) {
+     
+        let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "", preferredStyle: .alert)
+        let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in
+            do {
+                try self.realm.write {
+                    if let courseToDelete = CourseService.courseShared.getCourse(atIndex: index) {
+                        self.realm.delete(courseToDelete)
+                        CourseService.courseShared.updateCourses()
+                        self.tableView.reloadData()
+                    }
+                }
+            } catch {
+                print("Error writing task to realm")
+            }
+        }
+        
+        let actionCancel = UIAlertAction(title: "Cancel", style: .default) { (alert) in self.tableView.reloadData()}
+
+        alert.addAction(actionCancel)
+        alert.addAction(actionDeleteCourse)
+        present(alert, animated: true)
+
+    }
+    
+    //MARK: - Actions
+    @objc func addButtonPressed() {
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Class Name", message: "Write the name of the class below", preferredStyle: .alert)
+        let actionAddCourse = UIAlertAction(title: "Add Course", style: .default) { (alert) in
+            let newCourse = Course()
+            newCourse.title = textField.text ?? "Untitled"
+            
+            do {
+                try self.realm.write {
+                    self.realm.add(newCourse, update: .modified)
+                    self.tableView.reloadData()
+                }
+            } catch {
+                print("ERROR add course to realm \(error.localizedDescription)")
+            }
+        }
+        
+        let actionCancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        
+        alert.addTextField { (alertTextField) in
+            textField.placeholder = "Add new Category"
+            textField = alertTextField
+        }
+        
+        alert.addAction(actionCancel)
+        alert.addAction(actionAddCourse)
+        present(alert, animated: true)
     }
 }
 
 //MARK: - Tableview Delegate and Datasource
 extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       // return CourseService.courseShared.getCourses()?.count ?? 0
-        return 1
+        return CourseService.courseShared.getCourses()?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: courseReuseIdentifer) as! CourseCell
-        //let cell = tableView.dequeueReusableCell(withIdentifier: courseReuseIdentifer, for: indexPath) as! CourseCell
-//        if let task = TaskService.shared.getTask(atIndex: indexPath.row) {
-//            cell.update(task: task)
-//        }
+        if let course = CourseService.courseShared.getCourse(atIndex: indexPath.row) {
+            cell.update(course: course)
+            cell.delegate = self
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //TaskService.shared.setTaskIndex(index: indexPath.row)
-       // addButtonTapped()
+        // addButtonTapped()
     }
 }
+
+

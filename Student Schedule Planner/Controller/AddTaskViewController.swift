@@ -85,6 +85,9 @@ class AddTaskViewController: PickerViewController {
         titleTextField.anchor(top: titleHeading.bottomAnchor, paddingTop: 2)
         titleTextField.returnKeyType = UIReturnKeyType.done
         titleTextField.delegate = self
+        let spacerView = UIView(frame:CGRect(x:0, y:0, width:10, height:10))
+        titleTextField.leftViewMode = UITextField.ViewMode.always
+        titleTextField.leftView = spacerView
         
         startDateHeading.anchor(top: titleTextField.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/30, paddingLeft: 20)
         startDatePicker.centerX(in: view)
@@ -175,7 +178,6 @@ class AddTaskViewController: PickerViewController {
                     if TaskService.shared.getTaskIndex() != nil {
                         if let taskIndex = TaskService.shared.getTaskIndex() {
                             //Updates previous task
-                            print(taskIndex)
                             var taskToUpdate = TaskService.shared.getTask(atIndex: taskIndex)
                             taskToUpdate?.title = task.title
                             taskToUpdate?.startDate = task.startDate
@@ -305,7 +307,7 @@ class AddTaskViewController: PickerViewController {
     
     //MARK: - Helper methods
     func checkForTimeConflict(startTime: Date, endDateTime: Date, check: Bool) -> Bool{
-        //TODO
+        
         var addOne = 0
         if TaskService.shared.getTaskIndex() == nil {
             addOne = 1
@@ -359,10 +361,4 @@ extension AddTaskViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-//    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-//        if (text == "\n") {
-//            textView.resignFirstResponder()
-//        }
-//        return true
-//    }
 }

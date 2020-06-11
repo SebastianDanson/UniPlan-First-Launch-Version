@@ -29,20 +29,6 @@ class TaskCell: SwipeTableViewCell {
     let reminderLabel = makeTaskLabel(ofSize: 12, weight: .semibold)
     let taskView = makeTaskView()
     
-//    private let taskView: UIView = {
-//        let taskView = UIView()
-//        taskView.layer.shadowColor = UIColor.black.cgColor
-//        taskView.layer.shadowOpacity = 0.1
-//        taskView.layer.shadowRadius = 0.5
-//        taskView.layer.shadowOffset = CGSize(width: 0, height: 2)
-//        taskView.layer.borderWidth = 1
-//        taskView.layer.borderColor = UIColor.lightGray.cgColor
-//        taskView.backgroundColor = .lightBlue
-//        taskView.layer.cornerRadius = 10
-//
-//        return taskView
-//    }()
-    
     //MARK: - setupUI
     func setupViews() {
         let nextImage = UIImageView(image: nextIcon!)

@@ -36,8 +36,8 @@ class CourseCell: SwipeTableViewCell {
     private let circleView: UIView = {
        let view = UIView()
         view.backgroundColor = .mainBlue
-        view.setDimensions(width: 18, height: 18)
-        view.layer.cornerRadius = 9
+        view.setDimensions(width: 16, height: 16)
+        view.layer.cornerRadius = 8
         return view
     }()
     
@@ -63,12 +63,11 @@ class CourseCell: SwipeTableViewCell {
         durationEndLabel.anchor(top: nextClassLabel.bottomAnchor, right: nextImage.rightAnchor, paddingTop: 0, paddingRight: 25)
         nextAsignmentDateLabel.anchor(top: nextAsignmentLabel.bottomAnchor, left: durationStartLabel.leftAnchor)
 
-        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 5, paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
+        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, paddingBottom: 10)
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
                 
         nextAsignmentDateLabel.text = "June 12, 12:00AM"
-        taskLabel.text = "HEY"
         durationStartLabel.text = "05:30PM-"
         durationEndLabel.text = "06:30PM"
         nextClassLabel.text = "Next Class:"
@@ -82,8 +81,8 @@ class CourseCell: SwipeTableViewCell {
     }
     
     //MARK: - Actions
-//    func update(task: Task) {
-//    }
-    
+    func update(course: Course) {
+        taskLabel.text = course.title
+    }
 }
 

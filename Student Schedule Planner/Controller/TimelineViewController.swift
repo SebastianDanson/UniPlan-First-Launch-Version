@@ -15,7 +15,7 @@ let reuseIdentifer = "TaskCell"
 let courseReuseIdentifer = "CourseCell"
 
 
-class TimelineViewController: UIViewController  {
+class TimelineViewController: SwipeViewController  {
     let realm = try! Realm()
     
     //MARK: - Properties
@@ -71,22 +71,21 @@ class TimelineViewController: UIViewController  {
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
-   
-        //setupTableView()
+        
     }
     
-//    func setupTableView() {
-//        view.addSubview(tableView)
-//        tableView.separatorColor = .clear
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//        tableView.rowHeight = 80
-//        tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
-//        tableView.centerX(in: view)
-//        tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
-//        tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height)
-//        tableView.isScrollEnabled = true
-//    }
+    override func updateModel(index: Int) {
+        do {
+            try self.realm.write {
+                if let taskToDelete = TaskService.shared.getTask(atIndex: index) {
+                    self.realm.delete(taskToDelete)
+                    self.tableView.reloadData()
+                }
+            }
+        } catch {
+            print("Error writing task to realm")
+        }
+    }
     
     //MARK: - Actions
     @objc func addButtonTapped() {
@@ -114,29 +113,6 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         TaskService.shared.setTaskIndex(index: indexPath.row)
         addButtonTapped()
-    }
-}
-
-//MARK: - Swipe Cell Delegate Methods
-extension TimelineViewController: SwipeTableViewCellDelegate {
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        guard orientation == .right else { return nil }
-        
-        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            do {
-                try self.realm.write {
-                    if let taskToDelete = TaskService.shared.getTask(atIndex: indexPath.row) {
-                        self.realm.delete(taskToDelete)
-                        tableView.reloadData()
-                    }
-                }
-            } catch {
-                print("Error writing task to realm")
-            }
-        }
-        deleteAction.image = UIImage(named: "Trash")
-        
-        return [deleteAction]
     }
 }
 

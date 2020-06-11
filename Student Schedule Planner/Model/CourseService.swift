@@ -19,7 +19,12 @@ class CourseService: TaskService {
         super.init()
     }
     
+    func updateCourses() {
+        courses = realm.objects(Course.self)
+    }
+    
     func getCourses() -> Results<Course>?{
+        updateCourses()
         return courses
     }
     

@@ -28,6 +28,8 @@
 		3F94E2C924929CF600B0F958 /* CourseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2C824929CF600B0F958 /* CourseService.swift */; };
 		3F94E2CB24929E4200B0F958 /* CoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */; };
 		3F94E2CD2492A68B00B0F958 /* CourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2CC2492A68B00B0F958 /* CourseCell.swift */; };
+		3F94E2D12492CD0100B0F958 /* CourseScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2D02492CD0100B0F958 /* CourseScheduleViewController.swift */; };
+		3F94E2D52492E3B700B0F958 /* SwipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2D42492E3B700B0F958 /* SwipeViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,8 @@
 		3F94E2C824929CF600B0F958 /* CourseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseService.swift; sourceTree = "<group>"; };
 		3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoursesViewController.swift; sourceTree = "<group>"; };
 		3F94E2CC2492A68B00B0F958 /* CourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCell.swift; sourceTree = "<group>"; };
+		3F94E2D02492CD0100B0F958 /* CourseScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseScheduleViewController.swift; sourceTree = "<group>"; };
+		3F94E2D42492E3B700B0F958 /* SwipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeViewController.swift; sourceTree = "<group>"; };
 		8E06086E3544786A6DA9157B /* Pods-Student Schedule Planner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.release.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.release.xcconfig"; sourceTree = "<group>"; };
 		9318D2EFB62EA01CADAC290D /* Pods-Student Schedule Planner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.debug.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.debug.xcconfig"; sourceTree = "<group>"; };
 		9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Student_Schedule_Planner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,6 +138,8 @@
 				3F67BC26248EDE4100BFD6E5 /* SetReminderViewController.swift */,
 				3F67BC28248EE6AA00BFD6E5 /* PickerViewController.swift */,
 				3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */,
+				3F94E2D02492CD0100B0F958 /* CourseScheduleViewController.swift */,
+				3F94E2D42492E3B700B0F958 /* SwipeViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -288,6 +294,8 @@
 				3F94E2C72492963400B0F958 /* Course.swift in Sources */,
 				3F67BC27248EDE4200BFD6E5 /* SetReminderViewController.swift in Sources */,
 				3F94E2C924929CF600B0F958 /* CourseService.swift in Sources */,
+				3F94E2D12492CD0100B0F958 /* CourseScheduleViewController.swift in Sources */,
+				3F94E2D52492E3B700B0F958 /* SwipeViewController.swift in Sources */,
 				3F67BC05248C7B9E00BFD6E5 /* TaskService.swift in Sources */,
 				3F383E7A2486BD0600D2A5D1 /* Factories.swift in Sources */,
 				3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */,
