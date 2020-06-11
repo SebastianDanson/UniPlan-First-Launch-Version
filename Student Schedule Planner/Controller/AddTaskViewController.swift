@@ -202,7 +202,6 @@ class AddTaskViewController: PickerViewController {
                             newDay.tasks.append(task)
                             realm.add(newDay)
                         }
-                        print("YOOOO \(TaskService.shared.getTaskIndex())")
                         realm.add(task, update: .modified)
                     }
                 }

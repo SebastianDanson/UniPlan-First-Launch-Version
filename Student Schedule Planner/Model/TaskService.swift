@@ -22,7 +22,7 @@ class TaskService {
     private var checkForTimeConflict = true
 
     let realm =  try! Realm()
-    private init() {
+    init() {
         updateTasks()
     }
     static let shared = TaskService()

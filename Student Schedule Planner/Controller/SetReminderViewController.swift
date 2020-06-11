@@ -45,7 +45,7 @@ class SetReminderViewController: PickerViewController {
         
         topView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
         
-        titleLabel.anchor(top: topView.topAnchor, paddingTop: 40)
+        titleLabel.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
         titleLabel.centerX(in: topView)
         
         backButton.anchor(left: topView.leftAnchor, paddingLeft: 20)

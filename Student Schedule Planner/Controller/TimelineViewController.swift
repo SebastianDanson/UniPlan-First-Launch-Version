@@ -12,12 +12,14 @@ import SwipeCellKit
 import FSCalendar
 
 let reuseIdentifer = "TaskCell"
+let courseReuseIdentifer = "CourseCell"
+
 
 class TimelineViewController: UIViewController  {
     let realm = try! Realm()
     
     //MARK: - Properties
-    let tableView = UITableView()
+    let tableView = makeTableView()
     let topView = makeTopView(height: UIScreen.main.bounds.height/5.5)
     let addButton = makeAddButton()
     let calendar = makeCalendar()
@@ -47,6 +49,7 @@ class TimelineViewController: UIViewController  {
         view.backgroundColor = .backgroundColor
         
         view.addSubview(topView)
+        view.addSubview(tableView)
         topView.addSubview(calendar)
         topView.addSubview(addButton)
         
@@ -62,21 +65,28 @@ class TimelineViewController: UIViewController  {
         addButton.centerYAnchor.constraint(equalTo: calendar.calendarHeaderView.centerYAnchor).isActive = true
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
-        setupTableView()
-    }
-    
-    func setupTableView() {
-        view.addSubview(tableView)
-        tableView.separatorColor = .clear
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.rowHeight = 80
-        tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
         tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height)
-        tableView.isScrollEnabled = true
+        tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
+        tableView.delegate = self
+        tableView.dataSource = self
+   
+        //setupTableView()
     }
+    
+//    func setupTableView() {
+//        view.addSubview(tableView)
+//        tableView.separatorColor = .clear
+//        tableView.delegate = self
+//        tableView.dataSource = self
+//        tableView.rowHeight = 80
+//        tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
+//        tableView.centerX(in: view)
+//        tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
+//        tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height)
+//        tableView.isScrollEnabled = true
+//    }
     
     //MARK: - Actions
     @objc func addButtonTapped() {
@@ -89,12 +99,11 @@ class TimelineViewController: UIViewController  {
 //MARK: - Tableview Delegate and Datasource
 extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("YUUUUHHH\(TaskService.shared.getTasks()?.count)")
         return TaskService.shared.getTasks()?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! TaskCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! TaskCell
         if let task = TaskService.shared.getTask(atIndex: indexPath.row) {
             cell.update(task: task)
             cell.delegate = self

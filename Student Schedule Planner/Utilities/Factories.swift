@@ -64,6 +64,15 @@ func makeBackButton() -> UIButton {
     return addButton
 }
 
+func makeTableView() -> UITableView {
+    let tableView = UITableView()
+    tableView.separatorColor = .clear
+    tableView.rowHeight = 80
+    tableView.isScrollEnabled = true
+    
+    return tableView
+}
+
 //MARK: - addTask functions
 func makeHeading(withText text: String) -> UILabel{
     let heading = UILabel()
@@ -134,4 +143,18 @@ func makeTaskLabel(ofSize size: CGFloat, weight: UIFont.Weight) -> UILabel {
     taskLabel.textColor = .darkBlue
     
     return taskLabel
+}
+
+func makeTaskView() -> UIView {
+        let taskView = UIView()
+        taskView.layer.shadowColor = UIColor.black.cgColor
+        taskView.layer.shadowOpacity = 0.1
+        taskView.layer.shadowRadius = 0.5
+        taskView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        taskView.layer.borderWidth = 1
+        taskView.layer.borderColor = UIColor.lightGray.cgColor
+        taskView.backgroundColor = .lightBlue
+        taskView.layer.cornerRadius = 10
+        
+        return taskView
 }
