@@ -12,7 +12,8 @@ import RealmSwift
 class CourseService: TaskService {
     
     private var courses: Results<Course>?
-    
+    private var courseIndex: Int?
+
     static let courseShared = CourseService()
     
     private override init() {
@@ -23,6 +24,7 @@ class CourseService: TaskService {
         courses = realm.objects(Course.self)
     }
     
+    //MARK: - courses
     func getCourses() -> Results<Course>?{
         updateCourses()
         return courses
@@ -31,4 +33,13 @@ class CourseService: TaskService {
     func getCourse(atIndex index: Int) -> Course? {
         return courses?[index]
     }
+    
+    //MARK: - courseIndex
+    func getCourseIndex() -> Int? {
+        return courseIndex
+    }
+    func setCourseIndex(index: Int?) {
+        courseIndex = index
+    }
+    
 }

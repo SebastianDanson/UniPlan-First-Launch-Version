@@ -35,7 +35,7 @@ class SwipeViewController: UIViewController, SwipeTableViewCellDelegate {
         options.expansionStyle = .destructive(automaticallyDelete: false)
         return options
     }
-    
+
     func updateModel(index: Int) {}
 }
 

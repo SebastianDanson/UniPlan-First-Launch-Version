@@ -21,8 +21,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         window?.makeKeyAndVisible()
-        window?.rootViewController = CoursesViewController()
+        //window?.rootViewController = CoursesViewController()
+        window?.rootViewController = TabBarController()
         //window?.rootViewController = TimelineViewController()
+        //window?.rootViewController = CourseDetailsViewController()
+        //window?.rootViewController = AddClassViewController()
+        //window?.rootViewController = ClassTypeViewController()
+
 
     }
     

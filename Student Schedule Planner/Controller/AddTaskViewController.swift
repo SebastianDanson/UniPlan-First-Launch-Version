@@ -42,7 +42,7 @@ class AddTaskViewController: PickerViewController {
     let durationHeading = makeHeading(withText: "Duration:")
     let durationPickerView = UIPickerView()
     let reminderHeading = makeHeading(withText: "Reminder:")
-    let reminderButton = makeRemindersButton()
+    let reminderButton = setValueButton(withPlaceholder: "None")
     let reminderSwitch = UISwitch()
     let saveButton = makeSaveButton()
     
@@ -83,11 +83,8 @@ class AddTaskViewController: PickerViewController {
         titleHeading.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
         titleTextField.centerX(in: view)
         titleTextField.anchor(top: titleHeading.bottomAnchor, paddingTop: 2)
-        titleTextField.returnKeyType = UIReturnKeyType.done
         titleTextField.delegate = self
-        let spacerView = UIView(frame:CGRect(x:0, y:0, width:10, height:10))
-        titleTextField.leftViewMode = UITextField.ViewMode.always
-        titleTextField.leftView = spacerView
+
         
         startDateHeading.anchor(top: titleTextField.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/30, paddingLeft: 20)
         startDatePicker.centerX(in: view)

@@ -14,13 +14,5 @@ import RealmSwift
 class Course: Task {
         
     @objc dynamic var course = false
-    @objc dynamic var repeats = 0
-    @objc dynamic var courseStartDate = Date()
-    @objc dynamic var courseEndDate = Date()
-    //@objc dynamic var classes = Date()
-   // @objc dynamic var courseEndDate = Date()
-    
-    var courseDays = List<Int>()
-   // var courseDay = LinkingObjects(fromType: Day.self, property: "courses")
-
+    var classes = List<Class>()
 }

@@ -19,7 +19,7 @@ class TimelineViewController: SwipeViewController  {
     let realm = try! Realm()
     
     //MARK: - Properties
-    let tableView = makeTableView()
+    var tableView = makeTableView()
     let topView = makeTopView(height: UIScreen.main.bounds.height/5.5)
     let addButton = makeAddButton()
     let calendar = makeCalendar()
@@ -28,6 +28,7 @@ class TimelineViewController: SwipeViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        self.tabBarController?.navigationController?.navigationBar.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,6 +68,8 @@ class TimelineViewController: SwipeViewController  {
         
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
+        tableView.rowHeight = 80
+        
         tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height)
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self

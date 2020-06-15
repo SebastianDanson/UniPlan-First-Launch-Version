@@ -22,11 +22,11 @@ class TaskCell: SwipeTableViewCell {
     }
     
     //MARK: - Properties
-    let taskLabel = makeTaskLabel(ofSize: 18, weight: .bold)
+    let taskLabel = makeLabel(ofSize: 18, weight: .bold)
     let nextIcon = UIImage(named: "nextMenuButton")
-    let durationStartLabel = makeTaskLabel(ofSize: 16, weight: .regular)
-    let durationEndLabel = makeTaskLabel(ofSize: 16, weight: .regular)
-    let reminderLabel = makeTaskLabel(ofSize: 12, weight: .semibold)
+    let durationStartLabel = makeLabel(ofSize: 16, weight: .regular)
+    let durationEndLabel = makeLabel(ofSize: 16, weight: .regular)
+    let reminderLabel = makeLabel(ofSize: 12, weight: .semibold)
     let taskView = makeTaskView()
     
     //MARK: - setupUI

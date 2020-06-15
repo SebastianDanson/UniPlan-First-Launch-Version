@@ -125,7 +125,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //TaskService.shared.setTaskIndex(index: indexPath.row)
+        CourseService.courseShared.setCourseIndex(index: indexPath.row)
         // addButtonTapped()
     }
 }
