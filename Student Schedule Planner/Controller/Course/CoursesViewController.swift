@@ -58,9 +58,9 @@ class CoursesViewController: SwipeViewController {
         let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in
             do {
                 try self.realm.write {
-                    if let courseToDelete = CourseService.courseShared.getCourse(atIndex: index) {
+                    if let courseToDelete = AllCoursesService.courseShared.getCourse(atIndex: index) {
                         self.realm.delete(courseToDelete)
-                        CourseService.courseShared.updateCourses()
+                        AllCoursesService.courseShared.updateCourses()
                         self.tableView.reloadData()
                     }
                 }
@@ -112,12 +112,12 @@ class CoursesViewController: SwipeViewController {
 //MARK: - Tableview Delegate and Datasource
 extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return CourseService.courseShared.getCourses()?.count ?? 0
+        return AllCoursesService.courseShared.getCourses()?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: courseReuseIdentifer) as! CourseCell
-        if let course = CourseService.courseShared.getCourse(atIndex: indexPath.row) {
+        if let course = AllCoursesService.courseShared.getCourse(atIndex: indexPath.row) {
             cell.update(course: course)
             cell.delegate = self
         }
@@ -125,7 +125,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        CourseService.courseShared.setCourseIndex(index: indexPath.row)
+        AllCoursesService.courseShared.setCourseIndex(index: indexPath.row)
         // addButtonTapped()
     }
 }

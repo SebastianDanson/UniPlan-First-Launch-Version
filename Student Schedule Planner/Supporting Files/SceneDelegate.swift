@@ -22,13 +22,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
         window?.makeKeyAndVisible()
         //window?.rootViewController = CoursesViewController()
-        window?.rootViewController = TabBarController()
+        //window?.rootViewController = TabBarController()
         //window?.rootViewController = TimelineViewController()
-        //window?.rootViewController = CourseDetailsViewController()
+        window?.rootViewController = CourseDetailsViewController()
         //window?.rootViewController = AddClassViewController()
         //window?.rootViewController = ClassTypeViewController()
-
-
+        //window?.rootViewController = SetClassTimeViewController()
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -1,5 +1,5 @@
 //
-//  ClassService.swift
+//  SingleClassService.swift
 //  Student Schedule Planner
 //
 //  Created by Student on 2020-06-14.
@@ -9,28 +9,28 @@
 import Foundation
 import RealmSwift
 
-class ClassService {
+class SingleClassService {
     
-    private var classDays = Set<String>()
+    private var classDays: Array<Int> = [0, 0, 0, 0, 0, 0, 0]
     private var location = ""
     private var startTime = Date()
     private var endTime = Date()
     private var startDate = Date()
     private var endDate = Date()
-    private var type = ClassType(rawValue: 0)
+    private var type = ClassType.Class
     private var repeats = "Never"
     
-    static let shared = ClassService()
+    static let shared = SingleClassService()
     
     private init(){}
     
     //MARK: - Class Days
-    func getClassDays() -> Set<String> {
+    func getClassDays() -> Array<Int> {
         return classDays
     }
     
-    func setClassDays(days: Set<String>) {
-        classDays = days
+    func setClassDay(day: Int) {
+        classDays[day] = classDays[day] == 0 ? 1:0
     }
     
     //MARK: - Location
@@ -51,8 +51,12 @@ class ClassService {
         repeats = every
     }
     //MARK: - Start Time
-    func getStartTime() -> Date {
-        return startTime
+    func getStartTime() -> Date{
+           return startTime
+    }
+    
+    func getStartTimeAsString() -> String {
+        return formatTime(from: startTime)
     }
     
     func setStartTime(time: Date) {
@@ -60,8 +64,12 @@ class ClassService {
     }
     
     //MARK: - End Time
-    func getEndTime() -> Date {
+    func getEndTime() -> Date{
         return endTime
+    }
+    
+    func getEndTimeAsString() -> String {
+        return formatTime(from: endTime)
     }
     
     func setEndTime(time: Date) {
@@ -69,8 +77,12 @@ class ClassService {
     }
     
     //MARK: - Start Date
-    func getStartDate() -> Date {
-        return startDate
+    func getStartDate() -> Date{
+           return startDate
+    }
+    
+    func getStartDateAsString() -> String {
+        return formatDate(from:  startDate)
     }
     
     func setStartDate(date: Date) {
@@ -78,8 +90,12 @@ class ClassService {
     }
     
     //MARK: - End Date
-    func getEndDate() -> Date {
-        return endDate
+    func getEndDate() -> Date{
+           return endDate
+    }
+    
+    func getEndDateAsString() -> String {
+        return formatDate(from: endDate)
     }
     
     func setEndDate(date: Date) {
@@ -87,12 +103,11 @@ class ClassService {
     }
     
     //MARK: - Type
-    func getType() -> ClassType? {
+    func getType() -> ClassType {
         return type
     }
     
     func setType(classType: ClassType) {
         type = classType
     }
-    
 }

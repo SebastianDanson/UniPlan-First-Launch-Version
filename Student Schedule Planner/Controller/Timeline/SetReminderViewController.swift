@@ -18,7 +18,7 @@ class SetReminderViewController: PickerViewController {
     
     //MARK: - properties
     //topView
-    let topView = makeTopView(height: 90)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/8)
     let titleLabel = makeTitleLabel(withText: "Set Reminder")
     let backButton = makeBackButton()
     
@@ -26,7 +26,7 @@ class SetReminderViewController: PickerViewController {
     let pickerTypeSegmentedControl = UISegmentedControl(items: ["Time Before", "Date"])
     let pickerTypeLabel = makeHeading(withText: "Time Before Task:")
     let timeBeforePickerView = UIPickerView()
-    let datePickerView = makeDatePicker(height: 160)
+    let datePickerView = makeDateAndTimePicker(height: 160)
     let saveButton = makeSaveButton()
     
     //MARK: - setup UI

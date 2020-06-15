@@ -1,5 +1,5 @@
 //
-//  IndividualClassCell.swift
+//  ClassCell.swift
 //  Student Schedule Planner
 //
 //  Created by Student on 2020-06-13.
@@ -9,7 +9,7 @@
 import UIKit
 import SwipeCellKit
 
-class IndividualClassCell: SwipeTableViewCell {
+class SingleClassCell: SwipeTableViewCell {
     
     //MARK: - lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -28,8 +28,8 @@ class IndividualClassCell: SwipeTableViewCell {
     let nextIcon = UIImage(named: "nextMenuButton")
     let locationIcon = UIImage(named: "location")
     let locationLabel = makeLabel(ofSize: 14, weight: .semibold)
-    let durationStartLabel = makeLabel(ofSize: 18, weight: .regular)
-    let durationEndLabel = makeLabel(ofSize: 18, weight: .regular)
+    let startTimeLabel = makeLabel(ofSize: 18, weight: .regular)
+    let endTimeLabel = makeLabel(ofSize: 18, weight: .regular)
     let classFrequencyLabel = makeLabel(ofSize: 16, weight: .semibold)
     let reminderLabel = makeLabel(ofSize: 14, weight: .regular)
     let reminderIcon = UIImage(systemName: "alarm")
@@ -50,7 +50,7 @@ class IndividualClassCell: SwipeTableViewCell {
         let nextImage = UIImageView(image: nextIcon!)
         let locationImage = UIImageView(image: locationIcon!)
         let reminderImage = UIImageView(image: reminderIcon!)
-
+        
         backgroundColor = .backgroundColor
         addSubview(taskView)
         taskView.addSubview(classDayStackView)
@@ -58,8 +58,8 @@ class IndividualClassCell: SwipeTableViewCell {
         taskView.addSubview(classTypeLabel)
         taskView.addSubview(locationImage)
         taskView.addSubview(locationLabel)
-        taskView.addSubview(durationStartLabel)
-        taskView.addSubview(durationEndLabel)
+        taskView.addSubview(startTimeLabel)
+        taskView.addSubview(endTimeLabel)
         taskView.addSubview(classFrequencyLabel)
         taskView.addSubview(reminderLabel)
         taskView.addSubview(reminderImage)
@@ -71,7 +71,7 @@ class IndividualClassCell: SwipeTableViewCell {
         classDayStackView.addArrangedSubview(thursday)
         classDayStackView.addArrangedSubview(friday)
         classDayStackView.addArrangedSubview(saturday)
-
+        
         taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 10,
                         paddingLeft: 10, paddingRight: 10, paddingBottom: 10)
         
@@ -87,16 +87,16 @@ class IndividualClassCell: SwipeTableViewCell {
         locationLabel.anchor(top: classDayStackView.bottomAnchor, left: locationImage.rightAnchor,
                              paddingTop: 7, paddingLeft: 5)
         locationImage.setDimensions(width: 9, height: 13)
-
+        
         locationLabel.text = "Macdonald Building 424"
         
-        durationStartLabel.anchor(top: taskView.topAnchor, right: nextImage.leftAnchor, paddingTop: 16, paddingRight: 25)
-        durationEndLabel.anchor(top: durationStartLabel.bottomAnchor,
-                                left: durationStartLabel.leftAnchor)
-        durationStartLabel.text = "12:00PM-"
-        durationEndLabel.text = "01:00PM"
+        startTimeLabel.anchor(top: taskView.topAnchor, right: nextImage.leftAnchor, paddingTop: 16, paddingRight: 25)
+        endTimeLabel.anchor(top: startTimeLabel.bottomAnchor,
+                                left: startTimeLabel.leftAnchor)
+        startTimeLabel.text = "12:00PM-"
+        endTimeLabel.text = "01:00PM"
         
-        classFrequencyLabel.anchor(top: durationEndLabel.bottomAnchor, left: durationEndLabel.leftAnchor, paddingTop: 5)
+        classFrequencyLabel.anchor(top: endTimeLabel.bottomAnchor, left: endTimeLabel.leftAnchor, paddingTop: 5)
         classFrequencyLabel.text = "Every week"
         
         reminderImage.anchor(left: taskView.leftAnchor, bottom: taskView.bottomAnchor, paddingLeft: 15, paddingBottom: 5)
@@ -107,7 +107,37 @@ class IndividualClassCell: SwipeTableViewCell {
     }
     
     //MARK: - Actions
-    func update(task: Task) {
+    func update(theClass: SingleClass) {
+        classTypeLabel.text = theClass.type
+        
+        //Highlight class Days
+        for (index, day) in theClass.classDays.enumerated() {
+            if day == 1 {
+                switch index {
+                case 0:
+                    sunday.highlight()
+                case 1:
+                    monday.highlight()
+                case 2:
+                    tuesday.highlight()
+                case 3:
+                    wednesday.highlight()
+                case 4:
+                    thursday.highlight()
+                case 5:
+                    friday.highlight()
+                case 6:
+                    saturday.highlight()
+                default:
+                    break
+                }
+            }
+        }
+        locationLabel.text = theClass.location
+        startTimeLabel.text = "\(formatTime(from: theClass.startTime))-"
+        endTimeLabel.text = formatTime(from: theClass.endTime)
+        classFrequencyLabel.text = theClass.repeats
+        
     }
 }
 

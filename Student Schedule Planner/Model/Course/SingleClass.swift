@@ -1,5 +1,5 @@
 //
-//  Class.swift
+//  SingleClass.swift
 //  Student Schedule Planner
 //
 //  Created by Student on 2020-06-14.
@@ -9,10 +9,10 @@
 import UIKit
 import RealmSwift
 
-class Class: Object {
+class SingleClass: Object {
     
-    var classDays = List<String>()
-    @objc dynamic var repeats = 0
+    var classDays = List<Int>()
+    @objc dynamic var repeats = "Never"
     @objc dynamic var classStartDate = Date()
     @objc dynamic var classEndDate = Date()
     @objc dynamic var type = ""
@@ -20,4 +20,7 @@ class Class: Object {
     @objc dynamic var startTime = Date()
     @objc dynamic var endTime = Date()
     
+    required init() {
+        classDays.append(objectsIn: [0,0,0,0,0,0,0])
+    }
 }

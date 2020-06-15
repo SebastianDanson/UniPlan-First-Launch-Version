@@ -117,7 +117,7 @@ class ClassTypeViewController: UIViewController {
         }
         
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            print(ClassType(rawValue: indexPath.row)?.description)
+            SingleClassService.shared.setType(classType: ClassType(rawValue: indexPath.row) ?? .Class)
             dismissVC()
         }
 }

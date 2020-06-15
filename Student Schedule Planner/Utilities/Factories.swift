@@ -74,7 +74,7 @@ func makeTableView() -> UITableView {
 
 
 
-//MARK: - addTask functions
+//MARK: - Add Task View Controller
 func makeHeading(withText text: String) -> UILabel{
     let heading = UILabel()
     heading.text = text
@@ -84,7 +84,7 @@ func makeHeading(withText text: String) -> UILabel{
     return heading
 }
 
-func makeDatePicker(height: CGFloat) -> UIDatePicker{
+func makeDateAndTimePicker(height: CGFloat) -> UIDatePicker{
     let startDatePicker = UIDatePicker()
     startDatePicker.setDimensions(width: UIScreen.main.bounds.width - 40, height: height)
     startDatePicker.backgroundColor = .backgroundColor
@@ -126,19 +126,34 @@ func makeDeleteButton() -> UIButton {
 }
 
 func setValueButton(withPlaceholder text: String) -> UIButton {
-    let reminderButton = UIButton()
-    reminderButton.setTitle(text, for: .normal)
-    reminderButton.setTitleColor(.darkBlue, for: .normal)
-    reminderButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-    reminderButton.titleLabel?.alpha = 0.5
-    reminderButton.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
-    reminderButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: UIScreen.main.bounds.width - 60, bottom: 0, right: 0)
-    reminderButton.setDimensions(width: UIScreen.main.bounds.width - 40, height: 35)
-    reminderButton.backgroundColor = .lightBlue
+    let button = UIButton()
+    button.setTitle(text, for: .normal)
+    button.setTitleColor(.darkBlue, for: .normal)
+    button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+    button.titleLabel?.alpha = 0.5
+    button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+    button.imageEdgeInsets = UIEdgeInsets(top: 0, left: UIScreen.main.bounds.width - 60, bottom: 0, right: 0)
+    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: 35)
+    button.backgroundColor = .lightBlue
     let nextIcon = UIImage(named: "nextMenuButton")
-    reminderButton.setImage(nextIcon, for: .normal)
+    button.setImage(nextIcon, for: .normal)
     
-    return reminderButton
+    return button
+}
+
+func setValueButtonNoWidth(withPlaceholder text: String) -> UIButton {
+    let button = UIButton()
+    button.setTitle(text, for: .normal)
+    button.setTitleColor(.darkBlue, for: .normal)
+    button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+    button.titleLabel?.alpha = 0.5
+    button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+    button.setDimensions(height: 35)
+    button.backgroundColor = .lightBlue
+    let nextIcon = UIImage(named: "nextMenuButton")
+    button.setImage(nextIcon, for: .normal)
+    
+    return button
 }
 
 //MARK: - Task Cell
@@ -151,17 +166,17 @@ func makeLabel(ofSize size: CGFloat, weight: UIFont.Weight) -> UILabel {
 }
 
 func makeTaskView() -> UIView {
-        let taskView = UIView()
-        taskView.layer.shadowColor = UIColor.black.cgColor
-        taskView.layer.shadowOpacity = 0.1
-        taskView.layer.shadowRadius = 0.5
-        taskView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        taskView.layer.borderWidth = 1
-        taskView.layer.borderColor = UIColor.lightGray.cgColor
-        taskView.backgroundColor = .lightBlue
-        taskView.layer.cornerRadius = 10
-        
-        return taskView
+    let taskView = UIView()
+    taskView.layer.shadowColor = UIColor.black.cgColor
+    taskView.layer.shadowOpacity = 0.1
+    taskView.layer.shadowRadius = 0.5
+    taskView.layer.shadowOffset = CGSize(width: 0, height: 2)
+    taskView.layer.borderWidth = 1
+    taskView.layer.borderColor = UIColor.lightGray.cgColor
+    taskView.backgroundColor = .lightBlue
+    taskView.layer.cornerRadius = 10
+    
+    return taskView
 }
 
 //MARK: - Course Details View
@@ -185,7 +200,7 @@ func makeStackView(withOrientation axis: NSLayoutConstraint.Axis, spacing: CGFlo
     stackView.distribution = .fill
     stackView.alignment = .fill
     stackView.spacing = spacing
-
+    
     return stackView
 }
 
@@ -204,7 +219,7 @@ func makeAddButtonWithFill() -> UIButton {
     return makeAddButtonWithFill
 }
 
-//MARK: - Add Class View Controller
+//MARK: - Add Class
 func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
     let button = UIButton()
     button.backgroundColor = .lightBlue
@@ -221,14 +236,15 @@ func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
 
 func makeRepeatsButton(withText text: String) -> UIButton{
     let button = UIButton()
-      button.setDimensions(height: UIScreen.main.bounds.height/15)
-      button.backgroundColor = .lightBlue
-      button.layer.borderWidth = 1
-      button.layer.borderColor = UIColor.lightGray.cgColor
-      button.setTitle(text, for: .normal)
-      button.setTitleColor(.darkBlue, for: .normal)
-      
-      return button
+    button.setDimensions(height: UIScreen.main.bounds.height/15)
+    button.backgroundColor = .lightBlue
+    button.layer.borderWidth = 1
+    button.layer.borderColor = UIColor.lightGray.cgColor
+    button.setTitle(text, for: .normal)
+    button.setTitleColor(.darkBlue, for: .normal)
+    button.layer.cornerRadius = 5
+    
+    return button
 }
 
 func makeSpacerView() -> UIView {
@@ -237,4 +253,35 @@ func makeSpacerView() -> UIView {
     view.setDimensions(height: UIScreen.main.bounds.height/128)
     
     return view
+}
+
+func makeTimePicker() -> UIDatePicker {
+    let timePicker = UIDatePicker()
+    timePicker.datePickerMode = .time
+    timePicker.setDimensions(height: UIScreen.main.bounds.height/6)
+    
+    return timePicker
+}
+
+func makeDatePicker() -> UIDatePicker {
+    let datePicker = UIDatePicker()
+    datePicker.datePickerMode = .date
+    datePicker.setDimensions(height: UIScreen.main.bounds.height/6)
+    
+    return datePicker
+}
+
+//MARK: - DateFormatter
+func formatTime(from time: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "h:mm a"
+    let time = dateFormatter.string(from: time)
+    return time
+}
+
+func formatDate(from date: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MMM d Y"
+    let date = dateFormatter.string(from: date)
+    return date
 }

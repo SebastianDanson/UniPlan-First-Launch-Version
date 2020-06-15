@@ -36,7 +36,7 @@ class AddTaskViewController: PickerViewController {
     
     //Not topView
     let titleHeading = makeHeading(withText: "Title")
-    let startDatePicker = makeDatePicker(height: UIScreen.main.bounds.height/7)
+    let startDatePicker = makeDateAndTimePicker(height: UIScreen.main.bounds.height/7)
     let titleTextField = makeTextField(withPlaceholder: "Title")
     let startDateHeading = makeHeading(withText: "Start Date:")
     let durationHeading = makeHeading(withText: "Duration:")

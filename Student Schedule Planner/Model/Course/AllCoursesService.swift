@@ -1,5 +1,5 @@
 //
-//  CourseService.swift
+//  AllCoursesService.swift
 //  Student Schedule Planner
 //
 //  Created by Student on 2020-06-11.
@@ -9,12 +9,12 @@
 import Foundation
 import RealmSwift
 
-class CourseService: TaskService {
+class AllCoursesService: TaskService {
     
     private var courses: Results<Course>?
     private var courseIndex: Int?
 
-    static let courseShared = CourseService()
+    static let courseShared = AllCoursesService()
     
     private override init() {
         super.init()

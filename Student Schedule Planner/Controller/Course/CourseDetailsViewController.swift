@@ -20,6 +20,15 @@ class CourseDetailsViewController: UIViewController {
         setupViews()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print(CourseService.shared.getClasses()?.count)
+        classTableView.reloadData()
+        assignmentsTableView.reloadData()
+        quizzesTableView.reloadData()
+        examsTableView.reloadData()
+    }
+    
     //MARK: - Properties
     //table views
     let classTableView = UITableView()
@@ -29,7 +38,7 @@ class CourseDetailsViewController: UIViewController {
     
     let topView = makeTopView(height: UIScreen.main.bounds.height/8)
     let titleLabel = makeTitleLabel(withText: "Math")
-
+    
     //Headings
     let classesHeading = makeHeading(withText: "Classes")
     let assignmentsHeading = makeHeading(withText: "Assignments")
@@ -41,7 +50,7 @@ class CourseDetailsViewController: UIViewController {
     let assignmentsAddButton = makeAddButtonWithFill()
     let quizzesAddButton = makeAddButtonWithFill()
     let examsAddButton = makeAddButtonWithFill()
-
+    
     
     
     //MARK: - UISetup
@@ -61,7 +70,7 @@ class CourseDetailsViewController: UIViewController {
         view.addSubview(assignmentsAddButton)
         view.addSubview(quizzesAddButton)
         view.addSubview(examsAddButton)
-
+        
         topView.addSubview(titleLabel)
         
         topView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
@@ -73,14 +82,16 @@ class CourseDetailsViewController: UIViewController {
         classesHeading.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
         classesAddButton.anchor(left: classesHeading.rightAnchor, paddingLeft: 7)
         classesAddButton.centerYAnchor.constraint(equalTo: classesHeading.centerYAnchor).isActive = true
+        classesAddButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
+        
         classTableView.centerX(in: view)
         classTableView.anchor(top: classesHeading.bottomAnchor, paddingTop: 5)
-        classTableView.setDimensions(width: view.frame.width, height: 120)
-        classTableView.register(IndividualClassCell.self, forCellReuseIdentifier: reuseIdentifer)
+        classTableView.setDimensions(width: view.frame.width, height: 120 * 3)
+        classTableView.register(SingleClassCell.self, forCellReuseIdentifier: reuseIdentifer)
         classTableView.delegate = self
         classTableView.dataSource = self
         classTableView.rowHeight = 120
-
+        
         //Assignments Section
         assignmentsHeading.anchor(top: classTableView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
         assignmentsAddButton.anchor(left: assignmentsHeading.rightAnchor, paddingTop: 15,paddingLeft: 7)
@@ -117,19 +128,40 @@ class CourseDetailsViewController: UIViewController {
         examsTableView.dataSource = self
         examsTableView.rowHeight = 50
     }
+    
+    //MARK: - Actions
+    @objc func addButtonPressed(button: UIButton) {
+        if button == classesAddButton {
+            let vc = AddClassViewController()
+            vc.modalPresentationStyle = .fullScreen
+            present(vc, animated: true, completion: nil)
+        }
+    }
 }
 
 //MARK: - Tableview Delegate and Datasource
 extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        switch tableView {
+        case classTableView:
+            return CourseService.shared.getClasses()?.count ?? 0
+        case assignmentsTableView:
+            return CourseService.shared.getAssignments()?.count ?? 0
+        case quizzesTableView:
+            return CourseService.shared.getQuizzes()?.count ?? 0
+        case examsTableView:
+            return CourseService.shared.getExams()?.count ?? 0
+        default:
+            return 0
+            
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = UITableViewCell()
         switch tableView {
         case classTableView:
-            cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! IndividualClassCell
+            cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! SingleClassCell
         case assignmentsTableView:
             cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! AssignmentCell
         case quizzesTableView:
@@ -141,7 +173,7 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        CourseService.courseShared.setCourseIndex(index: indexPath.row)
+        AllCoursesService.courseShared.setCourseIndex(index: indexPath.row)
         // addButtonTapped()
     }
 }

@@ -58,6 +58,20 @@ extension UIView {
     }
 }
 
+//MARK: - Button
+extension UIButton {
+    func highlight() {
+        self.setTitleColor(.mainBlue, for: .normal)
+        self.layer.borderColor = UIColor.mainBlue.cgColor
+        self.layer.borderWidth = 4
+    }
+
+    func unhighlight() {
+        self.setTitleColor(.darkBlue, for: .normal)
+        self.layer.borderColor = UIColor.lightGray.cgColor
+        self.layer.borderWidth = 1
+    }
+}
 //MARK: - Dismiss Keyboard
 extension UIViewController {
     func dismissKey()

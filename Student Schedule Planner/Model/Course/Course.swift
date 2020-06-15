@@ -14,5 +14,8 @@ import RealmSwift
 class Course: Task {
         
     @objc dynamic var course = false
-    var classes = List<Class>()
+    var classes = List<SingleClass>()
+    var assignments = List<Assignment>()
+    var quizzes = List<Quiz>()
+    var exams = List<Exam>()
 }
