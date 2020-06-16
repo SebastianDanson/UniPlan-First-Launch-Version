@@ -10,6 +10,6 @@ import UIKit
 import RealmSwift
 
 class Exam: Object {
-    @objc dynamic var quizStartDate = Date()
-    @objc dynamic var quizEndDate = Date()
+    @objc dynamic var startDate = Date()
+    @objc dynamic var endTime = Date()
 }

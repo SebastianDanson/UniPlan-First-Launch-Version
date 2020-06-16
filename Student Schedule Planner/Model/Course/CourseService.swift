@@ -18,6 +18,7 @@ class CourseService {
     private var assignments: Results<Assignment>?
     private var quizzes: Results<Quiz>?
     private var exams: Results<Exam>?
+    private var quizOrExam = 0 //0 -> quiz, non zero ->Exam
     
     static let shared = CourseService()
     private init() {}
@@ -89,5 +90,14 @@ class CourseService {
     
     func updateExams() {
         exams = realm.objects(Exam.self)
+    }
+    
+    //MARK: - quizOrExam
+    func getQuizOrExam() -> Int {
+        return quizOrExam
+    }
+    
+    func setQuizOrExam(int: Int) {
+        quizOrExam = int
     }
 }

@@ -21,7 +21,6 @@ class Task: Object {
     @objc dynamic var location = ""
     @objc dynamic var isCourse = false
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
-   // var day = LinkingObjects(fromType: Day.self, property: "tasks")
 
     required init() {
         reminderTime.append(objectsIn: [0, 0])

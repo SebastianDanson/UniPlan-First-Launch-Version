@@ -88,8 +88,7 @@ class AddClassViewController: UIViewController {
     let spacerView1 = makeSpacerView()
     let spacerView2 = makeSpacerView()
     let spacerView3 = makeSpacerView()
-    let spacerView4 = makeSpacerView()
-    let spacerView5 = makeSpacerView()
+
     
     
     //MARK: - setup UI
@@ -123,10 +122,10 @@ class AddClassViewController: UIViewController {
         bottomStackView.addArrangedSubview(timeAndReminderButtonsStackView)
         bottomStackView.addArrangedSubview(repeatsHeading)
         bottomStackView.addArrangedSubview(repeatsStackView)
-        bottomStackView.addArrangedSubview(spacerView4)
+        bottomStackView.addArrangedSubview(spacerView2)
         bottomStackView.addArrangedSubview(dateHeading)
         bottomStackView.addArrangedSubview(dateButton)
-        bottomStackView.addArrangedSubview(spacerView5)
+        bottomStackView.addArrangedSubview(spacerView3)
         bottomStackView.addArrangedSubview(locationHeading)
         bottomStackView.addArrangedSubview(locationTextField)
         
@@ -164,13 +163,7 @@ class AddClassViewController: UIViewController {
         topStackView.setDimensions(width: UIScreen.main.bounds.width - 40)
         
         classTimeHeading.anchor(top: topStackView.bottomAnchor, left: topStackView.leftAnchor, paddingTop: 5)
-//        classTimeButton.anchor(top: classTimeHeading.bottomAnchor, left: topStackView.leftAnchor, right: view.centerXAnchor, paddingRight: 5)
-        
-
-        
         reminderHeading.anchor(top: topStackView.bottomAnchor, left: reminderButton.leftAnchor, paddingTop: 5)
-//        reminderButton.anchor(top: classTimeHeading.bottomAnchor, left: classTimeButton.rightAnchor, right: view.rightAnchor, paddingLeft: 5, paddingRight: 20)
-
 
         bottomStackView.anchor(top: reminderHeading.bottomAnchor)
         bottomStackView.centerX(in: view)
@@ -178,7 +171,6 @@ class AddClassViewController: UIViewController {
         saveButton.centerX(in: view)
         saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: 40)
         saveButton.addTarget(self, action: #selector(saveClass), for: .touchUpInside)
-
         
         //Setting button tags
         sunday.tag = 0
@@ -198,13 +190,14 @@ class AddClassViewController: UIViewController {
         friday.addTarget(self, action: #selector(dayButtonTapped), for: .touchUpInside)
         saturday.addTarget(self, action: #selector(dayButtonTapped), for: .touchUpInside)
         
-//        classTypeButton.addTarget(self, action: #selector(typeButtonTapped), for: .touchUpInside)
-//        classTimeButton.addTarget(self, action: #selector(timeButtonTapped), for: .touchUpInside)
+        classTypeButton.addTarget(self, action: #selector(typeButtonTapped), for: .touchUpInside)
+        classTimeButton.addTarget(self, action: #selector(timeButtonTapped), for: .touchUpInside)
         
         everyWeekButton.addTarget(self, action: #selector(repeatsButtonTapped), for: .touchUpInside)
         everyTwoWeeksButton.addTarget(self, action: #selector(repeatsButtonTapped), for: .touchUpInside)
         everyMonthButton.addTarget(self, action: #selector(repeatsButtonTapped), for: .touchUpInside)
         
+        reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
         dateButton.addTarget(self, action: #selector(dateButtonTapped), for: .touchUpInside)
     }
     
@@ -249,6 +242,12 @@ class AddClassViewController: UIViewController {
         SingleClassService.shared.setRepeats(every: "Never")
     }
     
+    @objc func reminderButtonPressed() {
+        let vc = SetTaskReminderViewController()
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+    }
+    
     @objc func saveClass() {
         let theClass = SingleClass()
         theClass.classDays = configureClassDays()
@@ -259,6 +258,7 @@ class AddClassViewController: UIViewController {
         theClass.repeats = SingleClassService.shared.getRepeats()
         theClass.location = locationTextField.text ?? ""
         theClass.type = SingleClassService.shared.getType().description
+        //theClass.reminderTime = SingleClassService.shared.get
         
         do {
             try realm.write {
@@ -278,8 +278,7 @@ class AddClassViewController: UIViewController {
         //        if SingleClassService.shared.getStartDate == SingleClassService.shared.getEndDate {
         //            classTimeButton.setTitle("Set...", for: .normal)
         //        } else {
-//        classTimeButton.setTitle("\(SingleClassService.shared.getStartTimeAsString())-\(SingleClassService.shared.getEndTimeAsString())",
-//            for: .normal)
+        classTimeButton.setTitle("\(SingleClassService.shared.getStartTimeAsString())-\(SingleClassService.shared.getEndTimeAsString())", for: .normal)
         //}
     }
     

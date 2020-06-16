@@ -63,11 +63,13 @@ class AssignmentCell: SwipeTableViewCell {
         
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
-        
     }
     
     //MARK: - Actions
-    func update(task: Task) {
+    func update(assignment: Assignment) {
+        titleLabel.text = assignment.title
+        dateLabel.text = formatDate(from: assignment.dueDate)
+        timeLabel.text = formatTime(from: assignment.dueDate)
     }
 }
 

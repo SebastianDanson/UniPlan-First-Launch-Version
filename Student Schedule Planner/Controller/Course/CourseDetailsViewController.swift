@@ -22,7 +22,6 @@ class CourseDetailsViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print(CourseService.shared.getClasses()?.count)
         classTableView.reloadData()
         assignmentsTableView.reloadData()
         quizzesTableView.reloadData()
@@ -86,7 +85,7 @@ class CourseDetailsViewController: UIViewController {
         
         classTableView.centerX(in: view)
         classTableView.anchor(top: classesHeading.bottomAnchor, paddingTop: 5)
-        classTableView.setDimensions(width: view.frame.width, height: 120 * 3)
+        classTableView.setDimensions(width: view.frame.width, height: 120 )
         classTableView.register(SingleClassCell.self, forCellReuseIdentifier: reuseIdentifer)
         classTableView.delegate = self
         classTableView.dataSource = self
@@ -96,6 +95,7 @@ class CourseDetailsViewController: UIViewController {
         assignmentsHeading.anchor(top: classTableView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
         assignmentsAddButton.anchor(left: assignmentsHeading.rightAnchor, paddingTop: 15,paddingLeft: 7)
         assignmentsAddButton.centerYAnchor.constraint(equalTo: assignmentsHeading.centerYAnchor).isActive = true
+        assignmentsAddButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         assignmentsTableView.centerX(in: view)
         assignmentsTableView.anchor(top: assignmentsHeading.bottomAnchor, paddingTop: 15)
         assignmentsTableView.setDimensions(width: view.frame.width, height: 85)
@@ -108,10 +108,11 @@ class CourseDetailsViewController: UIViewController {
         quizzesHeading.anchor(top: assignmentsTableView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
         quizzesAddButton.anchor(left: quizzesHeading.rightAnchor, paddingLeft: 7)
         quizzesAddButton.centerYAnchor.constraint(equalTo: quizzesHeading.centerYAnchor).isActive = true
+        quizzesAddButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         quizzesTableView.centerX(in: view)
         quizzesTableView.anchor(top: quizzesHeading.bottomAnchor, paddingTop: 5)
         quizzesTableView.setDimensions(width: view.frame.width, height: 50)
-        quizzesTableView.register(QuizCell.self, forCellReuseIdentifier: reuseIdentifer)
+        quizzesTableView.register(QuizAndExamCell.self, forCellReuseIdentifier: reuseIdentifer)
         quizzesTableView.delegate = self
         quizzesTableView.dataSource = self
         quizzesTableView.rowHeight = 50
@@ -120,10 +121,11 @@ class CourseDetailsViewController: UIViewController {
         examsHeading.anchor(top: quizzesTableView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
         examsAddButton.anchor(left: examsHeading.rightAnchor, paddingLeft: 7)
         examsAddButton.centerYAnchor.constraint(equalTo: examsHeading.centerYAnchor).isActive = true
+        examsAddButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         examsTableView.centerX(in: view)
         examsTableView.anchor(top: examsHeading.bottomAnchor, paddingTop: 5)
         examsTableView.setDimensions(width: view.frame.width, height: 50)
-        examsTableView.register(QuizCell.self, forCellReuseIdentifier: reuseIdentifer)
+        examsTableView.register(QuizAndExamCell.self, forCellReuseIdentifier: reuseIdentifer)
         examsTableView.delegate = self
         examsTableView.dataSource = self
         examsTableView.rowHeight = 50
@@ -131,11 +133,23 @@ class CourseDetailsViewController: UIViewController {
     
     //MARK: - Actions
     @objc func addButtonPressed(button: UIButton) {
-        if button == classesAddButton {
-            let vc = AddClassViewController()
-            vc.modalPresentationStyle = .fullScreen
-            present(vc, animated: true, completion: nil)
+        var vc = UIViewController()
+        switch button {
+        case classesAddButton:
+            vc = AddClassViewController()
+        case assignmentsAddButton:
+            vc = AddAssignmentViewController()
+        case quizzesAddButton:
+            vc = AddQuizAndExamViewController()
+            CourseService.shared.setQuizOrExam(int: 0)
+        case examsAddButton:
+           vc = AddQuizAndExamViewController()
+           CourseService.shared.setQuizOrExam(int: 1)
+        default:
+            vc = AddQuizAndExamViewController()
         }
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
 }
 
@@ -153,23 +167,39 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
             return CourseService.shared.getExams()?.count ?? 0
         default:
             return 0
-            
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = UITableViewCell()
         switch tableView {
         case classTableView:
-            cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! SingleClassCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! SingleClassCell
+            if let theClass = CourseService.shared.getClass(atIndex: indexPath.row) {
+                cell.update(theClass: theClass)
+            }
+            return cell
+            
         case assignmentsTableView:
-            cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! AssignmentCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! AssignmentCell
+            if let assignment = CourseService.shared.getAssignment(atIndex: indexPath.row) {
+                cell.update(assignment: assignment)
+            }
+            return cell
+            
         case quizzesTableView:
-            cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! QuizCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! QuizAndExamCell
+            if let quiz = CourseService.shared.getQuiz(atIndex: indexPath.row) {
+                cell.update(quiz: quiz)
+            }
+            return cell
+
         default:
-            cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! QuizCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! QuizAndExamCell
+            if let exam = CourseService.shared.getExam(atIndex: indexPath.row) {
+                cell.update(exam: exam)
+            }
+            return cell
         }
-        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

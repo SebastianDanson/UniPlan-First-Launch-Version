@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RealmSwift
 
 class SingleClassService {
     
@@ -19,6 +18,7 @@ class SingleClassService {
     private var endDate = Date()
     private var type = ClassType.Class
     private var repeats = "Never"
+    private var reminderTime = [0, 0] //First index is hours, second is minutes
     
     static let shared = SingleClassService()
     
@@ -52,7 +52,7 @@ class SingleClassService {
     }
     //MARK: - Start Time
     func getStartTime() -> Date{
-           return startTime
+        return startTime
     }
     
     func getStartTimeAsString() -> String {
@@ -78,7 +78,7 @@ class SingleClassService {
     
     //MARK: - Start Date
     func getStartDate() -> Date{
-           return startDate
+        return startDate
     }
     
     func getStartDateAsString() -> String {
@@ -91,7 +91,7 @@ class SingleClassService {
     
     //MARK: - End Date
     func getEndDate() -> Date{
-           return endDate
+        return endDate
     }
     
     func getEndDateAsString() -> String {
@@ -109,5 +109,42 @@ class SingleClassService {
     
     func setType(classType: ClassType) {
         type = classType
+    }
+    
+    //MARK: - reminderTime
+    func getReminderTime() -> [Int] {
+        return reminderTime
+    }
+    
+    func setReminderTime(_ time: [Int]) {
+        reminderTime = time
+    }
+    
+    //MARK: - ReminderString
+    func setupReminderString() -> String {
+            return formatReminderString(reminderTime: reminderTime)
+    }
+    
+//    func setupReminderString(theClass: SingleClass) -> String {
+//        if theClass.reminder {
+//            if theClass.dateOrTime == 0 {
+//                let reminderTime: [Int] = [task.reminderTime[0], task.reminderTime[1]]
+//                return formatReminderString(reminderTime: reminderTime)
+//            } else {
+//                let date = formatDate(from: task.reminderDate)
+//                return "Reminder: \(date)"
+//            }
+//        } else {
+//            return ""
+//        }
+//    }
+    
+    func formatReminderString(reminderTime: [Int]) -> String{
+        let hourString = reminderTime[0] == 1 ? "Hour" : "Hours"
+        if reminderTime == [0,0] {
+            return "Reminder: When Task Starts"
+        } else {
+            return "Reminder: \(reminderTime[0]) \(hourString), \(reminderTime[1]) min before"
+        }
     }
 }

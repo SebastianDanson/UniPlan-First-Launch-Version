@@ -63,7 +63,7 @@ extension UIButton {
     func highlight() {
         self.setTitleColor(.mainBlue, for: .normal)
         self.layer.borderColor = UIColor.mainBlue.cgColor
-        self.layer.borderWidth = 4
+        self.layer.borderWidth = 2
     }
 
     func unhighlight() {
@@ -74,14 +74,12 @@ extension UIButton {
 }
 //MARK: - Dismiss Keyboard
 extension UIViewController {
-    func dismissKey()
-    {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer( target: self, action: #selector(UIViewController.dismissKeyboard))
+    func dismissKey() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
-    @objc func dismissKeyboard()
-    {
+    @objc func dismissKeyboard() {
         view.endEditing(true)
     }
 }

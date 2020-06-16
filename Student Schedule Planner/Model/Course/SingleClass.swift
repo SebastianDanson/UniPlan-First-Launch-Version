@@ -19,8 +19,10 @@ class SingleClass: Object {
     @objc dynamic var location = ""
     @objc dynamic var startTime = Date()
     @objc dynamic var endTime = Date()
+    var reminderTime = List<Int>() //first index is hours, second index is minutes before task
     
     required init() {
         classDays.append(objectsIn: [0,0,0,0,0,0,0])
+        reminderTime.append(objectsIn: [0, 0])
     }
 }

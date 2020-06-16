@@ -238,7 +238,7 @@ class AddTaskViewController: PickerViewController {
     }
     
     @objc func reminderButtonPressed() {
-        let vc = SetReminderViewController()
+        let vc = SetTaskReminderViewController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
     }

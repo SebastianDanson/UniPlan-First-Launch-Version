@@ -111,11 +111,10 @@ class TaskService {
     
     //MARK: - ReminderString
     func setupReminderString() -> String {
-        if TaskService.shared.getDateOrTime() == 0 {
-            let reminderTime = TaskService.shared.getReminderTime()
+        if dateOrTime == 0 {
             return formatReminderString(reminderTime: reminderTime)
         } else {
-            let date = formatDate(from: TaskService.shared.getReminderDate())
+            let date = formatDate(from: reminderDate)
             return "\(date)"
         }
     }

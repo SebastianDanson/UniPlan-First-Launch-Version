@@ -28,6 +28,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //window?.rootViewController = AddClassViewController()
         //window?.rootViewController = ClassTypeViewController()
         //window?.rootViewController = SetClassTimeViewController()
+        //window?.rootViewController = AddAssignmentViewController()
+
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

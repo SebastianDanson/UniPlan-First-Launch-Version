@@ -1,0 +1,38 @@
+//
+//  AssignmentService.swift
+//  Student Schedule Planner
+//
+//  Created by Student on 2020-06-16.
+//  Copyright © 2020 Sebastian Danson. All rights reserved.
+//
+
+import Foundation
+
+class AssignmentService {
+    
+    private var title = ""
+    private var dueDate = Date()
+    
+    static let shared = AssignmentService()
+    
+    private init(){}
+    
+    //MARK: - Title
+    func getTitle() -> String {
+        return title
+    }
+
+    func setTitle(title: String) {
+        self.title = title
+    }
+    
+    //MARK: - dueDate
+    func getDueDate() -> Date {
+        return dueDate
+    }
+    
+    func setDueDate(date: Date) {
+        dueDate = date
+    }
+}
+

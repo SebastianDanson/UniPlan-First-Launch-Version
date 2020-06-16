@@ -9,7 +9,7 @@
 import UIKit
 import SwipeCellKit
 
-class QuizCell: SwipeTableViewCell {
+class QuizAndExamCell: SwipeTableViewCell {
     
     //MARK: - lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -56,7 +56,17 @@ class QuizCell: SwipeTableViewCell {
     }
     
     //MARK: - Actions
-    func update(task: Task) {
+    func update(quiz: Quiz? = nil, exam: Exam? = nil) {
+        if let quiz = quiz {
+        dateLabel.text = formatDate(from: quiz.startDate)
+        timeLabel.text = "\(formatTime(from: quiz.startDate))-\(formatTime(from: quiz.endTime))"
+        }
+        
+        if let exam = exam {
+            dateLabel.text = formatDate(from: exam.startDate)
+            timeLabel.text = "\(formatTime(from: exam.startDate))-\(formatTime(from: exam.endTime))"
+        }
+        
     }
 }
 

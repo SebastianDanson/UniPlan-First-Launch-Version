@@ -206,15 +206,11 @@ func makeStackView(withOrientation axis: NSLayoutConstraint.Axis, spacing: CGFlo
 
 func makeAddButtonWithFill() -> UIButton {
     let makeAddButtonWithFill = UIButton()
-    
-    makeAddButtonWithFill.tintColor = .green
     makeAddButtonWithFill.setTitle("+", for: .normal)
-    makeAddButtonWithFill.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
+    makeAddButtonWithFill.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
     makeAddButtonWithFill.backgroundColor = .mainBlue
-    makeAddButtonWithFill.setDimensions(width: 24, height: 24)
-    makeAddButtonWithFill.layer.cornerRadius = 12
-    makeAddButtonWithFill.imageView?.contentMode = .scaleAspectFit
-    makeAddButtonWithFill.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    makeAddButtonWithFill.setDimensions(width: 26,height: 26)
+    makeAddButtonWithFill.layer.cornerRadius = 13
     
     return makeAddButtonWithFill
 }
@@ -274,14 +270,14 @@ func makeDatePicker() -> UIDatePicker {
 //MARK: - DateFormatter
 func formatTime(from time: Date) -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "h:mm a"
+    dateFormatter.dateFormat = "h:mma"
     let time = dateFormatter.string(from: time)
     return time
 }
 
 func formatDate(from date: Date) -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "MMM d Y"
+    dateFormatter.dateFormat = "MMM d, Y"
     let date = dateFormatter.string(from: date)
     return date
 }
