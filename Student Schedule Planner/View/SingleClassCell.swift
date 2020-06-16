@@ -140,11 +140,9 @@ class SingleClassCell: SwipeTableViewCell {
         endTimeLabel.text = formatTime(from: theClass.endTime)
        
         let repeats = theClass.repeats
-        classFrequencyLabel.text = repeats == "Never" ? repeats : "Every \(repeats)"
+        classFrequencyLabel.text = repeats == "Never Repeats" ? repeats : "Every \(repeats)"
         
-        let hours = theClass.reminderTime[0]
-        let minutes = theClass.reminderTime[1]
-        reminderLabel.text = "\(hours) Hours, \(minutes) Min before"
+        reminderLabel.text = SingleClassService.shared.setupReminderString(theClass: theClass)
     }
 }
 

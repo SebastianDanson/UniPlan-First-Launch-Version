@@ -23,8 +23,9 @@ class AddClassViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         classTypeButton.setTitle(SingleClassService.shared.getType().description, for: .normal)
-        setInitialClassTime()
-        setInitialClassDates()
+        reminderButton.setTitle(SingleClassService.shared.setupReminderString(), for: .normal)
+        setClassTime()
+        setClassDates()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -243,7 +244,7 @@ class AddClassViewController: UIViewController {
     }
     
     @objc func reminderButtonPressed() {
-        let vc = SetTaskReminderViewController()
+        let vc = SetClassReminderViewController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
     }
@@ -256,10 +257,12 @@ class AddClassViewController: UIViewController {
         theClass.startTime = SingleClassService.shared.getStartTime()
         theClass.endTime = SingleClassService.shared.getEndTime()
         theClass.repeats = SingleClassService.shared.getRepeats()
-        theClass.location = locationTextField.text ?? ""
+        theClass.location = locationTextField.text ?? "Not Set"
         theClass.type = SingleClassService.shared.getType().description
-        //theClass.reminderTime = SingleClassService.shared.get
-        
+        theClass.reminderTime[0] = SingleClassService.shared.getReminderTime()[0]
+        theClass.reminderTime[1] = SingleClassService.shared.getReminderTime()[1]
+        theClass.reminder = SingleClassService.shared.getReminder()
+
         do {
             try realm.write {
                 realm.add(theClass)
@@ -274,7 +277,7 @@ class AddClassViewController: UIViewController {
         dismiss(animated: true)
     }
     //MARK: - Helper methods
-    func setInitialClassTime() {
+    func setClassTime() {
         //        if SingleClassService.shared.getStartDate == SingleClassService.shared.getEndDate {
         //            classTimeButton.setTitle("Set...", for: .normal)
         //        } else {
@@ -282,7 +285,7 @@ class AddClassViewController: UIViewController {
         //}
     }
     
-    func setInitialClassDates() {
+    func setClassDates() {
         //        if SingleClassService.shared.getStartDate == SingleClassService.shared.getEndDate {
         //            classTimeButton.setTitle("Set...", for: .normal)
         //        } else {

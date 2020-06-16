@@ -19,6 +19,7 @@ class SingleClassService {
     private var type = ClassType.Class
     private var repeats = "Never"
     private var reminderTime = [0, 0] //First index is hours, second is minutes
+    private var reminder = false
     
     static let shared = SingleClassService()
     
@@ -120,31 +121,39 @@ class SingleClassService {
         reminderTime = time
     }
     
-    //MARK: - ReminderString
-    func setupReminderString() -> String {
-            return formatReminderString(reminderTime: reminderTime)
+    //MARK: - Reminder
+    func getReminder() -> Bool {
+        return reminder
     }
     
-//    func setupReminderString(theClass: SingleClass) -> String {
-//        if theClass.reminder {
-//            if theClass.dateOrTime == 0 {
-//                let reminderTime: [Int] = [task.reminderTime[0], task.reminderTime[1]]
-//                return formatReminderString(reminderTime: reminderTime)
-//            } else {
-//                let date = formatDate(from: task.reminderDate)
-//                return "Reminder: \(date)"
-//            }
-//        } else {
-//            return ""
-//        }
-//    }
+    func setReminder(_ bool: Bool) {
+        reminder = bool
+    }
+    
+    //MARK: - ReminderString
+    func setupReminderString() -> String {
+        if reminder {
+            return formatReminderString(reminderTime: reminderTime)
+        } else {
+            return "None"
+        }
+    }
+    
+    func setupReminderString(theClass: SingleClass) -> String {
+        if theClass.reminder {
+            let reminderTime: [Int] = [theClass.reminderTime[0], theClass.reminderTime[1]]
+            let reminderString = TaskService.shared.formatReminderString(reminderTime: reminderTime).replacingOccurrences(of: "Reminder: ", with: "")
+             return reminderString
+        } else {
+            return "None"
+        }
+    }
     
     func formatReminderString(reminderTime: [Int]) -> String{
-        let hourString = reminderTime[0] == 1 ? "Hour" : "Hours"
         if reminderTime == [0,0] {
-            return "Reminder: When Task Starts"
+            return "When Class Starts"
         } else {
-            return "Reminder: \(reminderTime[0]) \(hourString), \(reminderTime[1]) min before"
+            return "\(reminderTime[0])h, \(reminderTime[1])m before"
         }
     }
 }

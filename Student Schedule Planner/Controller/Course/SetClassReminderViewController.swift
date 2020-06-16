@@ -19,11 +19,13 @@ class SetClassReminderViewController: PickerViewController {
     //MARK: - properties
     //topView
     let topView = makeTopView(height: UIScreen.main.bounds.height/8)
-    let titleLabel = makeTitleLabel(withText: "Set Reminder Before Each Class")
+    let titleLabel = makeTitleLabel(withText: "Set Reminder")
     let backButton = makeBackButton()
-    
+      
     //Not topView
-    let timeBeforeLabel = makeHeading(withText: "Time Before Each Class:")
+    let timeBeforeHeading = makeHeading(withText: "Time Before Each Class:")
+    let remindMeHeading = makeHeading(withText: "Remind Me:")
+    let reminderSwitch = UISwitch()
     let timeBeforePickerView = UIPickerView()
     let saveButton = makeSaveButton()
     
@@ -32,8 +34,10 @@ class SetClassReminderViewController: PickerViewController {
         view.backgroundColor = .backgroundColor
         view.addSubview(topView)
         view.addSubview(timeBeforePickerView)
-        view.addSubview(timeBeforeLabel)
+        view.addSubview(timeBeforeHeading)
         view.addSubview(saveButton)
+        view.addSubview(remindMeHeading)
+        view.addSubview(reminderSwitch)
         
         //topView
         topView.addSubview(titleLabel)
@@ -49,14 +53,18 @@ class SetClassReminderViewController: PickerViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
         //Not topView
-        timeBeforeLabel.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        remindMeHeading.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        reminderSwitch.anchor(left: remindMeHeading.rightAnchor, bottom: remindMeHeading.bottomAnchor, paddingLeft: 10)
+        reminderSwitch.isOn = true
+        reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
+        
+        timeBeforeHeading.anchor(top: remindMeHeading.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
         setupTimeBeforePickerView()
         
         saveButton.centerX(in: view)
         saveButton.anchor(top: timeBeforePickerView.bottomAnchor, paddingTop: UIScreen.main.bounds.height/11)
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
-        
-        
+                
         setupInitialSelectedRows()
     }
     
@@ -64,7 +72,7 @@ class SetClassReminderViewController: PickerViewController {
         timeBeforePickerView.delegate = self
         timeBeforePickerView.dataSource = self
         timeBeforePickerView.setDimensions(width: UIScreen.main.bounds.width - 140, height: 140)
-        timeBeforePickerView.anchor(top: timeBeforeLabel.bottomAnchor)
+        timeBeforePickerView.anchor(top: timeBeforeHeading.bottomAnchor)
         timeBeforePickerView.centerX(in: view)
         timeBeforePickerView.backgroundColor = .backgroundColor
     }
@@ -85,6 +93,18 @@ class SetClassReminderViewController: PickerViewController {
          let time = [self.hour, self.minutes]
         
         SingleClassService.shared.setReminderTime(time)
-         dismiss(animated: true)
+        SingleClassService.shared.setReminder(reminderSwitch.isOn)
+        
+        dismiss(animated: true)
      }
+    
+    @objc func reminderSwitchToggled() {
+        if reminderSwitch.isOn {
+            timeBeforePickerView.isHidden = false
+            timeBeforeHeading.isHidden = false
+        } else {
+            timeBeforePickerView.isHidden = true
+            timeBeforeHeading.isHidden = true
+        }
+    }
 }
