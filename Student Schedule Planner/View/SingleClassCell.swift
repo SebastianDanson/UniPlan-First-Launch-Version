@@ -109,10 +109,19 @@ class SingleClassCell: SwipeTableViewCell {
 
     //MARK: - Actions
     func update(theClass: SingleClass) {
-        classTypeLabel.text = theClass.type
+        classTypeLabel.text = theClass.type.description
+        print(theClass.id)
+        
+        monday.unhighlight()
+        tuesday.unhighlight()
+        wednesday.unhighlight()
+        thursday.unhighlight()
+        friday.unhighlight()
+        saturday.unhighlight()
+        sunday.unhighlight()
 
-        //Highlight class Days
         for (index, day) in theClass.classDays.enumerated() {
+    
             if day == 1 {
                 switch index {
                 case 0:

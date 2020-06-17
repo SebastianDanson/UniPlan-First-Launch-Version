@@ -20,6 +20,7 @@ class SingleClassService {
     private var repeats = "Never"
     private var reminderTime = [0, 0] //First index is hours, second is minutes
     private var reminder = false
+    private var classIndex: Int?
     
     static let shared = SingleClassService()
     
@@ -112,6 +113,25 @@ class SingleClassService {
         type = classType
     }
     
+    func setTypeAsString(classTypeString: String) {
+        switch classTypeString {
+        case "Class":
+            type = .Class
+        case "Lecture":
+            type = .Lecture
+        case "Lab":
+            type = .Lab
+        case "Tutorial":
+            type = .Tutorial
+        case "Seminar":
+            type = .Seminar
+        case "Study Session":
+            type = .StudySession
+        default:
+            break
+        }
+    }
+    
     //MARK: - reminderTime
     func getReminderTime() -> [Int] {
         return reminderTime
@@ -155,5 +175,13 @@ class SingleClassService {
         } else {
             return "\(reminderTime[0])h, \(reminderTime[1])m before"
         }
+    }
+    
+    //MARK: - classIndex
+    func getClassIndex() -> Int? {
+        return classIndex
+    }
+    func setClassIndex(index: Int?) {
+        classIndex = index
     }
 }

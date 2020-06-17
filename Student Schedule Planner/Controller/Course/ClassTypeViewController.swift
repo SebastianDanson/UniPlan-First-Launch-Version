@@ -10,6 +10,7 @@ import UIKit
 import RealmSwift
 
 enum ClassType: Int, CustomStringConvertible, CaseIterable{
+   
     case Class
     case Lecture
     case Lab
@@ -34,6 +35,7 @@ enum ClassType: Int, CustomStringConvertible, CaseIterable{
         }
     }
 }
+
 class ClassTypeViewController: UIViewController {
     
     let realm = try! Realm()

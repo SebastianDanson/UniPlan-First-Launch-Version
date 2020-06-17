@@ -20,12 +20,21 @@ class CourseDetailsViewController: UIViewController {
         setupViews()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         classTableView.reloadData()
         assignmentsTableView.reloadData()
         quizzesTableView.reloadData()
         examsTableView.reloadData()
+        SingleClassService.shared.setClassIndex(index: nil)
+        AssignmentService.shared.setAssignmentIndex(index: nil)
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+//        classTableView.reloadData()
+//        assignmentsTableView.reloadData()
+//        quizzesTableView.reloadData()
+//        examsTableView.reloadData()
     }
     
     //MARK: - Properties
@@ -203,7 +212,20 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        AllCoursesService.courseShared.setCourseIndex(index: indexPath.row)
-        // addButtonTapped()
+
+        switch tableView {
+        case classTableView:
+            SingleClassService.shared.setClassIndex(index: indexPath.row)
+            addButtonPressed(button: classesAddButton)
+        case assignmentsTableView:
+            AssignmentService.shared.setAssignmentIndex(index: indexPath.row)
+            addButtonPressed(button: assignmentsAddButton)
+        case quizzesTableView:
+            break
+        case examsTableView:
+            break
+        default:
+            break
+        }
     }
 }

@@ -74,7 +74,6 @@ class TimelineViewController: SwipeViewController  {
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
-        
     }
     
     override func updateModel(index: Int) {

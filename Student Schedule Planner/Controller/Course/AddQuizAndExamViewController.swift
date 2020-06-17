@@ -82,12 +82,12 @@ class AddQuizAndExamViewController: UIViewController {
                     var quiz = Quiz()
                     quiz.startDate = datePicker.date
                     quiz.endTime = endTimePicker.date
-                    realm.add(quiz)
+                    realm.add(quiz, update: .modified)
                 } else {
                     var exam = Exam()
                     exam.startDate = datePicker.date
                     exam.endTime = endTimePicker.date
-                    realm.add(exam)
+                    realm.add(exam, update: .modified)
                 }
             }
         } catch {

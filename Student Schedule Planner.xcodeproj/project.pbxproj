@@ -48,6 +48,8 @@
 		3FAEC83E24992767000ADD9D /* AssignmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC83D24992767000ADD9D /* AssignmentService.swift */; };
 		3FAEC84024992C2A000ADD9D /* AddQuizAndExamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC83F24992C2A000ADD9D /* AddQuizAndExamViewController.swift */; };
 		3FAEC84224993A56000ADD9D /* SetClassReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC84124993A56000ADD9D /* SetClassReminderViewController.swift */; };
+		3FAEC846249A8AA8000ADD9D /* QuizService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC845249A8AA8000ADD9D /* QuizService.swift */; };
+		3FAEC848249A8AB3000ADD9D /* ExamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC847249A8AB3000ADD9D /* ExamService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +94,8 @@
 		3FAEC83D24992767000ADD9D /* AssignmentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentService.swift; sourceTree = "<group>"; };
 		3FAEC83F24992C2A000ADD9D /* AddQuizAndExamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddQuizAndExamViewController.swift; sourceTree = "<group>"; };
 		3FAEC84124993A56000ADD9D /* SetClassReminderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetClassReminderViewController.swift; sourceTree = "<group>"; };
+		3FAEC845249A8AA8000ADD9D /* QuizService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizService.swift; sourceTree = "<group>"; };
+		3FAEC847249A8AB3000ADD9D /* ExamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamService.swift; sourceTree = "<group>"; };
 		8E06086E3544786A6DA9157B /* Pods-Student Schedule Planner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.release.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.release.xcconfig"; sourceTree = "<group>"; };
 		9318D2EFB62EA01CADAC290D /* Pods-Student Schedule Planner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.debug.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.debug.xcconfig"; sourceTree = "<group>"; };
 		9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Student_Schedule_Planner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -204,9 +208,11 @@
 				3F94E2C824929CF600B0F958 /* AllCoursesService.swift */,
 				3FAEC8252496F816000ADD9D /* SingleClass.swift */,
 				3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */,
-				3FAEC8272496FA94000ADD9D /* Assignment.swift */,
 				3FAEC8292496FAB0000ADD9D /* Quiz.swift */,
+				3FAEC845249A8AA8000ADD9D /* QuizService.swift */,
 				3FAEC82B2496FABE000ADD9D /* Exam.swift */,
+				3FAEC847249A8AB3000ADD9D /* ExamService.swift */,
+				3FAEC8272496FA94000ADD9D /* Assignment.swift */,
 				3FAEC83D24992767000ADD9D /* AssignmentService.swift */,
 			);
 			path = Course;
@@ -412,6 +418,7 @@
 				3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */,
 				3F383E732486B2EE00D2A5D1 /* TimelineViewController.swift in Sources */,
 				3F94E2D72492FDD100B0F958 /* TabBarController.swift in Sources */,
+				3FAEC846249A8AA8000ADD9D /* QuizService.swift in Sources */,
 				3FAEC83A2497FD1A000ADD9D /* CourseService.swift in Sources */,
 				3FAEC8382497EA08000ADD9D /* SetClassDatesViewController.swift in Sources */,
 				3FAEC8282496FA94000ADD9D /* Assignment.swift in Sources */,
@@ -420,6 +427,7 @@
 				3F67BC29248EE6AA00BFD6E5 /* PickerViewController.swift in Sources */,
 				3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */,
 				3F67BBFE24893C4800BFD6E5 /* Day.swift in Sources */,
+				3FAEC848249A8AB3000ADD9D /* ExamService.swift in Sources */,
 				3F383E5C2486B25E00D2A5D1 /* AppDelegate.swift in Sources */,
 				3FAEC83E24992767000ADD9D /* AssignmentService.swift in Sources */,
 				3F94E2CD2492A68B00B0F958 /* CourseCell.swift in Sources */,

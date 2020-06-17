@@ -89,7 +89,10 @@ class AddClassViewController: UIViewController {
     let spacerView1 = makeSpacerView()
     let spacerView2 = makeSpacerView()
     let spacerView3 = makeSpacerView()
-
+    let spacerView4 = makeSpacerView()
+    let spacerView5 = makeSpacerView()
+    
+    
     
     
     //MARK: - setup UI
@@ -114,21 +117,23 @@ class AddClassViewController: UIViewController {
         topStackView.addArrangedSubview(spacerView1)
         topStackView.addArrangedSubview(classDaysHeading)
         topStackView.addArrangedSubview(classDayStackView)
+        topStackView.addArrangedSubview(spacerView2)
+        topStackView.addArrangedSubview(locationHeading)
+        topStackView.addArrangedSubview(locationTextField)
+        bottomStackView.addArrangedSubview(spacerView3)
         
         timeAndReminderButtonsStackView.addArrangedSubview(classTimeButton)
         timeAndReminderButtonsStackView.addArrangedSubview(reminderButton)
         timeAndReminderButtonsStackView.distribution = .fillEqually
-
-
+        
+        
+        bottomStackView.addArrangedSubview(spacerView4)
         bottomStackView.addArrangedSubview(timeAndReminderButtonsStackView)
         bottomStackView.addArrangedSubview(repeatsHeading)
         bottomStackView.addArrangedSubview(repeatsStackView)
-        bottomStackView.addArrangedSubview(spacerView2)
+        bottomStackView.addArrangedSubview(spacerView5)
         bottomStackView.addArrangedSubview(dateHeading)
         bottomStackView.addArrangedSubview(dateButton)
-        bottomStackView.addArrangedSubview(spacerView3)
-        bottomStackView.addArrangedSubview(locationHeading)
-        bottomStackView.addArrangedSubview(locationTextField)
         
         classDayStackView.addArrangedSubview(sunday)
         classDayStackView.addArrangedSubview(monday)
@@ -165,7 +170,7 @@ class AddClassViewController: UIViewController {
         
         classTimeHeading.anchor(top: topStackView.bottomAnchor, left: topStackView.leftAnchor, paddingTop: 5)
         reminderHeading.anchor(top: topStackView.bottomAnchor, left: reminderButton.leftAnchor, paddingTop: 5)
-
+        
         bottomStackView.anchor(top: reminderHeading.bottomAnchor)
         bottomStackView.centerX(in: view)
         
@@ -200,6 +205,56 @@ class AddClassViewController: UIViewController {
         
         reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
         dateButton.addTarget(self, action: #selector(dateButtonTapped), for: .touchUpInside)
+        
+        if let classIndex = SingleClassService.shared.getClassIndex() {
+            if let theClass = CourseService.shared.getClass(atIndex: classIndex) {
+                SingleClassService.shared.setTypeAsString(classTypeString: theClass.type)
+                SingleClassService.shared.setReminderTime([theClass.reminderTime[0],theClass.reminderTime[1]])
+                
+                for (index, day) in theClass.classDays.enumerated() {
+                    if day == 1 {
+                        switch index {
+                        case 0:
+                            sunday.highlight()
+                        case 1:
+                            monday.highlight()
+                        case 2:
+                            tuesday.highlight()
+                        case 3:
+                            wednesday.highlight()
+                        case 4:
+                            thursday.highlight()
+                        case 5:
+                            friday.highlight()
+                        case 6:
+                            saturday.highlight()
+                        default:
+                            break
+                        }
+                    }
+                }
+                
+                locationTextField.text = theClass.location
+                classTimeButton.setTitle("\(formatTime(from: theClass.startTime))-\(formatTime(from: theClass.endTime))", for: .normal)
+                
+                if theClass.reminder {
+                    reminderButton.setTitle(SingleClassService.shared.setupReminderString(theClass: theClass), for: .normal)
+                }
+                
+                switch theClass.repeats {
+                case "Week":
+                    everyWeekButton.highlight()
+                case "2 Weeks":
+                    everyTwoWeeksButton.highlight()
+                case "Month":
+                    everyMonthButton.highlight()
+                default:
+                    break
+                }
+                
+                dateButton.setTitle("\(formatDate(from: theClass.classStartDate))-\(formatDate(from: theClass.classEndDate))", for: .normal)
+            }
+        }
     }
     
     //MARK: - Actions
@@ -262,10 +317,29 @@ class AddClassViewController: UIViewController {
         theClass.reminderTime[0] = SingleClassService.shared.getReminderTime()[0]
         theClass.reminderTime[1] = SingleClassService.shared.getReminderTime()[1]
         theClass.reminder = SingleClassService.shared.getReminder()
-
+        
         do {
             try realm.write {
-                realm.add(theClass)
+                if let classIndex = SingleClassService.shared.getClassIndex() {
+                    var classToUpdate = CourseService.shared.getClass(atIndex: classIndex)
+                    
+                    for index in 0..<theClass.classDays.count{
+                        classToUpdate?.classDays[index] = theClass.classDays[index]
+                    }
+                    
+                    classToUpdate?.classStartDate = theClass.classStartDate
+                    classToUpdate?.classEndDate = theClass.classEndDate
+                    classToUpdate?.startTime = theClass.startTime
+                    classToUpdate?.endTime = theClass.endTime
+                    classToUpdate?.repeats = theClass.repeats
+                    classToUpdate?.location = theClass.location
+                    classToUpdate?.type = theClass.type
+                    classToUpdate?.reminderTime[0] = theClass.reminderTime[0]
+                    classToUpdate?.reminderTime[1] = theClass.reminderTime[1]
+                    classToUpdate?.reminder = theClass.reminder
+                } else {
+                    realm.add(theClass, update: .modified)
+                }
             }
         }catch {
             print("Error writing Class to realm \(error.localizedDescription)")

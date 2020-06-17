@@ -10,6 +10,12 @@ import UIKit
 import RealmSwift
 
 class Exam: Object {
+    
     @objc dynamic var startDate = Date()
     @objc dynamic var endTime = Date()
+    @objc dynamic var id = UUID().uuidString
+       
+       override class func primaryKey() -> String? {
+              return "id"
+       }
 }

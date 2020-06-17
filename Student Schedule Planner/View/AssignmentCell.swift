@@ -50,16 +50,12 @@ class AssignmentCell: SwipeTableViewCell {
         
         titleLabel.centerY(in: taskView)
         titleLabel.anchor(left: taskView.leftAnchor, paddingLeft: 20)
-        titleLabel.text = "Write Shakespeare Essay"
         
         dueLabel.anchor(top: taskView.topAnchor, left: dateLabel.leftAnchor, paddingTop: 5)
         dueLabel.text = "Due:"
-        
         dateLabel.anchor(top: dueLabel.bottomAnchor, right: nextImage.rightAnchor, paddingRight: 20)
-        dateLabel.text = "March 6th"
 
         timeLabel.anchor(top: dateLabel.bottomAnchor, left: dateLabel.leftAnchor)
-        timeLabel.text = "12:00PM"
         
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)

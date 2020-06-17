@@ -62,6 +62,12 @@ class AddAssignmentViewController: UIViewController {
         saveButton.centerX(in: view)
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         
+        if let assignmentIndex = AssignmentService.shared.getAssignmentIndex(){
+            if let assignment = CourseService.shared.getAssignment(atIndex: assignmentIndex) {
+                titleTextField.text = assignment.title
+                datePicker.date = assignment.dueDate
+            }
+        }
     }
     
     @objc func backButtonPressed() {
@@ -69,15 +75,21 @@ class AddAssignmentViewController: UIViewController {
     }
     
     @objc func saveButtonPressed() {
-//        AssignmentService.shared.setTitle(title: titleTextField.text ?? "Untitled")
-//        AssignmentService.shared.setDueDate(date: datePicker.date)
+        //        AssignmentService.shared.setTitle(title: titleTextField.text ?? "Untitled")
+        //        AssignmentService.shared.setDueDate(date: datePicker.date)
         
         var assignment = Assignment()
         assignment.title = titleTextField.text ?? "Untitled"
         assignment.dueDate = datePicker.date
         do {
             try realm.write {
-                realm.add(assignment)
+                if let assignmentIndex = AssignmentService.shared.getAssignmentIndex() {
+                    var assignmentToUpdate = CourseService.shared.getAssignment(atIndex: assignmentIndex)
+                    assignmentToUpdate?.title = assignment.title
+                    assignmentToUpdate?.dueDate = assignment.dueDate
+                } else {
+                    realm.add(assignment, update: .modified)
+                }
             }
         } catch {
             print("Error writing Class to realm \(error.localizedDescription)")

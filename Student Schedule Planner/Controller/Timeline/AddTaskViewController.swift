@@ -172,7 +172,7 @@ class AddTaskViewController: PickerViewController {
         if !checkForTimeConflict(startTime: task.startDate, endDateTime: task.endDate, check: TaskService.shared.getCheckForTimeConflict()) {
             do {
                 try realm.write {
-                    if TaskService.shared.getTaskIndex() != nil {
+                   // if TaskService.shared.getTaskIndex() != nil {
                         if let taskIndex = TaskService.shared.getTaskIndex() {
                             //Updates previous task
                             var taskToUpdate = TaskService.shared.getTask(atIndex: taskIndex)
@@ -184,8 +184,8 @@ class AddTaskViewController: PickerViewController {
                             taskToUpdate?.reminder = task.reminder
                             taskToUpdate?.reminderTime[0] = task.reminderTime[0]
                             taskToUpdate?.reminderTime[1] = task.reminderTime[1]
-                        }
-                    } else{
+                     //   }
+                    } else {
                         let dateOfTask = Calendar.current.startOfDay(for: startDatePicker.date)
                         let endOfDay: Date = {
                             let components = DateComponents(day: 1, second: -1)

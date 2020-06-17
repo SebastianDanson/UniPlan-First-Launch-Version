@@ -12,6 +12,7 @@ class AssignmentService {
     
     private var title = ""
     private var dueDate = Date()
+    private var assignmentIndex: Int?
     
     static let shared = AssignmentService()
     
@@ -21,7 +22,7 @@ class AssignmentService {
     func getTitle() -> String {
         return title
     }
-
+    
     func setTitle(title: String) {
         self.title = title
     }
@@ -33,6 +34,14 @@ class AssignmentService {
     
     func setDueDate(date: Date) {
         dueDate = date
+    }
+    
+    //MARK: - assignmentIndex
+    func getAssignmentIndex() -> Int? {
+        return assignmentIndex
+    }
+    func setAssignmentIndex(index: Int?) {
+        assignmentIndex = index
     }
 }
 
