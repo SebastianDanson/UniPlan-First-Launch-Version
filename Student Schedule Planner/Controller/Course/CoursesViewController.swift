@@ -19,6 +19,10 @@ class CoursesViewController: SwipeViewController {
         setupViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
+    
     //MARK: - Properties
     let topView = makeTopView(height: UIScreen.main.bounds.height/8)
     let titleLabel = makeTitleLabel(withText: "Courses")
@@ -52,7 +56,7 @@ class CoursesViewController: SwipeViewController {
         tableView.rowHeight = 100
     }
     //What happens when user tries to delete course
-    override func updateModel(index: Int) {
+    override func updateModel(index: Int, tableView: UITableView) {
      
         let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "", preferredStyle: .alert)
         let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in
@@ -74,7 +78,6 @@ class CoursesViewController: SwipeViewController {
         alert.addAction(actionCancel)
         alert.addAction(actionDeleteCourse)
         present(alert, animated: true)
-
     }
     
     //MARK: - Actions
@@ -126,7 +129,9 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AllCoursesService.courseShared.setCourseIndex(index: indexPath.row)
-        // addButtonTapped()
+        let vc = CourseDetailsViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
 }
 

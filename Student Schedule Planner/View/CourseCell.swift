@@ -75,7 +75,7 @@ class CourseCell: SwipeTableViewCell {
         durationStartLabel.text = "05:30PM-"
         durationEndLabel.text = "06:30PM"
         nextClassLabel.text = "Next Class:"
-        nextAsignmentLabel.text = "Next Assignment"
+        nextAsignmentLabel.text = "Next Summative"
         
         taskLabel.centerY(in: taskView)
         taskLabel.anchor(left: taskView.leftAnchor, paddingLeft: 70)

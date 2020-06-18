@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 import UserNotifications
 
-class CourseDetailsViewController: UIViewController {
+class CourseDetailsViewController: SwipeViewController {
     
     let realm = try! Realm()
     
@@ -28,13 +28,8 @@ class CourseDetailsViewController: UIViewController {
         examsTableView.reloadData()
         SingleClassService.shared.setClassIndex(index: nil)
         AssignmentService.shared.setAssignmentIndex(index: nil)
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-//        classTableView.reloadData()
-//        assignmentsTableView.reloadData()
-//        quizzesTableView.reloadData()
-//        examsTableView.reloadData()
+        QuizService.shared.setQuizIndex(index: nil)
+        ExamService.shared.setExamIndex(index: nil)
     }
     
     //MARK: - Properties
@@ -45,7 +40,9 @@ class CourseDetailsViewController: UIViewController {
     let examsTableView = UITableView()
     
     let topView = makeTopView(height: UIScreen.main.bounds.height/8)
-    let titleLabel = makeTitleLabel(withText: "Math")
+    let titleLabel = makeTitleLabel(withText: "")
+    let backButton = makeBackButton()
+    let deleteButton = makeDeleteButton()
     
     //Headings
     let classesHeading = makeHeading(withText: "Classes")
@@ -59,13 +56,13 @@ class CourseDetailsViewController: UIViewController {
     let quizzesAddButton = makeAddButtonWithFill()
     let examsAddButton = makeAddButtonWithFill()
     
-    
-    
     //MARK: - UISetup
     func setupViews() {
         view.backgroundColor = .backgroundColor
         
         view.addSubview(topView)
+        view.addSubview(backButton)
+        view.addSubview(deleteButton)
         view.addSubview(classesHeading)
         view.addSubview(assignmentsHeading)
         view.addSubview(quizzesHeading)
@@ -85,6 +82,13 @@ class CourseDetailsViewController: UIViewController {
         
         titleLabel.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
         titleLabel.centerX(in: topView)
+        backButton.anchor(left: topView.leftAnchor, paddingLeft: 20)
+        backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        
+        deleteButton.anchor(right: topView.rightAnchor, paddingRight: 20)
+        deleteButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        deleteButton.addTarget(self, action: #selector(deleteCourse), for: .touchUpInside)
         
         //Classes Section
         classesHeading.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
@@ -120,11 +124,11 @@ class CourseDetailsViewController: UIViewController {
         quizzesAddButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         quizzesTableView.centerX(in: view)
         quizzesTableView.anchor(top: quizzesHeading.bottomAnchor, paddingTop: 5)
-        quizzesTableView.setDimensions(width: view.frame.width, height: 50)
+        quizzesTableView.setDimensions(width: view.frame.width, height: 65)
         quizzesTableView.register(QuizAndExamCell.self, forCellReuseIdentifier: reuseIdentifer)
         quizzesTableView.delegate = self
         quizzesTableView.dataSource = self
-        quizzesTableView.rowHeight = 50
+        quizzesTableView.rowHeight = 65
         
         //Exams Section
         examsHeading.anchor(top: quizzesTableView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
@@ -133,11 +137,15 @@ class CourseDetailsViewController: UIViewController {
         examsAddButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         examsTableView.centerX(in: view)
         examsTableView.anchor(top: examsHeading.bottomAnchor, paddingTop: 5)
-        examsTableView.setDimensions(width: view.frame.width, height: 50)
+        examsTableView.setDimensions(width: view.frame.width, height: 65)
         examsTableView.register(QuizAndExamCell.self, forCellReuseIdentifier: reuseIdentifer)
         examsTableView.delegate = self
         examsTableView.dataSource = self
-        examsTableView.rowHeight = 50
+        examsTableView.rowHeight = 65
+        
+        let courseIndex = AllCoursesService.courseShared.getCourseIndex()
+        let course = AllCoursesService.courseShared.getCourse(atIndex: courseIndex)
+        titleLabel.text = course?.title
     }
     
     //MARK: - Actions
@@ -152,13 +160,76 @@ class CourseDetailsViewController: UIViewController {
             vc = AddQuizAndExamViewController()
             CourseService.shared.setQuizOrExam(int: 0)
         case examsAddButton:
-           vc = AddQuizAndExamViewController()
-           CourseService.shared.setQuizOrExam(int: 1)
+            vc = AddQuizAndExamViewController()
+            CourseService.shared.setQuizOrExam(int: 1)
         default:
             vc = AddQuizAndExamViewController()
         }
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func backButtonPressed() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func deleteCourse() {
+        let index = AllCoursesService.courseShared.getCourseIndex()
+         let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "", preferredStyle: .alert)
+               let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in
+                   do {
+                       try self.realm.write {
+                           if let courseToDelete = AllCoursesService.courseShared.getCourse(atIndex: index) {
+                               self.realm.delete(courseToDelete)
+                               AllCoursesService.courseShared.updateCourses()
+                           }
+                       }
+                   } catch {
+                       print("Error writing task to realm")
+                   }
+                self.dismiss(animated: true, completion: nil)
+               }
+               
+               let actionCancel = UIAlertAction(title: "Cancel", style: .default) { (alert) in }
+
+               alert.addAction(actionCancel)
+               alert.addAction(actionDeleteCourse)
+               present(alert, animated: true)
+    }
+    
+    //MARK: - Helper Functions
+    //What happens when you swipe on a cell
+    override func updateModel(index: Int, tableView: UITableView) {
+        do {
+            try realm.write {
+                switch tableView {
+                case classTableView:
+                    if let classToDelete = CourseService.shared.getClass(atIndex: index) {
+                        realm.delete(classToDelete)
+                        CourseService.shared.updateClasses()
+                    }
+                case assignmentsTableView:
+                    if let assignmentToDelete = CourseService.shared.getAssignment(atIndex: index) {
+                        realm.delete(assignmentToDelete)
+                        CourseService.shared.updateAssignments()
+                    }
+                case quizzesTableView:
+                    if let quizToDelete = CourseService.shared.getQuiz(atIndex: index) {
+                        realm.delete(quizToDelete)
+                        CourseService.shared.updateQuizzes()
+                    }
+                default:
+                    if let examToDelete = CourseService.shared.getExam(atIndex: index) {
+                        realm.delete(examToDelete)
+                        CourseService.shared.updateExams()
+                    }
+                }
+            }
+           
+        } catch {
+            print("Error writing to Realm \(error.localizedDescription)")
+        }
+        tableView.reloadData()
     }
 }
 
@@ -185,6 +256,7 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
             let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! SingleClassCell
             if let theClass = CourseService.shared.getClass(atIndex: indexPath.row) {
                 cell.update(theClass: theClass)
+                cell.delegate = self
             }
             return cell
             
@@ -192,6 +264,7 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
             let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! AssignmentCell
             if let assignment = CourseService.shared.getAssignment(atIndex: indexPath.row) {
                 cell.update(assignment: assignment)
+                cell.delegate = self
             }
             return cell
             
@@ -199,20 +272,21 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
             let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! QuizAndExamCell
             if let quiz = CourseService.shared.getQuiz(atIndex: indexPath.row) {
                 cell.update(quiz: quiz)
+                cell.delegate = self
             }
             return cell
-
+            
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! QuizAndExamCell
             if let exam = CourseService.shared.getExam(atIndex: indexPath.row) {
                 cell.update(exam: exam)
+                cell.delegate = self
             }
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
         switch tableView {
         case classTableView:
             SingleClassService.shared.setClassIndex(index: indexPath.row)
@@ -221,9 +295,11 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
             AssignmentService.shared.setAssignmentIndex(index: indexPath.row)
             addButtonPressed(button: assignmentsAddButton)
         case quizzesTableView:
-            break
+            QuizService.shared.setQuizIndex(index: indexPath.row)
+            addButtonPressed(button: quizzesAddButton)
         case examsTableView:
-            break
+            ExamService.shared.setExamIndex(index: indexPath.row)
+            addButtonPressed(button: examsAddButton)
         default:
             break
         }

@@ -81,7 +81,6 @@ class SingleClassCell: SwipeTableViewCell {
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  UIScreen.main.bounds.height/45)
 
-        classTypeLabel.text = "Class"
         classTypeLabel.anchor(top: taskView.topAnchor, left: taskView.leftAnchor, paddingTop: 5, paddingLeft: 20)
 
         locationImage.anchor(top: classDayStackView.bottomAnchor, left: taskView.leftAnchor, paddingTop: 7, paddingLeft: 15)
@@ -89,20 +88,14 @@ class SingleClassCell: SwipeTableViewCell {
                              paddingTop: 7, paddingLeft: 5)
         locationImage.setDimensions(width: 9, height: 13)
 
-        locationLabel.text = "Macdonald Building 424"
-
         startTimeLabel.anchor(top: taskView.topAnchor, right: nextImage.leftAnchor, paddingTop: 16, paddingRight: UIScreen.main.bounds.height/36)
         endTimeLabel.anchor(top: startTimeLabel.bottomAnchor,
                                 left: startTimeLabel.leftAnchor)
-        startTimeLabel.text = "12:00PM-"
-        endTimeLabel.text = "01:00PM"
 
         classFrequencyLabel.anchor(top: endTimeLabel.bottomAnchor, left: endTimeLabel.leftAnchor, paddingTop: 5)
-        classFrequencyLabel.text = "Every week"
 
         reminderImage.anchor(left: taskView.leftAnchor, bottom: taskView.bottomAnchor, paddingLeft: 15, paddingBottom: 5)
         reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 5, paddingBottom: 5)
-        reminderLabel.text = "0 hours, 10min before"
         reminderImage.setDimensions(width: 11, height: 13)
 
     }
@@ -110,7 +103,6 @@ class SingleClassCell: SwipeTableViewCell {
     //MARK: - Actions
     func update(theClass: SingleClass) {
         classTypeLabel.text = theClass.type.description
-        print(theClass.id)
         
         monday.unhighlight()
         tuesday.unhighlight()

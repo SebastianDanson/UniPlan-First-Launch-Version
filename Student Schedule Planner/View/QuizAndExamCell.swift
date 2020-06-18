@@ -23,7 +23,6 @@ class QuizAndExamCell: SwipeTableViewCell {
     }
     
     //MARK: - Properties
-    
     let taskView = makeTaskView()
     let dateLabel = makeLabel(ofSize: 16, weight: .regular)
     let timeLabel = makeLabel(ofSize: 16, weight: .regular)

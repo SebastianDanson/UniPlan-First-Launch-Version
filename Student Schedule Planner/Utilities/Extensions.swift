@@ -8,6 +8,7 @@
 
 import UIKit
 
+//MARK: - UIColor
 extension UIColor {
     static let backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
     static let mainBlue = UIColor(red: 30/255, green: 86/255, blue: 160/255, alpha: 1)
@@ -15,6 +16,7 @@ extension UIColor {
     static let lightBlue = UIColor(red: 214/255, green: 228/255, blue: 240/255, alpha: 1)
 }
 
+//MARK: - UIView
 extension UIView {
     
     func anchor(top: NSLayoutYAxisAnchor? = nil, left: NSLayoutXAxisAnchor? = nil, right: NSLayoutXAxisAnchor? = nil, bottom: NSLayoutYAxisAnchor? = nil, paddingTop: CGFloat = 0, paddingLeft: CGFloat = 0, paddingRight: CGFloat = 0, paddingBottom: CGFloat = 0) {
@@ -72,6 +74,14 @@ extension UIButton {
         self.layer.borderWidth = 1
     }
 }
+
+//MARK: - Date
+extension Date {
+    func dayNumberOfWeek() -> Int? {
+        return Calendar.current.dateComponents([.weekday], from: self).weekday
+    }
+}
+
 //MARK: - Dismiss Keyboard
 extension UIViewController {
     func dismissKey() {

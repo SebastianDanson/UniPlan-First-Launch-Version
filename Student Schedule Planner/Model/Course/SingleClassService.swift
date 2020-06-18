@@ -21,6 +21,7 @@ class SingleClassService {
     private var reminderTime = [0, 0] //First index is hours, second is minutes
     private var reminder = false
     private var classIndex: Int?
+    private var initialLocation = ""
     
     static let shared = SingleClassService()
     
@@ -183,5 +184,14 @@ class SingleClassService {
     }
     func setClassIndex(index: Int?) {
         classIndex = index
+    }
+    
+    //MARK: - initialLocation
+    func getInitialLocation() -> String {
+        return initialLocation
+    }
+    
+    func setInitialLocation(location: String){
+        initialLocation = location
     }
 }

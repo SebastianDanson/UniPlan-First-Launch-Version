@@ -14,11 +14,12 @@ class CourseService {
     let realm = try! Realm()
     
     private var isCourse = false
-    private var classes: Results<SingleClass>?
-    private var assignments: Results<Assignment>?
-    private var quizzes: Results<Quiz>?
-    private var exams: Results<Exam>?
+    private var classes: List<SingleClass>?
+    private var assignments: List<Assignment>?
+    private var quizzes: List<Quiz>?
+    private var exams: List<Exam>?
     private var quizOrExam = 0 //0 -> quiz, non zero ->Exam
+    
     
     static let shared = CourseService()
     private init() {}
@@ -38,13 +39,16 @@ class CourseService {
         return classes?[index]
     }
     
-    func getClasses() -> Results<SingleClass>? {
+    func getClasses() -> List<SingleClass>? {
         updateClasses()
         return classes
     }
     
     func updateClasses() {
-        classes = realm.objects(SingleClass.self)
+        let id = AllCoursesService.courseShared.getSelectedCourse()?.id
+        if let course = realm.objects(Course.self).filter("id == %@", id).first {
+            classes = course.classes
+        }
     }
     
     //MARK: - Assignments
@@ -53,14 +57,16 @@ class CourseService {
         return assignments?[index]
     }
     
-    func getAssignments() -> Results<Assignment>? {
+    func getAssignments() -> List<Assignment>? {
         updateAssignments()
         return assignments
     }
     
     func updateAssignments() {
-        assignments = realm.objects(Assignment.self)
-    }
+        let id = AllCoursesService.courseShared.getSelectedCourse()?.id
+        if let course = realm.objects(Course.self).filter("id == %@", id).first {
+            assignments = course.assignments
+        }    }
     
     //MARK: - Quizzes
     func getQuiz(atIndex index: Int) -> Quiz? {
@@ -68,13 +74,16 @@ class CourseService {
         return quizzes?[index]
     }
     
-    func getQuizzes() -> Results<Quiz>? {
+    func getQuizzes() -> List<Quiz>? {
         updateQuizzes()
         return quizzes
     }
     
     func updateQuizzes() {
-        quizzes = realm.objects(Quiz.self)
+        let id = AllCoursesService.courseShared.getSelectedCourse()?.id
+        if let course = realm.objects(Course.self).filter("id == %@", id).first {
+            quizzes = course.quizzes
+        }
     }
     
     //MARK: - Exams
@@ -83,13 +92,16 @@ class CourseService {
         return exams?[index]
     }
     
-    func getExams() -> Results<Exam>? {
+    func getExams() -> List<Exam>? {
         updateExams()
         return exams
     }
     
     func updateExams() {
-        exams = realm.objects(Exam.self)
+        let id = AllCoursesService.courseShared.getSelectedCourse()?.id
+        if let course = realm.objects(Course.self).filter("id == %@", id).first {
+            exams = course.exams
+        }
     }
     
     //MARK: - quizOrExam

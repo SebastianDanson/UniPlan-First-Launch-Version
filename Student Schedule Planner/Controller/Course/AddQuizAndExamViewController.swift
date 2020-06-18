@@ -65,6 +65,20 @@ class AddQuizAndExamViewController: UIViewController {
         saveButton.anchor(top: endTimePicker.bottomAnchor, paddingTop: UIScreen.main.bounds.height/10)
         saveButton.centerX(in: view)
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+        
+        if let quizIndex = QuizService.shared.getQuizIndex(){
+            if let quiz = CourseService.shared.getQuiz(atIndex: quizIndex) {
+                datePicker.date = quiz.startDate
+                endTimePicker.date = quiz.endTime
+            }
+        }
+        
+        if let examIndex = ExamService.shared.getExamIndex(){
+            if let exam = CourseService.shared.getExam(atIndex: examIndex) {
+                datePicker.date = exam.startDate
+                endTimePicker.date = exam.endTime
+            }
+        }
     }
     
     @objc func backButtonPressed() {
@@ -82,12 +96,25 @@ class AddQuizAndExamViewController: UIViewController {
                     var quiz = Quiz()
                     quiz.startDate = datePicker.date
                     quiz.endTime = endTimePicker.date
-                    realm.add(quiz, update: .modified)
+                    if let quizIndex = QuizService.shared.getQuizIndex() {
+                        var quizToUpdate = CourseService.shared.getQuiz(atIndex: quizIndex)
+                        quizToUpdate?.startDate = quiz.startDate
+                        quizToUpdate?.endTime = quiz.endTime
+                    } else {
+                        realm.add(quiz, update: .modified)
+                    }
                 } else {
                     var exam = Exam()
                     exam.startDate = datePicker.date
                     exam.endTime = endTimePicker.date
-                    realm.add(exam, update: .modified)
+                    
+                    if let examIndex = ExamService.shared.getExamIndex(){
+                        var examToUpdate = CourseService.shared.getExam(atIndex: examIndex)
+                        examToUpdate?.startDate = exam.startDate
+                        examToUpdate?.endTime = exam.endTime
+                    } else {
+                        realm.add(exam, update: .modified)
+                    }
                 }
             }
         } catch {

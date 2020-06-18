@@ -12,7 +12,8 @@ import RealmSwift
 class AllCoursesService: TaskService {
     
     private var courses: Results<Course>?
-    private var courseIndex: Int?
+    private var selectedCourse: Course?
+    private var courseIndex = 0
 
     static let courseShared = AllCoursesService()
     
@@ -35,11 +36,20 @@ class AllCoursesService: TaskService {
     }
     
     //MARK: - courseIndex
-    func getCourseIndex() -> Int? {
+    func getCourseIndex() -> Int {
         return courseIndex
     }
-    func setCourseIndex(index: Int?) {
+    func setCourseIndex(index: Int) {
         courseIndex = index
+    }
+    
+    //MARK: - Selected Course
+    func getSelectedCourse() -> Course? {
+        return AllCoursesService.courseShared.getCourse(atIndex: AllCoursesService.courseShared.getCourseIndex())
+    }
+    
+    func setSelectedCourse(course: Course?){
+        selectedCourse = course
     }
     
 }

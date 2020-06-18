@@ -8,6 +8,9 @@
 
 import UIKit
 import FSCalendar
+import RealmSwift
+
+let realm = try! Realm()
 
 //MARK: - Timeline View Controller
 func makeTopView(height: CGFloat) -> UIView {
@@ -71,8 +74,6 @@ func makeTableView() -> UITableView {
     
     return tableView
 }
-
-
 
 //MARK: - Add Task View Controller
 func makeHeading(withText text: String) -> UILabel{

@@ -23,7 +23,7 @@ class SwipeViewController: UIViewController, SwipeTableViewCellDelegate {
         guard orientation == .right else { return nil }
         
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            self.updateModel(index: indexPath.row)
+            self.updateModel(index: indexPath.row, tableView: tableView)
         }
         deleteAction.image = UIImage(named: "Trash")
         
@@ -36,7 +36,7 @@ class SwipeViewController: UIViewController, SwipeTableViewCellDelegate {
         return options
     }
 
-    func updateModel(index: Int) {}
+    func updateModel(index: Int, tableView: UITableView) {}
 }
 
 

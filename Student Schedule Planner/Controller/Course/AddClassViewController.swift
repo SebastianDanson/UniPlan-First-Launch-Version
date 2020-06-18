@@ -26,6 +26,8 @@ class AddClassViewController: UIViewController {
         reminderButton.setTitle(SingleClassService.shared.setupReminderString(), for: .normal)
         setClassTime()
         setClassDates()
+        
+        SingleClassService.shared.setInitialLocation(location: locationTextField.text ?? "")
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -91,9 +93,6 @@ class AddClassViewController: UIViewController {
     let spacerView3 = makeSpacerView()
     let spacerView4 = makeSpacerView()
     let spacerView5 = makeSpacerView()
-    
-    
-    
     
     //MARK: - setup UI
     func setupViews() {
@@ -337,13 +336,18 @@ class AddClassViewController: UIViewController {
                     classToUpdate?.reminderTime[0] = theClass.reminderTime[0]
                     classToUpdate?.reminderTime[1] = theClass.reminderTime[1]
                     classToUpdate?.reminder = theClass.reminder
+                    updateTasks(forClass: theClass)
                 } else {
                     realm.add(theClass, update: .modified)
+                    var course = AllCoursesService.courseShared.getSelectedCourse()
+                    course?.classes.append(theClass)
+                    makeTasks(forClass: theClass)
                 }
             }
         }catch {
             print("Error writing Class to realm \(error.localizedDescription)")
         }
+        
         dismiss(animated: true)
     }
     
@@ -372,5 +376,42 @@ class AddClassViewController: UIViewController {
         let days = List<Int>()
         days.append(objectsIn: SingleClassService.shared.getClassDays())
         return days
+    }
+    
+    func makeTasks(forClass theClass: SingleClass) {
+        var startDate = Calendar.current.startOfDay(for: theClass.classStartDate)
+        var dayIncrementor = startDate
+        var endDate = Calendar.current.startOfDay(for: theClass.classEndDate)
+        
+        while dayIncrementor < theClass.classEndDate {
+            if theClass.classDays[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
+                print(dayIncrementor.dayNumberOfWeek())
+                let task = Task()
+                task.title = AllCoursesService.courseShared.getSelectedCourse()?.title ?? ""
+                task.dateOrTime = 0
+                task.startDate = theClass.startTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
+                task.endDate = theClass.endTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
+                task.reminder = theClass.reminder
+                task.reminderTime = theClass.reminderTime
+                task.location = theClass.location
+                
+                realm.add(task)
+            }
+            dayIncrementor.addTimeInterval(86400)
+        }
+    }
+    
+    func updateTasks(forClass theClass: SingleClass) {
+        deleteTasks()
+        makeTasks(forClass: theClass)
+    }
+    
+    func deleteTasks() {
+        var course = AllCoursesService.courseShared.getSelectedCourse()
+        let tasksToUpdate = realm.objects(Task.self).filter("title == %@ AND location == %@", course?.title, SingleClassService.shared.getInitialLocation())
+        
+        for task in tasksToUpdate {
+            realm.delete(task)
+        }
     }
 }
