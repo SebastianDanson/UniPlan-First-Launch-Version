@@ -50,6 +50,7 @@
 		3FAEC84224993A56000ADD9D /* SetClassReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC84124993A56000ADD9D /* SetClassReminderViewController.swift */; };
 		3FAEC846249A8AA8000ADD9D /* QuizService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC845249A8AA8000ADD9D /* QuizService.swift */; };
 		3FAEC848249A8AB3000ADD9D /* ExamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC847249A8AB3000ADD9D /* ExamService.swift */; };
+		3FAEC84A249BF85A000ADD9D /* AddCourseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC849249BF859000ADD9D /* AddCourseViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +97,7 @@
 		3FAEC84124993A56000ADD9D /* SetClassReminderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetClassReminderViewController.swift; sourceTree = "<group>"; };
 		3FAEC845249A8AA8000ADD9D /* QuizService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizService.swift; sourceTree = "<group>"; };
 		3FAEC847249A8AB3000ADD9D /* ExamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamService.swift; sourceTree = "<group>"; };
+		3FAEC849249BF859000ADD9D /* AddCourseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCourseViewController.swift; sourceTree = "<group>"; };
 		8E06086E3544786A6DA9157B /* Pods-Student Schedule Planner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.release.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.release.xcconfig"; sourceTree = "<group>"; };
 		9318D2EFB62EA01CADAC290D /* Pods-Student Schedule Planner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Student Schedule Planner.debug.xcconfig"; path = "Target Support Files/Pods-Student Schedule Planner/Pods-Student Schedule Planner.debug.xcconfig"; sourceTree = "<group>"; };
 		9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Student_Schedule_Planner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -241,13 +243,14 @@
 			children = (
 				3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */,
 				3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */,
-				3F94E3282496A90500B0F958 /* AddClassViewController.swift */,
 				3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */,
 				3FAEC82F2497D2B7000ADD9D /* SetClassTimeViewController.swift */,
 				3FAEC8372497EA08000ADD9D /* SetClassDatesViewController.swift */,
+				3FAEC84124993A56000ADD9D /* SetClassReminderViewController.swift */,
+				3F94E3282496A90500B0F958 /* AddClassViewController.swift */,
 				3FAEC83B2499242B000ADD9D /* AddAssignmentViewController.swift */,
 				3FAEC83F24992C2A000ADD9D /* AddQuizAndExamViewController.swift */,
-				3FAEC84124993A56000ADD9D /* SetClassReminderViewController.swift */,
+				3FAEC849249BF859000ADD9D /* AddCourseViewController.swift */,
 			);
 			path = Course;
 			sourceTree = "<group>";
@@ -421,6 +424,7 @@
 				3FAEC846249A8AA8000ADD9D /* QuizService.swift in Sources */,
 				3FAEC83A2497FD1A000ADD9D /* CourseService.swift in Sources */,
 				3FAEC8382497EA08000ADD9D /* SetClassDatesViewController.swift in Sources */,
+				3FAEC84A249BF85A000ADD9D /* AddCourseViewController.swift in Sources */,
 				3FAEC8282496FA94000ADD9D /* Assignment.swift in Sources */,
 				3F94E3252496895900B0F958 /* AssignmentCell.swift in Sources */,
 				3FAEC8302497D2B7000ADD9D /* SetClassTimeViewController.swift in Sources */,

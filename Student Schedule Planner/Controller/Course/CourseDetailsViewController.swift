@@ -143,8 +143,8 @@ class CourseDetailsViewController: SwipeViewController {
         examsTableView.dataSource = self
         examsTableView.rowHeight = 65
         
-        let courseIndex = AllCoursesService.courseShared.getCourseIndex()
-        let course = AllCoursesService.courseShared.getCourse(atIndex: courseIndex)
+        let courseIndex = AllCoursesService.shared.getCourseIndex()
+        let course = AllCoursesService.shared.getCourse(atIndex: courseIndex)
         titleLabel.text = course?.title
     }
     
@@ -174,14 +174,14 @@ class CourseDetailsViewController: SwipeViewController {
     }
     
     @objc func deleteCourse() {
-        let index = AllCoursesService.courseShared.getCourseIndex()
+        let index = AllCoursesService.shared.getCourseIndex()
          let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "", preferredStyle: .alert)
                let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in
                    do {
                        try self.realm.write {
-                           if let courseToDelete = AllCoursesService.courseShared.getCourse(atIndex: index) {
+                           if let courseToDelete = AllCoursesService.shared.getCourse(atIndex: index) {
                                self.realm.delete(courseToDelete)
-                               AllCoursesService.courseShared.updateCourses()
+                               AllCoursesService.shared.updateCourses()
                            }
                        }
                    } catch {

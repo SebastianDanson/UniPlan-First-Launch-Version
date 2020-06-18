@@ -79,32 +79,6 @@ class SingleClassService {
         endTime = time
     }
     
-    //MARK: - Start Date
-    func getStartDate() -> Date{
-        return startDate
-    }
-    
-    func getStartDateAsString() -> String {
-        return formatDate(from:  startDate)
-    }
-    
-    func setStartDate(date: Date) {
-        startDate = date
-    }
-    
-    //MARK: - End Date
-    func getEndDate() -> Date{
-        return endDate
-    }
-    
-    func getEndDateAsString() -> String {
-        return formatDate(from: endDate)
-    }
-    
-    func setEndDate(date: Date) {
-        endDate = date
-    }
-    
     //MARK: - Type
     func getType() -> ClassType {
         return type

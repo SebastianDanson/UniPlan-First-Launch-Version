@@ -25,12 +25,8 @@ class CourseCell: SwipeTableViewCell {
     //MARK: - Properties
     let taskLabel = makeLabel(ofSize: 22, weight: .bold)
     let nextIcon = UIImage(named: "nextMenuButton")
-    let durationStartLabel = makeLabel(ofSize: 14, weight: .regular)
-    let durationEndLabel = makeLabel(ofSize: 14, weight: .regular)
     let taskView = makeTaskView()
-    let nextClassLabel = makeLabel(ofSize: 14, weight: .bold)
-    let nextAsignmentLabel = makeLabel(ofSize: 14, weight: .bold)
-    let nextAsignmentDateLabel = makeLabel(ofSize: 14, weight: .regular)
+
 
     
     private let circleView: UIView = {
@@ -47,35 +43,13 @@ class CourseCell: SwipeTableViewCell {
         backgroundColor = .backgroundColor
         addSubview(taskView)
         taskView.addSubview(taskLabel)
-        taskView.addSubview(durationStartLabel)
-        taskView.addSubview(durationEndLabel)
         taskView.addSubview(nextImage)
         taskView.addSubview(circleView)
-        taskView.addSubview(nextClassLabel)
-        taskView.addSubview(nextAsignmentLabel)
-        taskView.addSubview(nextAsignmentDateLabel)
-
-        
-        nextClassLabel.anchor(top: taskView.topAnchor, left: durationStartLabel.leftAnchor, paddingTop: 4)
-        nextAsignmentLabel.anchor(top: durationStartLabel.bottomAnchor, left: durationStartLabel.leftAnchor, paddingTop: 5)
-
-        durationStartLabel.anchor(top: nextClassLabel.bottomAnchor, right: durationEndLabel.leftAnchor, paddingTop: 0,
-                                  paddingRight: 5)
-        durationEndLabel.anchor(top: nextClassLabel.bottomAnchor, right: nextImage.rightAnchor, paddingTop: 0,
-                                paddingRight: 25)
-        
-        nextAsignmentDateLabel.anchor(top: nextAsignmentLabel.bottomAnchor, left: durationStartLabel.leftAnchor)
 
         taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, paddingBottom: 10)
       
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
-                
-        nextAsignmentDateLabel.text = "June 12, 12:00AM"
-        durationStartLabel.text = "05:30PM-"
-        durationEndLabel.text = "06:30PM"
-        nextClassLabel.text = "Next Class:"
-        nextAsignmentLabel.text = "Next Summative"
         
         taskLabel.centerY(in: taskView)
         taskLabel.anchor(left: taskView.leftAnchor, paddingLeft: 70)
@@ -86,6 +60,7 @@ class CourseCell: SwipeTableViewCell {
     
     //MARK: - Actions
     func update(course: Course) {
+        print(course.title)
         taskLabel.text = course.title
     }
 }

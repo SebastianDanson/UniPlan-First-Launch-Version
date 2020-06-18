@@ -9,17 +9,15 @@
 import Foundation
 import RealmSwift
 
-class AllCoursesService: TaskService {
+class AllCoursesService {
     
     private var courses: Results<Course>?
     private var selectedCourse: Course?
     private var courseIndex = 0
 
-    static let courseShared = AllCoursesService()
+    static let shared = AllCoursesService()
     
-    private override init() {
-        super.init()
-    }
+    private init(){}
     
     func updateCourses() {
         courses = realm.objects(Course.self)
@@ -45,7 +43,7 @@ class AllCoursesService: TaskService {
     
     //MARK: - Selected Course
     func getSelectedCourse() -> Course? {
-        return AllCoursesService.courseShared.getCourse(atIndex: AllCoursesService.courseShared.getCourseIndex())
+        return AllCoursesService.shared.getCourse(atIndex: AllCoursesService.shared.getCourseIndex())
     }
     
     func setSelectedCourse(course: Course?){

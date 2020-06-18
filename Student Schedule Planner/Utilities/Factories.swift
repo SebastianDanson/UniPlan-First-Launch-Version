@@ -282,3 +282,15 @@ func formatDate(from date: Date) -> String {
     let date = dateFormatter.string(from: date)
     return date
 }
+
+//MARK: - AddCourse
+func makeColorButton(ofColor color: UIColor) -> UIButton {
+    let button = UIButton()
+    button.setDimensions(width: 40, height: 40)
+    button.layer.cornerRadius = 20
+    button.backgroundColor = color
+    button.layer.borderColor = UIColor.lightGray.cgColor
+    button.layer.borderWidth = 1
+    
+    return button
+}

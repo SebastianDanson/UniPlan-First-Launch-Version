@@ -29,6 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //window?.rootViewController = ClassTypeViewController()
         //window?.rootViewController = SetClassTimeViewController()
         //window?.rootViewController = AddAssignmentViewController()
+        //window?.rootViewController = AddCourseViewController()
 
     }
     

@@ -19,6 +19,9 @@ class CourseService {
     private var quizzes: List<Quiz>?
     private var exams: List<Exam>?
     private var quizOrExam = 0 //0 -> quiz, non zero ->Exam
+    private var color = 0
+    private var startDate = Date()
+    private var endDate = Date()
     
     
     static let shared = CourseService()
@@ -45,7 +48,7 @@ class CourseService {
     }
     
     func updateClasses() {
-        let id = AllCoursesService.courseShared.getSelectedCourse()?.id
+        let id = AllCoursesService.shared.getSelectedCourse()?.id
         if let course = realm.objects(Course.self).filter("id == %@", id).first {
             classes = course.classes
         }
@@ -63,7 +66,7 @@ class CourseService {
     }
     
     func updateAssignments() {
-        let id = AllCoursesService.courseShared.getSelectedCourse()?.id
+        let id = AllCoursesService.shared.getSelectedCourse()?.id
         if let course = realm.objects(Course.self).filter("id == %@", id).first {
             assignments = course.assignments
         }    }
@@ -80,7 +83,7 @@ class CourseService {
     }
     
     func updateQuizzes() {
-        let id = AllCoursesService.courseShared.getSelectedCourse()?.id
+        let id = AllCoursesService.shared.getSelectedCourse()?.id
         if let course = realm.objects(Course.self).filter("id == %@", id).first {
             quizzes = course.quizzes
         }
@@ -98,7 +101,7 @@ class CourseService {
     }
     
     func updateExams() {
-        let id = AllCoursesService.courseShared.getSelectedCourse()?.id
+        let id = AllCoursesService.shared.getSelectedCourse()?.id
         if let course = realm.objects(Course.self).filter("id == %@", id).first {
             exams = course.exams
         }
@@ -111,5 +114,39 @@ class CourseService {
     
     func setQuizOrExam(int: Int) {
         quizOrExam = int
+    }
+    
+    func getColor() -> Int {
+        return color
+    }
+    
+    func setColor(int: Int) {
+        color = int
+    }
+    
+    //MARK: - Start Date
+    func getStartDate() -> Date{
+        return startDate
+    }
+    
+    func getStartDateAsString() -> String {
+        return formatDate(from:  startDate)
+    }
+    
+    func setStartDate(date: Date) {
+        startDate = date
+    }
+    
+    //MARK: - End Date
+    func getEndDate() -> Date{
+        return endDate
+    }
+    
+    func getEndDateAsString() -> String {
+        return formatDate(from: endDate)
+    }
+    
+    func setEndDate(date: Date) {
+        endDate = date
     }
 }

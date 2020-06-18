@@ -53,18 +53,18 @@ class CoursesViewController: SwipeViewController {
         tableView.register(CourseCell.self, forCellReuseIdentifier: courseReuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = 100
+        tableView.rowHeight = 80
     }
     //What happens when user tries to delete course
     override func updateModel(index: Int, tableView: UITableView) {
-     
+        
         let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "", preferredStyle: .alert)
         let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in
             do {
                 try self.realm.write {
-                    if let courseToDelete = AllCoursesService.courseShared.getCourse(atIndex: index) {
+                    if let courseToDelete = AllCoursesService.shared.getCourse(atIndex: index) {
                         self.realm.delete(courseToDelete)
-                        AllCoursesService.courseShared.updateCourses()
+                        AllCoursesService.shared.updateCourses()
                         self.tableView.reloadData()
                     }
                 }
@@ -74,7 +74,7 @@ class CoursesViewController: SwipeViewController {
         }
         
         let actionCancel = UIAlertAction(title: "Cancel", style: .default) { (alert) in self.tableView.reloadData()}
-
+        
         alert.addAction(actionCancel)
         alert.addAction(actionDeleteCourse)
         present(alert, animated: true)
@@ -82,45 +82,21 @@ class CoursesViewController: SwipeViewController {
     
     //MARK: - Actions
     @objc func addButtonPressed() {
-        var textField = UITextField()
-        
-        let alert = UIAlertController(title: "Class Name", message: "Write the name of the class below", preferredStyle: .alert)
-        let actionAddCourse = UIAlertAction(title: "Add Course", style: .default) { (alert) in
-            let newCourse = Course()
-            newCourse.title = textField.text ?? "Untitled"
-            
-            do {
-                try self.realm.write {
-                    self.realm.add(newCourse, update: .modified)
-                    self.tableView.reloadData()
-                }
-            } catch {
-                print("ERROR add course to realm \(error.localizedDescription)")
-            }
-        }
-        
-        let actionCancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
-        
-        alert.addTextField { (alertTextField) in
-            textField.placeholder = "Add new Category"
-            textField = alertTextField
-        }
-        
-        alert.addAction(actionCancel)
-        alert.addAction(actionAddCourse)
-        present(alert, animated: true)
+        let vc = AddCourseViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
 }
 
 //MARK: - Tableview Delegate and Datasource
 extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return AllCoursesService.courseShared.getCourses()?.count ?? 0
+        return AllCoursesService.shared.getCourses()?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: courseReuseIdentifer) as! CourseCell
-        if let course = AllCoursesService.courseShared.getCourse(atIndex: indexPath.row) {
+        if let course = AllCoursesService.shared.getCourse(atIndex: indexPath.row) {
             cell.update(course: course)
             cell.delegate = self
         }
@@ -128,7 +104,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        AllCoursesService.courseShared.setCourseIndex(index: indexPath.row)
+        AllCoursesService.shared.setCourseIndex(index: indexPath.row)
         let vc = CourseDetailsViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)

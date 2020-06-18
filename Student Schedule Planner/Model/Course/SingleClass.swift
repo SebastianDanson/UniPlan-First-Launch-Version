@@ -13,8 +13,6 @@ class SingleClass: Object {
     
     var classDays = List<Int>()
     @objc dynamic var repeats = "Never"
-    @objc dynamic var classStartDate = Date()
-    @objc dynamic var classEndDate = Date()
     @objc dynamic var location = ""
     @objc dynamic var startTime = Date()
     @objc dynamic var endTime = Date()

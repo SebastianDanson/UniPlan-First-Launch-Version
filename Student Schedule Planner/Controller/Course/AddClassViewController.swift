@@ -25,7 +25,7 @@ class AddClassViewController: UIViewController {
         classTypeButton.setTitle(SingleClassService.shared.getType().description, for: .normal)
         reminderButton.setTitle(SingleClassService.shared.setupReminderString(), for: .normal)
         setClassTime()
-        setClassDates()
+        //setClassDates()
         
         SingleClassService.shared.setInitialLocation(location: locationTextField.text ?? "")
     }
@@ -87,7 +87,6 @@ class AddClassViewController: UIViewController {
     let classTypeButton = setValueButton(withPlaceholder: "Class")
     let classTimeButton = setValueButtonNoWidth(withPlaceholder: "Set...")
     let reminderButton = setValueButtonNoWidth(withPlaceholder: "None")
-    let dateButton = setValueButton(withPlaceholder: "Set...")
     let spacerView1 = makeSpacerView()
     let spacerView2 = makeSpacerView()
     let spacerView3 = makeSpacerView()
@@ -132,7 +131,6 @@ class AddClassViewController: UIViewController {
         bottomStackView.addArrangedSubview(repeatsStackView)
         bottomStackView.addArrangedSubview(spacerView5)
         bottomStackView.addArrangedSubview(dateHeading)
-        bottomStackView.addArrangedSubview(dateButton)
         
         classDayStackView.addArrangedSubview(sunday)
         classDayStackView.addArrangedSubview(monday)
@@ -203,7 +201,6 @@ class AddClassViewController: UIViewController {
         everyMonthButton.addTarget(self, action: #selector(repeatsButtonTapped), for: .touchUpInside)
         
         reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
-        dateButton.addTarget(self, action: #selector(dateButtonTapped), for: .touchUpInside)
         
         if let classIndex = SingleClassService.shared.getClassIndex() {
             if let theClass = CourseService.shared.getClass(atIndex: classIndex) {
@@ -250,8 +247,6 @@ class AddClassViewController: UIViewController {
                 default:
                     break
                 }
-                
-                dateButton.setTitle("\(formatDate(from: theClass.classStartDate))-\(formatDate(from: theClass.classEndDate))", for: .normal)
             }
         }
     }
@@ -278,12 +273,6 @@ class AddClassViewController: UIViewController {
         self.present(vc, animated: true, completion: nil)
     }
     
-    @objc func dateButtonTapped() {
-        let vc = SetClassDatesViewController()
-        vc.modalPresentationStyle = .fullScreen
-        self.present(vc, animated: true, completion: nil)
-    }
-    
     @objc func repeatsButtonTapped(button: UIButton) {
         everyWeekButton.unhighlight()
         everyTwoWeeksButton.unhighlight()
@@ -306,8 +295,6 @@ class AddClassViewController: UIViewController {
     @objc func saveClass() {
         let theClass = SingleClass()
         theClass.classDays = configureClassDays()
-        theClass.classStartDate = SingleClassService.shared.getStartDate()
-        theClass.classEndDate = SingleClassService.shared.getEndDate()
         theClass.startTime = SingleClassService.shared.getStartTime()
         theClass.endTime = SingleClassService.shared.getEndTime()
         theClass.repeats = SingleClassService.shared.getRepeats()
@@ -326,8 +313,8 @@ class AddClassViewController: UIViewController {
                         classToUpdate?.classDays[index] = theClass.classDays[index]
                     }
                     
-                    classToUpdate?.classStartDate = theClass.classStartDate
-                    classToUpdate?.classEndDate = theClass.classEndDate
+//                    classToUpdate?.classStartDate = theClass.classStartDate
+//                    classToUpdate?.classEndDate = theClass.classEndDate
                     classToUpdate?.startTime = theClass.startTime
                     classToUpdate?.endTime = theClass.endTime
                     classToUpdate?.repeats = theClass.repeats
@@ -339,7 +326,7 @@ class AddClassViewController: UIViewController {
                     updateTasks(forClass: theClass)
                 } else {
                     realm.add(theClass, update: .modified)
-                    var course = AllCoursesService.courseShared.getSelectedCourse()
+                    var course = AllCoursesService.shared.getSelectedCourse()
                     course?.classes.append(theClass)
                     makeTasks(forClass: theClass)
                 }
@@ -363,15 +350,6 @@ class AddClassViewController: UIViewController {
         //}
     }
     
-    func setClassDates() {
-        //        if SingleClassService.shared.getStartDate == SingleClassService.shared.getEndDate {
-        //            classTimeButton.setTitle("Set...", for: .normal)
-        //        } else {
-        dateButton.setTitle("\(SingleClassService.shared.getStartDateAsString()) - \(SingleClassService.shared.getEndDateAsString())",
-            for: .normal)
-        //}
-    }
-    
     func configureClassDays() -> List<Int> {
         let days = List<Int>()
         days.append(objectsIn: SingleClassService.shared.getClassDays())
@@ -379,15 +357,15 @@ class AddClassViewController: UIViewController {
     }
     
     func makeTasks(forClass theClass: SingleClass) {
-        var startDate = Calendar.current.startOfDay(for: theClass.classStartDate)
+        let course = AllCoursesService.shared.getSelectedCourse()
+        var startDate = Calendar.current.startOfDay(for: course?.startDate ?? Date())
         var dayIncrementor = startDate
-        var endDate = Calendar.current.startOfDay(for: theClass.classEndDate)
+        var endDate = Calendar.current.startOfDay(for: course?.endDate ?? Date())
         
-        while dayIncrementor < theClass.classEndDate {
+        while dayIncrementor < endDate {
             if theClass.classDays[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
-                print(dayIncrementor.dayNumberOfWeek())
                 let task = Task()
-                task.title = AllCoursesService.courseShared.getSelectedCourse()?.title ?? ""
+                task.title = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
                 task.dateOrTime = 0
                 task.startDate = theClass.startTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
                 task.endDate = theClass.endTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
@@ -407,7 +385,7 @@ class AddClassViewController: UIViewController {
     }
     
     func deleteTasks() {
-        var course = AllCoursesService.courseShared.getSelectedCourse()
+        var course = AllCoursesService.shared.getSelectedCourse()
         let tasksToUpdate = realm.objects(Task.self).filter("title == %@ AND location == %@", course?.title, SingleClassService.shared.getInitialLocation())
         
         for task in tasksToUpdate {
