@@ -53,7 +53,7 @@ class SetTaskReminderViewController: PickerViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
         //Not topView
-        pickerTypeSegmentedControl.backgroundColor = .lightBlue
+        pickerTypeSegmentedControl.backgroundColor = .mainBlue
         pickerTypeSegmentedControl.selectedSegmentIndex = TaskService.shared.getDateOrTime()
         pickerTypeSegmentedControl.anchor(top: topView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 80, paddingRight: 80)
         pickerTypeSegmentedControl.addTarget(self, action: #selector(pickerTypeSCToggled), for: .valueChanged)

@@ -96,9 +96,13 @@ func makeDateAndTimePicker(height: CGFloat) -> UIDatePicker{
 
 func makeTextField(withPlaceholder text: String) -> UITextField {
     let textField = UITextField()
-    textField.setDimensions(width: UIScreen.main.bounds.width - 40, height: 35)
+    textField.setDimensions(width: UIScreen.main.bounds.width - 40, height: 45)
     textField.placeholder = text
-    textField.backgroundColor = .lightBlue
+    textField.backgroundColor = .clear
+    textField.textColor = .gray
+    textField.layer.borderColor = UIColor.mainBlue.cgColor
+    textField.layer.borderWidth = 3
+    textField.layer.cornerRadius = 5
     textField.returnKeyType = UIReturnKeyType.done
     let spacerView = UIView(frame:CGRect(x:0, y:0, width:10, height:10))
     textField.leftViewMode = UITextField.ViewMode.always
@@ -131,12 +135,15 @@ func setValueButton(withPlaceholder text: String) -> UIButton {
     button.setTitle(text, for: .normal)
     button.setTitleColor(.darkBlue, for: .normal)
     button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-    button.titleLabel?.alpha = 0.5
+    button.titleLabel?.alpha = 0.4
     button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
-    button.imageEdgeInsets = UIEdgeInsets(top: 0, left: UIScreen.main.bounds.width - 60, bottom: 0, right: 0)
-    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: 35)
-    button.backgroundColor = .lightBlue
-    let nextIcon = UIImage(named: "nextMenuButton")
+    button.imageEdgeInsets = UIEdgeInsets(top: 0, left: UIScreen.main.bounds.width - 65, bottom: 0, right: 0)
+    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: 45)
+    button.backgroundColor = .clear
+    button.layer.borderColor = UIColor.mainBlue.cgColor
+    button.layer.borderWidth = 3
+    button.layer.cornerRadius = 5
+    let nextIcon = UIImage(named: "nextMenuButtonGray")
     button.setImage(nextIcon, for: .normal)
     
     return button
@@ -161,19 +168,13 @@ func setValueButtonNoWidth(withPlaceholder text: String) -> UIButton {
 func makeLabel(ofSize size: CGFloat, weight: UIFont.Weight) -> UILabel {
     let taskLabel = UILabel()
     taskLabel.font = UIFont.systemFont(ofSize: size, weight: weight)
-    taskLabel.textColor = .darkBlue
+    taskLabel.textColor = .backgroundColor
     
     return taskLabel
 }
 
 func makeTaskView() -> UIView {
     let taskView = UIView()
-    taskView.layer.shadowColor = UIColor.black.cgColor
-    taskView.layer.shadowOpacity = 0.1
-    taskView.layer.shadowRadius = 0.5
-    taskView.layer.shadowOffset = CGSize(width: 0, height: 2)
-    taskView.layer.borderWidth = 1
-    taskView.layer.borderColor = UIColor.lightGray.cgColor
     taskView.backgroundColor = .lightBlue
     taskView.layer.cornerRadius = 10
     
@@ -226,7 +227,6 @@ func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
     button.setTitleColor(.darkBlue, for: .normal)
     button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
     button.clipsToBounds = true
-    
     
     return button
 }

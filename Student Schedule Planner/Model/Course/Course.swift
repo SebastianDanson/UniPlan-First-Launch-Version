@@ -16,7 +16,7 @@ class Course: Object {
     @objc dynamic var color = 0
     @objc dynamic var startDate = Date()
     @objc dynamic var endDate = Date()
-    var title = ""
+    @objc dynamic var title = ""
     var classes = List<SingleClass>()
     var assignments = List<Assignment>()
     var quizzes = List<Quiz>()

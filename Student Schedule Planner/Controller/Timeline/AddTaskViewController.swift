@@ -44,8 +44,20 @@ class AddTaskViewController: PickerViewController {
     let reminderHeading = makeHeading(withText: "Reminder:")
     let reminderButton = setValueButton(withPlaceholder: "None")
     let reminderSwitch = UISwitch()
+    let colorHeading = makeHeading(withText: "Color:")
     let saveButton = makeSaveButton()
     
+    //Color Buttons
+    let red = makeColorButton(ofColor: .alizarin)
+    let orange = makeColorButton(ofColor: .carrot)
+    let yellow = makeColorButton(ofColor: .sunflower)
+    let green = makeColorButton(ofColor: .emerald)
+    let turquoise = makeColorButton(ofColor: .turquoise)
+    let blue = makeColorButton(ofColor: .riverBlue)
+    let darkBlue = makeColorButton(ofColor: .midnightBlue)
+    let purple = makeColorButton(ofColor: .amethyst)
+    let colorStackView = makeStackView(withOrientation: .horizontal, spacing: 3)
+
     //MARK: - setup UI
     func setupViews() {
         view.backgroundColor = .backgroundColor
@@ -60,6 +72,18 @@ class AddTaskViewController: PickerViewController {
         view.addSubview(reminderHeading)
         view.addSubview(reminderButton)
         view.addSubview(reminderSwitch)
+        view.addSubview(colorHeading)
+        view.addSubview(colorStackView)
+        
+        
+        colorStackView.addArrangedSubview(red)
+        colorStackView.addArrangedSubview(orange)
+        colorStackView.addArrangedSubview(yellow)
+        colorStackView.addArrangedSubview(green)
+        colorStackView.addArrangedSubview(turquoise)
+        colorStackView.addArrangedSubview(blue)
+        colorStackView.addArrangedSubview(darkBlue)
+        colorStackView.addArrangedSubview(purple)
         
         //topView
         topView.addSubview(titleLabel)
@@ -102,8 +126,11 @@ class AddTaskViewController: PickerViewController {
         reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
         
         saveButton.centerX(in: view)
-        saveButton.anchor(top: reminderButton.bottomAnchor, paddingTop: UIScreen.main.bounds.height/18)
+        saveButton.anchor(top: colorStackView.bottomAnchor, paddingTop: UIScreen.main.bounds.height/30)
         saveButton.addTarget(self, action: #selector(saveTask), for: .touchUpInside)
+        
+        colorHeading.anchor(top: reminderButton.bottomAnchor, left: reminderHeading.leftAnchor, paddingTop: UIScreen.main.bounds.height/80)
+        colorStackView.anchor(top: colorHeading.bottomAnchor, left: colorHeading.leftAnchor, paddingTop: 5)
         
         if let taskIndex = TaskService.shared.getTaskIndex() {
             if let task = TaskService.shared.getTask(atIndex: taskIndex) {

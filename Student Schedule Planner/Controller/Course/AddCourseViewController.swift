@@ -37,11 +37,11 @@ class AddCourseViewController: PickerViewController {
     let saveButton = makeSaveButton()
     
     //Color Buttons
-    let red = makeColorButton(ofColor: .red)
-    let orange = makeColorButton(ofColor: .orange)
-    let yellow = makeColorButton(ofColor: .yellow)
+    let red = makeColorButton(ofColor: .alizarin)
+    let orange = makeColorButton(ofColor: .carrot)
+    let yellow = makeColorButton(ofColor: .sunflower)
     let green = makeColorButton(ofColor: .emerald)
-    let cyan = makeColorButton(ofColor: .cyan)
+    let turquoise = makeColorButton(ofColor: .turquoise)
     let blue = makeColorButton(ofColor: .riverBlue)
     let darkBlue = makeColorButton(ofColor: .midnightBlue)
     let purple = makeColorButton(ofColor: .amethyst)
@@ -65,7 +65,7 @@ class AddCourseViewController: PickerViewController {
         colorStackView.addArrangedSubview(orange)
         colorStackView.addArrangedSubview(yellow)
         colorStackView.addArrangedSubview(green)
-        colorStackView.addArrangedSubview(cyan)
+        colorStackView.addArrangedSubview(turquoise)
         colorStackView.addArrangedSubview(blue)
         colorStackView.addArrangedSubview(darkBlue)
         colorStackView.addArrangedSubview(purple)
@@ -97,7 +97,7 @@ class AddCourseViewController: PickerViewController {
         orange.tag = 1
         yellow.tag = 2
         green.tag = 3
-        cyan.tag = 4
+        turquoise.tag = 4
         blue.tag = 5
         darkBlue.tag = 6
         purple.tag = 7
@@ -107,7 +107,7 @@ class AddCourseViewController: PickerViewController {
         orange.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         yellow.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         green.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        cyan.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
+        turquoise.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         blue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         darkBlue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         purple.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
@@ -147,7 +147,7 @@ class AddCourseViewController: PickerViewController {
         orange.alpha = 1
         yellow.alpha = 1
         green.alpha = 1
-        cyan.alpha = 1
+        turquoise.alpha = 1
         blue.alpha = 1
         darkBlue.alpha = 1
         purple.alpha = 1

@@ -24,8 +24,8 @@ class TaskCell: SwipeTableViewCell {
     //MARK: - Properties
     let taskLabel = makeLabel(ofSize: 18, weight: .bold)
     let nextIcon = UIImage(named: "nextMenuButton")
-    let durationStartLabel = makeLabel(ofSize: 16, weight: .regular)
-    let durationEndLabel = makeLabel(ofSize: 16, weight: .regular)
+    let durationStartLabel = makeLabel(ofSize: 16, weight: .semibold)
+    let durationEndLabel = makeLabel(ofSize: 16, weight: .semibold)
     let reminderLabel = makeLabel(ofSize: 12, weight: .semibold)
     let taskView = makeTaskView()
     
@@ -39,7 +39,8 @@ class TaskCell: SwipeTableViewCell {
         taskView.addSubview(durationEndLabel)
         taskView.addSubview(nextImage)
         taskView.addSubview(reminderLabel)
-        
+        taskView.backgroundColor = .carrot
+        taskView.layer.borderWidth = 0
         taskLabel.lineBreakMode = .byWordWrapping
         taskLabel.numberOfLines = 0
         
