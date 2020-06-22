@@ -39,8 +39,8 @@ class QuizAndExamCell: SwipeTableViewCell {
         taskView.addSubview(timeLabel)
         taskView.addSubview(nextImage)
         
-        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 10,
-                        paddingLeft: 10, paddingRight: 10, paddingBottom: 10)
+        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 5,
+                        paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
         
         dateLabel.centerY(in: taskView)
         dateLabel.anchor(left: taskView.leftAnchor, paddingLeft: 20)

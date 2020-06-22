@@ -34,10 +34,10 @@ class CourseDetailsViewController: SwipeViewController {
     
     //MARK: - Properties
     //table views
-    let classTableView = UITableView()
-    let assignmentsTableView = UITableView()
-    let quizzesTableView = UITableView()
-    let examsTableView = UITableView()
+    let classTableView = makeTableView(withRowHeight: 110)
+    let assignmentsTableView = makeTableView(withRowHeight: 75)
+    let quizzesTableView = makeTableView(withRowHeight: 55)
+    let examsTableView = makeTableView(withRowHeight: 55)
     
     let topView = makeTopView(height: UIScreen.main.bounds.height/8)
     let titleLabel = makeTitleLabel(withText: "")
@@ -98,11 +98,10 @@ class CourseDetailsViewController: SwipeViewController {
         
         classTableView.centerX(in: view)
         classTableView.anchor(top: classesHeading.bottomAnchor, paddingTop: 5)
-        classTableView.setDimensions(width: view.frame.width, height: 120 )
+        classTableView.setDimensions(width: view.frame.width, height: classTableView.rowHeight )
         classTableView.register(SingleClassCell.self, forCellReuseIdentifier: reuseIdentifer)
         classTableView.delegate = self
         classTableView.dataSource = self
-        classTableView.rowHeight = 120
         
         //Assignments Section
         assignmentsHeading.anchor(top: classTableView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
@@ -110,12 +109,11 @@ class CourseDetailsViewController: SwipeViewController {
         assignmentsAddButton.centerYAnchor.constraint(equalTo: assignmentsHeading.centerYAnchor).isActive = true
         assignmentsAddButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         assignmentsTableView.centerX(in: view)
-        assignmentsTableView.anchor(top: assignmentsHeading.bottomAnchor, paddingTop: 15)
-        assignmentsTableView.setDimensions(width: view.frame.width, height: 85)
+        assignmentsTableView.anchor(top: assignmentsHeading.bottomAnchor, paddingTop: 5)
+        assignmentsTableView.setDimensions(width: view.frame.width, height: assignmentsTableView.rowHeight)
         assignmentsTableView.register(AssignmentCell.self, forCellReuseIdentifier: reuseIdentifer)
         assignmentsTableView.delegate = self
         assignmentsTableView.dataSource = self
-        assignmentsTableView.rowHeight = 85        
         
         //Quizzes Section
         quizzesHeading.anchor(top: assignmentsTableView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
@@ -124,11 +122,10 @@ class CourseDetailsViewController: SwipeViewController {
         quizzesAddButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         quizzesTableView.centerX(in: view)
         quizzesTableView.anchor(top: quizzesHeading.bottomAnchor, paddingTop: 5)
-        quizzesTableView.setDimensions(width: view.frame.width, height: 65)
+        quizzesTableView.setDimensions(width: view.frame.width, height: quizzesTableView.rowHeight)
         quizzesTableView.register(QuizAndExamCell.self, forCellReuseIdentifier: reuseIdentifer)
         quizzesTableView.delegate = self
         quizzesTableView.dataSource = self
-        quizzesTableView.rowHeight = 65
         
         //Exams Section
         examsHeading.anchor(top: quizzesTableView.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/55, paddingLeft: 20)
@@ -137,11 +134,10 @@ class CourseDetailsViewController: SwipeViewController {
         examsAddButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         examsTableView.centerX(in: view)
         examsTableView.anchor(top: examsHeading.bottomAnchor, paddingTop: 5)
-        examsTableView.setDimensions(width: view.frame.width, height: 65)
+        examsTableView.setDimensions(width: view.frame.width, height: examsTableView.rowHeight)
         examsTableView.register(QuizAndExamCell.self, forCellReuseIdentifier: reuseIdentifer)
         examsTableView.delegate = self
         examsTableView.dataSource = self
-        examsTableView.rowHeight = 65
         
         let courseIndex = AllCoursesService.shared.getCourseIndex()
         let course = AllCoursesService.shared.getCourse(atIndex: courseIndex)
@@ -206,6 +202,7 @@ class CourseDetailsViewController: SwipeViewController {
                 case classTableView:
                     if let classToDelete = CourseService.shared.getClass(atIndex: index) {
                         realm.delete(classToDelete)
+                        TaskService.shared.deleteTasks()
                         CourseService.shared.updateClasses()
                     }
                 case assignmentsTableView:
@@ -225,7 +222,6 @@ class CourseDetailsViewController: SwipeViewController {
                     }
                 }
             }
-           
         } catch {
             print("Error writing to Realm \(error.localizedDescription)")
         }

@@ -29,7 +29,6 @@ class SetClassTimeViewController: PickerViewController {
     let endTimePickerView = makeTimePicker()
     let saveButton = makeSaveButton()
 
-    
     //MARK: - setup UI
     func setupViews() {
         view.backgroundColor = .backgroundColor

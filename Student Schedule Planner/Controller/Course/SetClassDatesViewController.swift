@@ -75,6 +75,7 @@ class SetClassDatesViewController: PickerViewController {
     @objc func saveButtonPressed() {
         CourseService.shared.setStartDate(date: startDatePickerView.date)
         CourseService.shared.setEndDate(date: endDatePickerView.date)
+
          dismiss(animated: true)
      }
 }

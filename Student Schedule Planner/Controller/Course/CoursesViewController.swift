@@ -27,7 +27,7 @@ class CoursesViewController: SwipeViewController {
     let topView = makeTopView(height: UIScreen.main.bounds.height/8)
     let titleLabel = makeTitleLabel(withText: "Courses")
     let addButton = makeAddButton()
-    let tableView = makeTableView()
+    let tableView = makeTableView(withRowHeight: 80)
     
     //MARK: - UI setup
     func setupViews() {
@@ -53,7 +53,6 @@ class CoursesViewController: SwipeViewController {
         tableView.register(CourseCell.self, forCellReuseIdentifier: courseReuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = 80
     }
     //What happens when user tries to delete course
     override func updateModel(index: Int, tableView: UITableView) {

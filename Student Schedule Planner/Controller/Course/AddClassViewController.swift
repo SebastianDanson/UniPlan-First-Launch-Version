@@ -56,7 +56,6 @@ class AddClassViewController: UIViewController {
     let classDaysHeading = makeHeading(withText: "Days:")
     let classTimeHeading = makeHeading(withText: "Time:")
     let reminderHeading = makeHeading(withText: "Reminder:")
-    let dateHeading = makeHeading(withText: "Start Date/End Date:")
     let repeatsHeading = makeHeading(withText: "Repeats Every:")
     let locationHeading = makeHeading(withText: "Location:")
     
@@ -118,19 +117,17 @@ class AddClassViewController: UIViewController {
         topStackView.addArrangedSubview(spacerView2)
         topStackView.addArrangedSubview(locationHeading)
         topStackView.addArrangedSubview(locationTextField)
-        bottomStackView.addArrangedSubview(spacerView3)
+        topStackView.addArrangedSubview(spacerView3)
         
         timeAndReminderButtonsStackView.addArrangedSubview(classTimeButton)
         timeAndReminderButtonsStackView.addArrangedSubview(reminderButton)
         timeAndReminderButtonsStackView.distribution = .fillEqually
         
-        
-        bottomStackView.addArrangedSubview(spacerView4)
         bottomStackView.addArrangedSubview(timeAndReminderButtonsStackView)
+        bottomStackView.addArrangedSubview(spacerView4)
         bottomStackView.addArrangedSubview(repeatsHeading)
         bottomStackView.addArrangedSubview(repeatsStackView)
         bottomStackView.addArrangedSubview(spacerView5)
-        bottomStackView.addArrangedSubview(dateHeading)
         
         classDayStackView.addArrangedSubview(sunday)
         classDayStackView.addArrangedSubview(monday)
@@ -168,8 +165,7 @@ class AddClassViewController: UIViewController {
         classTimeHeading.anchor(top: topStackView.bottomAnchor, left: topStackView.leftAnchor, paddingTop: 5)
         reminderHeading.anchor(top: topStackView.bottomAnchor, left: reminderButton.leftAnchor, paddingTop: 5)
         
-        bottomStackView.anchor(top: reminderHeading.bottomAnchor)
-        bottomStackView.centerX(in: view)
+        bottomStackView.anchor(top: reminderHeading.bottomAnchor, left: topStackView.leftAnchor, right: topStackView.rightAnchor)
         
         saveButton.centerX(in: view)
         saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: 40)
@@ -303,6 +299,7 @@ class AddClassViewController: UIViewController {
         theClass.reminderTime[0] = SingleClassService.shared.getReminderTime()[0]
         theClass.reminderTime[1] = SingleClassService.shared.getReminderTime()[1]
         theClass.reminder = SingleClassService.shared.getReminder()
+        TaskService.shared.setReminderTime([theClass.reminderTime[0], theClass.reminderTime[1]])
         
         do {
             try realm.write {
@@ -312,9 +309,6 @@ class AddClassViewController: UIViewController {
                     for index in 0..<theClass.classDays.count{
                         classToUpdate?.classDays[index] = theClass.classDays[index]
                     }
-                    
-//                    classToUpdate?.classStartDate = theClass.classStartDate
-//                    classToUpdate?.classEndDate = theClass.classEndDate
                     classToUpdate?.startTime = theClass.startTime
                     classToUpdate?.endTime = theClass.endTime
                     classToUpdate?.repeats = theClass.repeats
@@ -323,18 +317,17 @@ class AddClassViewController: UIViewController {
                     classToUpdate?.reminderTime[0] = theClass.reminderTime[0]
                     classToUpdate?.reminderTime[1] = theClass.reminderTime[1]
                     classToUpdate?.reminder = theClass.reminder
-                    updateTasks(forClass: theClass)
+                    TaskService.shared.updateTasks(forClass: theClass)
                 } else {
                     realm.add(theClass, update: .modified)
                     var course = AllCoursesService.shared.getSelectedCourse()
                     course?.classes.append(theClass)
-                    makeTasks(forClass: theClass)
+                    TaskService.shared.makeTasks(forClass: theClass)
                 }
             }
-        }catch {
+        } catch {
             print("Error writing Class to realm \(error.localizedDescription)")
         }
-        
         dismiss(animated: true)
     }
     
@@ -343,53 +336,12 @@ class AddClassViewController: UIViewController {
     }
     //MARK: - Helper methods
     func setClassTime() {
-        //        if SingleClassService.shared.getStartDate == SingleClassService.shared.getEndDate {
-        //            classTimeButton.setTitle("Set...", for: .normal)
-        //        } else {
         classTimeButton.setTitle("\(SingleClassService.shared.getStartTimeAsString())-\(SingleClassService.shared.getEndTimeAsString())", for: .normal)
-        //}
     }
     
     func configureClassDays() -> List<Int> {
         let days = List<Int>()
         days.append(objectsIn: SingleClassService.shared.getClassDays())
         return days
-    }
-    
-    func makeTasks(forClass theClass: SingleClass) {
-        let course = AllCoursesService.shared.getSelectedCourse()
-        var startDate = Calendar.current.startOfDay(for: course?.startDate ?? Date())
-        var dayIncrementor = startDate
-        var endDate = Calendar.current.startOfDay(for: course?.endDate ?? Date())
-        
-        while dayIncrementor < endDate {
-            if theClass.classDays[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
-                let task = Task()
-                task.title = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
-                task.dateOrTime = 0
-                task.startDate = theClass.startTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
-                task.endDate = theClass.endTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
-                task.reminder = theClass.reminder
-                task.reminderTime = theClass.reminderTime
-                task.location = theClass.location
-                
-                realm.add(task)
-            }
-            dayIncrementor.addTimeInterval(86400)
-        }
-    }
-    
-    func updateTasks(forClass theClass: SingleClass) {
-        deleteTasks()
-        makeTasks(forClass: theClass)
-    }
-    
-    func deleteTasks() {
-        var course = AllCoursesService.shared.getSelectedCourse()
-        let tasksToUpdate = realm.objects(Task.self).filter("title == %@ AND location == %@", course?.title, SingleClassService.shared.getInitialLocation())
-        
-        for task in tasksToUpdate {
-            realm.delete(task)
-        }
     }
 }

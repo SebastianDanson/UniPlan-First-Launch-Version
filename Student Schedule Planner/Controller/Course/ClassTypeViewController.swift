@@ -41,7 +41,7 @@ class ClassTypeViewController: UIViewController {
     let realm = try! Realm()
     
     //MARK: - Properties
-    var tableView = makeTableView()
+    var tableView = makeTableView(withRowHeight: 50)
     let topView = makeTopView(height: UIScreen.main.bounds.height/8)
     let backButton = makeBackButton()
     let titleLabel = makeTitleLabel(withText: "Select Class Type")
@@ -87,8 +87,6 @@ class ClassTypeViewController: UIViewController {
         
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
-        tableView.rowHeight = 50
-        
         tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self

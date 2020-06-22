@@ -13,7 +13,6 @@ class CourseService {
     
     let realm = try! Realm()
     
-    private var isCourse = false
     private var classes: List<SingleClass>?
     private var assignments: List<Assignment>?
     private var quizzes: List<Quiz>?
@@ -26,15 +25,6 @@ class CourseService {
     
     static let shared = CourseService()
     private init() {}
-    
-    //MARK: - IsCourse
-    func getIsCourse() -> Bool {
-        return isCourse
-    }
-    
-    func setIsCourse(bool: Bool) {
-        isCourse = bool
-    }
     
     //MARK: - Classes
     func getClass(atIndex index: Int) -> SingleClass? {
@@ -69,7 +59,8 @@ class CourseService {
         let id = AllCoursesService.shared.getSelectedCourse()?.id
         if let course = realm.objects(Course.self).filter("id == %@", id).first {
             assignments = course.assignments
-        }    }
+        }
+    }
     
     //MARK: - Quizzes
     func getQuiz(atIndex index: Int) -> Quiz? {

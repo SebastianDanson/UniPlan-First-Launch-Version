@@ -66,10 +66,10 @@ func makeBackButton() -> UIButton {
     return addButton
 }
 
-func makeTableView() -> UITableView {
+func makeTableView(withRowHeight height: CGFloat) -> UITableView {
     let tableView = UITableView()
     tableView.separatorColor = .clear
-    tableView.rowHeight = 80
+    tableView.rowHeight = height
     tableView.isScrollEnabled = true
     
     return tableView
@@ -101,7 +101,7 @@ func makeTextField(withPlaceholder text: String) -> UITextField {
     textField.backgroundColor = .clear
     textField.textColor = .gray
     textField.layer.borderColor = UIColor.mainBlue.cgColor
-    textField.layer.borderWidth = 3
+    textField.layer.borderWidth = 2
     textField.layer.cornerRadius = 5
     textField.returnKeyType = UIReturnKeyType.done
     let spacerView = UIView(frame:CGRect(x:0, y:0, width:10, height:10))
@@ -141,7 +141,7 @@ func setValueButton(withPlaceholder text: String) -> UIButton {
     button.setDimensions(width: UIScreen.main.bounds.width - 40, height: 45)
     button.backgroundColor = .clear
     button.layer.borderColor = UIColor.mainBlue.cgColor
-    button.layer.borderWidth = 3
+    button.layer.borderWidth = 2
     button.layer.cornerRadius = 5
     let nextIcon = UIImage(named: "nextMenuButtonGray")
     button.setImage(nextIcon, for: .normal)
@@ -154,11 +154,13 @@ func setValueButtonNoWidth(withPlaceholder text: String) -> UIButton {
     button.setTitle(text, for: .normal)
     button.setTitleColor(.darkBlue, for: .normal)
     button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-    button.titleLabel?.alpha = 0.5
+    button.titleLabel?.alpha = 0.4
+    button.layer.borderColor = UIColor.mainBlue.cgColor
     button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
-    button.setDimensions(height: 35)
-    button.backgroundColor = .lightBlue
-    let nextIcon = UIImage(named: "nextMenuButton")
+    button.setDimensions(height: 45)
+    button.layer.borderWidth = 2
+    button.layer.cornerRadius = 3
+    let nextIcon = UIImage(named: "nextMenuButtonGray")
     button.setImage(nextIcon, for: .normal)
     
     return button
@@ -168,14 +170,15 @@ func setValueButtonNoWidth(withPlaceholder text: String) -> UIButton {
 func makeLabel(ofSize size: CGFloat, weight: UIFont.Weight) -> UILabel {
     let taskLabel = UILabel()
     taskLabel.font = UIFont.systemFont(ofSize: size, weight: weight)
-    taskLabel.textColor = .backgroundColor
+    taskLabel.textColor = .darkBlue
     
     return taskLabel
 }
 
 func makeTaskView() -> UIView {
     let taskView = UIView()
-    taskView.backgroundColor = .lightBlue
+    taskView.layer.borderColor = UIColor.mainBlue.cgColor
+    taskView.layer.borderWidth = 3
     taskView.layer.cornerRadius = 10
     
     return taskView
@@ -185,12 +188,9 @@ func makeTaskView() -> UIView {
 func makeDayCircleButton(withLetter day: String) -> UIButton {
     let button = UIButton()
     button.setDimensions(width: 26, height: 26)
-    button.backgroundColor = .backgroundColor
     button.layer.cornerRadius = 13
-    button.layer.borderWidth = 1
-    button.layer.borderColor = UIColor.lightGray.cgColor
     button.setTitle(day, for: .normal)
-    button.setTitleColor(.lightGray, for: .normal)
+    button.unhighlight()
     
     return button
 }
@@ -220,13 +220,10 @@ func makeAddButtonWithFill() -> UIButton {
 //MARK: - Add Class
 func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
     let button = UIButton()
-    button.backgroundColor = .lightBlue
-    button.layer.borderWidth = 1
-    button.layer.borderColor = UIColor.lightGray.cgColor
     button.setTitle(day, for: .normal)
-    button.setTitleColor(.darkBlue, for: .normal)
     button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
     button.clipsToBounds = true
+    button.unhighlight()
     
     return button
 }
@@ -234,11 +231,8 @@ func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
 func makeRepeatsButton(withText text: String) -> UIButton{
     let button = UIButton()
     button.setDimensions(height: UIScreen.main.bounds.height/15)
-    button.backgroundColor = .lightBlue
-    button.layer.borderWidth = 1
-    button.layer.borderColor = UIColor.lightGray.cgColor
     button.setTitle(text, for: .normal)
-    button.setTitleColor(.darkBlue, for: .normal)
+    button.unhighlight()
     button.layer.cornerRadius = 5
     
     return button

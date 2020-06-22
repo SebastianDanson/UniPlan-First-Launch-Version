@@ -18,6 +18,11 @@ class AddAssignmentViewController: UIViewController {
         setupViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupReminderTime()
+    }
+    
     //MARK: - Properties
     let topView = makeTopView(height: UIScreen.main.bounds.height/8)
     let titleLabel = makeTitleLabel(withText: "Add Assignment")
@@ -27,9 +32,13 @@ class AddAssignmentViewController: UIViewController {
     let titleTextField = makeTextField(withPlaceholder: "Assignment Title")
     let dateHeading = makeHeading(withText: "Date:")
     let datePicker = makeDateAndTimePicker(height: UIScreen.main.bounds.height/6)
+    let reminderHeading = makeHeading(withText: "Reminder")
+    let reminderSwitch = UISwitch()
+    let reminderButton = setValueButton(withPlaceholder: "When Task Starts")
     
     //MARK: - UI Setup
     func setupViews() {
+        
         view.backgroundColor = .backgroundColor
         view.addSubview(topView)
         view.addSubview(saveButton)
@@ -37,6 +46,9 @@ class AddAssignmentViewController: UIViewController {
         view.addSubview(titleTextField)
         view.addSubview(dateHeading)
         view.addSubview(datePicker)
+        view.addSubview(reminderButton)
+        view.addSubview(reminderSwitch)
+        view.addSubview(reminderHeading)
         
         //topView
         topView.addSubview(titleLabel)
@@ -58,7 +70,17 @@ class AddAssignmentViewController: UIViewController {
         datePicker.anchor(top: dateHeading.bottomAnchor)
         datePicker.centerX(in: view)
         
-        saveButton.anchor(top: datePicker.bottomAnchor, paddingTop: UIScreen.main.bounds.height/10)
+        reminderHeading.anchor(top: datePicker.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/25, paddingLeft: 20)
+        reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
+        reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
+        reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
+        
+        reminderButton.centerX(in: view)
+        reminderButton.anchor(top: reminderHeading.bottomAnchor, paddingTop: UIScreen.main.bounds.height/80)
+        reminderButton.isHidden = true
+        reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
+        
+        saveButton.anchor(top: reminderButton.bottomAnchor, paddingTop: UIScreen.main.bounds.height/10)
         saveButton.centerX(in: view)
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         
@@ -70,14 +92,18 @@ class AddAssignmentViewController: UIViewController {
         }
     }
     
+    func setupReminderTime() {
+        reminderButton.isHidden = TaskService.shared.getHideReminder()
+        reminderSwitch.isOn = !reminderButton.isHidden
+        reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)
+    }
+    
+    //MARK: - Actions
     @objc func backButtonPressed() {
         dismiss(animated: true, completion: nil)
     }
     
     @objc func saveButtonPressed() {
-        //        AssignmentService.shared.setTitle(title: titleTextField.text ?? "Untitled")
-        //        AssignmentService.shared.setDueDate(date: datePicker.date)
-        
         var assignment = Assignment()
         assignment.title = titleTextField.text ?? "Untitled"
         assignment.dueDate = datePicker.date
@@ -89,11 +115,31 @@ class AddAssignmentViewController: UIViewController {
                     assignmentToUpdate?.dueDate = assignment.dueDate
                 } else {
                     realm.add(assignment, update: .modified)
+                    if let course = AllCoursesService.shared.getSelectedCourse() {
+                        course.assignments.append(assignment)
+                    }
                 }
             }
         } catch {
             print("Error writing Class to realm \(error.localizedDescription)")
         }
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func reminderButtonPressed() {
+        let vc = SetTaskReminderViewController()
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func reminderSwitchToggled() {
+        if reminderSwitch.isOn {
+            reminderButton.isHidden = false
+            TaskService.shared.setHideReminder(bool: false)
+            TaskService.shared.askToSendNotifications()
+        } else {
+            reminderButton.isHidden = true
+            TaskService.shared.setHideReminder(bool: true)
+        }
     }
 }

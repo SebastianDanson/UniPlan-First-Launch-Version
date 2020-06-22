@@ -19,7 +19,8 @@ class Task: Object {
     @objc dynamic var dateOrTime = 0 //0 means time was set, non zero means date was set
     @objc dynamic var reminderDate: Date = Date()
     @objc dynamic var location = ""
-    @objc dynamic var isCourse = false
+    @objc dynamic var color = 0
+    
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
 
     required init() {

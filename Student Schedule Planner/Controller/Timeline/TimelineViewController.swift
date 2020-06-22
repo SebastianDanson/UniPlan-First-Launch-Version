@@ -19,7 +19,7 @@ class TimelineViewController: SwipeViewController  {
     let realm = try! Realm()
     
     //MARK: - Properties
-    var tableView = makeTableView()
+    var tableView = makeTableView(withRowHeight: 80)
     let topView = makeTopView(height: UIScreen.main.bounds.height/5.5)
     let addButton = makeAddButton()
     let calendar = makeCalendar()

@@ -18,6 +18,11 @@ class AddQuizAndExamViewController: UIViewController {
         setupViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupReminderTime()
+    }
+    
     //MARK: - Properties
     let topView = makeTopView(height: UIScreen.main.bounds.height/8)
     let titleLabel = makeTitleLabel(withText: "Add Quiz")
@@ -27,12 +32,16 @@ class AddQuizAndExamViewController: UIViewController {
     let endTimeHeading = makeHeading(withText: "End Time")
     let endTimePicker = makeTimePicker()
     let datePicker = makeDateAndTimePicker(height: UIScreen.main.bounds.height/6)
+    let reminderHeading = makeHeading(withText: "Reminder")
+    let reminderSwitch = UISwitch()
+    let reminderButton = setValueButton(withPlaceholder: "When Task Starts")
     
     //MARK: - UI Setup
     func setupViews() {
         if CourseService.shared.getQuizOrExam() != 0 {
             titleLabel.text = "Add Exam"
         }
+        
         view.backgroundColor = .backgroundColor
         view.addSubview(topView)
         view.addSubview(saveButton)
@@ -40,6 +49,9 @@ class AddQuizAndExamViewController: UIViewController {
         view.addSubview(datePicker)
         view.addSubview(endTimeHeading)
         view.addSubview(endTimePicker)
+        view.addSubview(reminderButton)
+        view.addSubview(reminderSwitch)
+        view.addSubview(reminderHeading)
         
         //topView
         topView.addSubview(titleLabel)
@@ -62,7 +74,17 @@ class AddQuizAndExamViewController: UIViewController {
         endTimeHeading.anchor(top: datePicker.bottomAnchor, left: dateHeading.leftAnchor, paddingTop: 15)
         endTimePicker.anchor(top: endTimeHeading.bottomAnchor, left: endTimeHeading.leftAnchor)
         
-        saveButton.anchor(top: endTimePicker.bottomAnchor, paddingTop: UIScreen.main.bounds.height/10)
+        reminderHeading.anchor(top: endTimePicker.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/25, paddingLeft: 20)
+        reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
+        reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
+        reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
+        
+        reminderButton.centerX(in: view)
+        reminderButton.anchor(top: reminderHeading.bottomAnchor, paddingTop: UIScreen.main.bounds.height/80)
+        reminderButton.isHidden = true
+        reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
+        
+        saveButton.anchor(top: reminderButton.bottomAnchor, paddingTop: UIScreen.main.bounds.height/10)
         saveButton.centerX(in: view)
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         
@@ -81,15 +103,17 @@ class AddQuizAndExamViewController: UIViewController {
         }
     }
     
+    func setupReminderTime() {
+        reminderButton.isHidden = TaskService.shared.getHideReminder()
+        reminderSwitch.isOn = !reminderButton.isHidden
+        reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)
+    }
+    
     @objc func backButtonPressed() {
         dismiss(animated: true, completion: nil)
     }
     
     @objc func saveButtonPressed() {
-        //        AssignmentService.shared.setTitle(title: titleTextField.text ?? "Untitled")
-        //        AssignmentService.shared.setDueDate(date: datePicker.date)
-        
-        
         do {
             try realm.write {
                 if CourseService.shared.getQuizOrExam() == 0 {
@@ -102,6 +126,9 @@ class AddQuizAndExamViewController: UIViewController {
                         quizToUpdate?.endTime = quiz.endTime
                     } else {
                         realm.add(quiz, update: .modified)
+                        if let course = AllCoursesService.shared.getSelectedCourse() {
+                            course.quizzes.append(quiz)
+                        }
                     }
                 } else {
                     var exam = Exam()
@@ -114,6 +141,9 @@ class AddQuizAndExamViewController: UIViewController {
                         examToUpdate?.endTime = exam.endTime
                     } else {
                         realm.add(exam, update: .modified)
+                        if let course = AllCoursesService.shared.getSelectedCourse() {
+                            course.exams.append(exam)
+                        }
                     }
                 }
             }
@@ -121,5 +151,22 @@ class AddQuizAndExamViewController: UIViewController {
             print("Error writing Class to realm \(error.localizedDescription)")
         }
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func reminderButtonPressed() {
+        let vc = SetTaskReminderViewController()
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func reminderSwitchToggled() {
+        if reminderSwitch.isOn {
+            reminderButton.isHidden = false
+            TaskService.shared.setHideReminder(bool: false)
+            TaskService.shared.askToSendNotifications()
+        } else {
+            reminderButton.isHidden = true
+            TaskService.shared.setHideReminder(bool: true)
+        }
     }
 }

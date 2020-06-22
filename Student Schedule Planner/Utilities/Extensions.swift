@@ -13,8 +13,7 @@ extension UIColor {
     static let backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
     static let mainBlue = UIColor(red: 41/255, green: 128/255, blue: 185/255, alpha: 1)
     static let darkBlue = UIColor(red: 52/255, green: 73/255, blue: 94/255, alpha: 1)
-    static let lightBlue = UIColor(red: 52/255, green: 73/255, blue: 94/255, alpha: 1)
-
+    
     static let turquoise = UIColor(red: 0/255, green: 188/255, blue: 212/255, alpha: 1)
     static let emerald = UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1)
     static let riverBlue = UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1)
@@ -72,15 +71,17 @@ extension UIView {
 //MARK: - Button
 extension UIButton {
     func highlight() {
-        self.setTitleColor(.mainBlue, for: .normal)
+        self.setTitleColor(.backgroundColor, for: .normal)
+        self.backgroundColor = .mainBlue
         self.layer.borderColor = UIColor.mainBlue.cgColor
         self.layer.borderWidth = 2
     }
-
+    
     func unhighlight() {
-        self.setTitleColor(.darkBlue, for: .normal)
-        self.layer.borderColor = UIColor.lightGray.cgColor
-        self.layer.borderWidth = 1
+        self.setTitleColor(.mainBlue, for: .normal)
+        self.layer.borderColor = UIColor.mainBlue.cgColor
+        self.layer.borderWidth = 2
+        self.backgroundColor = .clear
     }
 }
 

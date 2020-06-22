@@ -19,6 +19,7 @@ class AddCourseViewController: PickerViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setClassDates()
+        CourseService.shared.setColor(int: 0)
     }
     
     //MARK: - properties
@@ -130,9 +131,8 @@ class AddCourseViewController: PickerViewController {
                 let course = Course()
                 course.title = titleTextField.text ?? "Unitled"
                 course.startDate = CourseService.shared.getStartDate()
-                course.endDate = CourseService.shared.getStartDate()
+                course.endDate = CourseService.shared.getEndDate()
                 course.color = CourseService.shared.getColor()
-                
                 realm.add(course)
             }
         } catch {
@@ -158,11 +158,7 @@ class AddCourseViewController: PickerViewController {
     
     //MARK: - Helper functions
     func setClassDates() {
-        //        if SingleClassService.shared.getStartDate == SingleClassService.shared.getEndDate {
-        //            classTimeButton.setTitle("Set...", for: .normal)
-        //        } else {
         setDateButton.setTitle("\(CourseService.shared.getStartDateAsString()) - \(CourseService.shared.getEndDateAsString())",
             for: .normal)
-        //}
     }
 }

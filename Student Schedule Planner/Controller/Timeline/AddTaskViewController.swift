@@ -25,6 +25,7 @@ class AddTaskViewController: PickerViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupReminderTime() //setups initial reminder time
+        CourseService.shared.setColor(int: 0)
     }
     
     //MARK: - Properties
@@ -132,6 +133,25 @@ class AddTaskViewController: PickerViewController {
         colorHeading.anchor(top: reminderButton.bottomAnchor, left: reminderHeading.leftAnchor, paddingTop: UIScreen.main.bounds.height/80)
         colorStackView.anchor(top: colorHeading.bottomAnchor, left: colorHeading.leftAnchor, paddingTop: 5)
         
+        red.tag = 0
+        orange.tag = 1
+        yellow.tag = 2
+        green.tag = 3
+        turquoise.tag = 4
+        blue.tag = 5
+        darkBlue.tag = 6
+        purple.tag = 7
+        
+        red.alpha = 0.3
+        red.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
+        orange.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
+        yellow.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
+        green.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
+        turquoise.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
+        blue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
+        darkBlue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
+        purple.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
+        
         if let taskIndex = TaskService.shared.getTaskIndex() {
             if let task = TaskService.shared.getTask(atIndex: taskIndex) {
                 titleTextField.text = task.title
@@ -152,6 +172,28 @@ class AddTaskViewController: PickerViewController {
                 TaskService.shared.setDateOrTime(scIndex: task.dateOrTime)
                 let reminderTime: [Int] = [task.reminderTime[0], task.reminderTime[1]]
                 TaskService.shared.setReminderTime(reminderTime)
+                CourseService.shared.setColor(int: task.color)
+                
+                switch task.color {
+                case 0:
+                    colorButtonPressed(button: red)
+                case 1:
+                    colorButtonPressed(button: orange)
+                case 2:
+                    colorButtonPressed(button: yellow)
+                case 3:
+                    colorButtonPressed(button: green)
+                case 4:
+                    colorButtonPressed(button: turquoise)
+                case 5:
+                    colorButtonPressed(button: blue)
+                case 6:
+                    colorButtonPressed(button: darkBlue)
+                case 7:
+                    colorButtonPressed(button: purple)
+                default:
+                    break
+                }
             }
         }
     }
@@ -188,6 +230,8 @@ class AddTaskViewController: PickerViewController {
         task.endDate = endDate
         task.dateOrTime = TaskService.shared.getDateOrTime()
         task.reminder = reminderSwitch.isOn
+        task.color = CourseService.shared.getColor()
+        
         if task.dateOrTime == 0 {
             let reminderTime = TaskService.shared.getReminderTime()
             task.reminderTime[0] = reminderTime[0]
@@ -199,7 +243,6 @@ class AddTaskViewController: PickerViewController {
         if !checkForTimeConflict(startTime: task.startDate, endDateTime: task.endDate, check: TaskService.shared.getCheckForTimeConflict()) {
             do {
                 try realm.write {
-                   // if TaskService.shared.getTaskIndex() != nil {
                         if let taskIndex = TaskService.shared.getTaskIndex() {
                             //Updates previous task
                             var taskToUpdate = TaskService.shared.getTask(atIndex: taskIndex)
@@ -211,7 +254,7 @@ class AddTaskViewController: PickerViewController {
                             taskToUpdate?.reminder = task.reminder
                             taskToUpdate?.reminderTime[0] = task.reminderTime[0]
                             taskToUpdate?.reminderTime[1] = task.reminderTime[1]
-                     //   }
+                            taskToUpdate?.color = task.color
                     } else {
 //                        let dateOfTask = Calendar.current.startOfDay(for: startDatePicker.date)
 //                        let endOfDay: Date = {
@@ -235,7 +278,7 @@ class AddTaskViewController: PickerViewController {
                 print("Error writing task to realm, \(error.localizedDescription)")
             }
             TaskService.shared.updateTasks()
-            scheduleNotification()
+            TaskService.shared.scheduleNotification(forTask: task)
             dismiss(animated: true)
         }
     }
@@ -269,64 +312,30 @@ class AddTaskViewController: PickerViewController {
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
     }
-    
+
     @objc func reminderSwitchToggled() {
         if reminderSwitch.isOn {
             reminderButton.isHidden = false
             TaskService.shared.setHideReminder(bool: false)
-            askToSendNotifications()
+            TaskService.shared.askToSendNotifications()
         } else {
             reminderButton.isHidden = true
             TaskService.shared.setHideReminder(bool: true)
         }
     }
     
-    //MARK: - Push notification methods
-    @objc func askToSendNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .badge, .sound], completionHandler: {_,_ in })
-    }
-    
-    @objc func scheduleNotification() {
-        let center = UNUserNotificationCenter.current()
-        let content = UNMutableNotificationContent()
+    @objc func colorButtonPressed(button: UIButton) {
+        red.alpha = 1
+        orange.alpha = 1
+        yellow.alpha = 1
+        green.alpha = 1
+        turquoise.alpha = 1
+        blue.alpha = 1
+        darkBlue.alpha = 1
+        purple.alpha = 1
         
-        var dateComponents = DateComponents()
-        let units: Set<Calendar.Component> = [.nanosecond, .second,.minute, .hour, .day, .month, .year]
-        
-        //If user specified time before a specific date for the reminder
-        if TaskService.shared.getDateOrTime() == 0 {
-            let reminderTime = TaskService.shared.getReminderTime()
-            var comps = Calendar.current.dateComponents(units, from: startDatePicker.date)
-            comps.second = 0 //ignores seconds -> reminder happens when the specified minute occurs
-            dateComponents = comps
-            if let hours = dateComponents.hour, let minutes = dateComponents.minute{
-                dateComponents.hour = hours - reminderTime[0]
-                dateComponents.minute = minutes - reminderTime[1]
-
-                if reminderTime[0] == 0, reminderTime[1] == 0 {
-                   content.body = "Your task starts now"
-                } else  {
-                    content.body = "Your task will start in \(reminderTime[0]) hour(s) and \(reminderTime[1]) minutes"
-                }
-            }
-        } else {
-            var comps = Calendar.current.dateComponents(units, from: TaskService.shared.getReminderDate())
-            comps.nanosecond = 0
-            comps.second = 0
-            dateComponents = comps
-            let date = TaskService.shared.formatDate(from: startDatePicker.date)
-            content.body = "Your task will start on \(date)"
-        }
-        
-        content.title = titleTextField.text ?? ""
-        content.categoryIdentifier = "alarm"
-        content.userInfo = ["customData": "fizzbuzz"]
-        content.sound = UNNotificationSound.default
-        
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        center.add(request)
+        button.alpha = 0.3
+        CourseService.shared.setColor(int: button.tag)
     }
     
     //MARK: - Helper methods

@@ -45,8 +45,8 @@ class AssignmentCell: SwipeTableViewCell {
         taskView.addSubview(timeLabel)
         taskView.addSubview(nextImage)
         
-        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 10,
-                        paddingLeft: 10, paddingRight: 10, paddingBottom: 10)
+        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 5,
+                        paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
         
         titleLabel.centerY(in: taskView)
         titleLabel.anchor(left: taskView.leftAnchor, paddingLeft: 20)

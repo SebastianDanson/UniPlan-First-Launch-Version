@@ -28,10 +28,13 @@ class TaskCell: SwipeTableViewCell {
     let durationEndLabel = makeLabel(ofSize: 16, weight: .semibold)
     let reminderLabel = makeLabel(ofSize: 12, weight: .semibold)
     let taskView = makeTaskView()
-    
+    let reminderIcon = UIImage(systemName: "alarm")
+
     //MARK: - setupUI
     func setupViews() {
         let nextImage = UIImageView(image: nextIcon!)
+        let reminderImage = UIImageView(image: reminderIcon!)
+
         backgroundColor = .backgroundColor
         addSubview(taskView)
         taskView.addSubview(taskLabel)
@@ -39,6 +42,7 @@ class TaskCell: SwipeTableViewCell {
         taskView.addSubview(durationEndLabel)
         taskView.addSubview(nextImage)
         taskView.addSubview(reminderLabel)
+        taskView.addSubview(reminderImage)
         taskView.backgroundColor = .carrot
         taskView.layer.borderWidth = 0
         taskLabel.lineBreakMode = .byWordWrapping
@@ -51,7 +55,10 @@ class TaskCell: SwipeTableViewCell {
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
         
-        reminderLabel.anchor(left: taskLabel.leftAnchor, bottom: taskView.bottomAnchor, paddingBottom: 5)
+        reminderImage.anchor(left: taskLabel.leftAnchor,bottom: taskView.bottomAnchor, paddingBottom: 5 )
+        reminderImage.tintColor = .white
+        reminderImage.setDimensions(width: 15, height: 15)
+        reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 3, paddingBottom: 5)
     }
     
     //MARK: - Actions
@@ -59,10 +66,18 @@ class TaskCell: SwipeTableViewCell {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mma"
         durationStartLabel.text = "\(dateFormatter.string(from: task.startDate))-"
+        durationStartLabel.textColor = .backgroundColor
+
         durationEndLabel.text = dateFormatter.string(from: task.endDate)
+        durationEndLabel.textColor = .backgroundColor
+
         reminderLabel.text = TaskService.shared.setupReminderString(task: task)
+        reminderLabel.textColor = .backgroundColor
+
         
-        taskLabel.text = task.title 
+        taskLabel.text = task.title
+        taskLabel.textColor = .backgroundColor
+        
         if taskLabel.text == "" {
             taskLabel.text = "Untitled"
         }
@@ -82,5 +97,7 @@ class TaskCell: SwipeTableViewCell {
         }
         taskLabel.centerY(in: taskView)
         taskLabel.anchor(left: taskView.leftAnchor, right: durationStartLabel.leftAnchor, paddingLeft: 30)
+        
+        taskView.backgroundColor = getColor(colorAsInt: task.color)
     }
 }
