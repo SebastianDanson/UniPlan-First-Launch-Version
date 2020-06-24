@@ -57,6 +57,8 @@ class SetTaskReminderViewController: PickerViewController {
         pickerTypeSegmentedControl.selectedSegmentIndex = TaskService.shared.getDateOrTime()
         pickerTypeSegmentedControl.anchor(top: topView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 80, paddingRight: 80)
         pickerTypeSegmentedControl.addTarget(self, action: #selector(pickerTypeSCToggled), for: .valueChanged)
+        pickerTypeSegmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.darkBlue, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .semibold)], for: .selected)
+        pickerTypeSegmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.backgroundColor, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .semibold)], for: .normal)
         
         pickerTypeLabel.anchor(top: pickerTypeSegmentedControl.bottomAnchor, left: view.leftAnchor, paddingTop: 40, paddingLeft: 20)
         setupTimeBeforePickerView()
@@ -98,14 +100,14 @@ class SetTaskReminderViewController: PickerViewController {
     }
     
     @objc func saveButtonPressed() {
-         let time = [self.hour, self.minutes]
-         let date = datePickerView.date
-         TaskService.shared.setReminderTime(time)
-         TaskService.shared.setReminderDate(date: date)
-         TaskService.shared.setDateOrTime(scIndex: pickerTypeSegmentedControl.selectedSegmentIndex)
-         TaskService.shared.setHideReminder(bool: false)
-         dismiss(animated: true)
-     }
+        let time = [self.hour, self.minutes]
+        let date = datePickerView.date
+        TaskService.shared.setReminderTime(time)
+        TaskService.shared.setReminderDate(date: date)
+        TaskService.shared.setDateOrTime(scIndex: pickerTypeSegmentedControl.selectedSegmentIndex)
+        TaskService.shared.setHideReminder(bool: false)
+        dismiss(animated: true)
+    }
     
     @objc func pickerTypeSCToggled() {
         if pickerTypeSegmentedControl.selectedSegmentIndex == 0 {

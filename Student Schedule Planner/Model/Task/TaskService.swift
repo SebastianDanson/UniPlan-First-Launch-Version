@@ -20,6 +20,9 @@ class TaskService {
     private var hideReminder = true
     //If the user does cares about time conflicts between tasks
     private var checkForTimeConflict = true
+    private var startTime = Date()
+    private var endTime = Date().addingTimeInterval(3600)
+    
     
     let realm =  try! Realm()
     init() {
@@ -100,6 +103,23 @@ class TaskService {
         hideReminder = bool
     }
     
+    //MARK: - startTime and endTime
+    func getStartTime() -> Date {
+        return startTime
+    }
+    
+    func setStartTime(time: Date){
+           startTime = time
+    }
+    
+    func getEndTime() -> Date {
+          return endTime
+    }
+    
+    func setEndTime(time: Date){
+        endTime = time
+    }
+    
     //MARK: - checkForTimeConflict
     func getCheckForTimeConflict() -> Bool {
         return checkForTimeConflict
@@ -178,7 +198,7 @@ class TaskService {
         task.title = ("\(AllCoursesService.shared.getSelectedCourse()?.title) Quiz") ?? ""
         task.dateOrTime = 0
         task.startDate = quiz.startDate
-        task.endDate = quiz.endTime
+        task.endDate = quiz.endDate
         
         scheduleNotification(forTask: task)
         

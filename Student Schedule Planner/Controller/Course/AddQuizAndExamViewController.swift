@@ -35,6 +35,9 @@ class AddQuizAndExamViewController: UIViewController {
     let reminderHeading = makeHeading(withText: "Reminder")
     let reminderSwitch = UISwitch()
     let reminderButton = setValueButton(withPlaceholder: "When Task Starts")
+    let locationHeading = makeHeading(withText: "Location")
+    let locationTextField = makeTextField(withPlaceholder: "Location")
+
     
     //MARK: - UI Setup
     func setupViews() {
@@ -52,6 +55,8 @@ class AddQuizAndExamViewController: UIViewController {
         view.addSubview(reminderButton)
         view.addSubview(reminderSwitch)
         view.addSubview(reminderHeading)
+        view.addSubview(locationHeading)
+        view.addSubview(locationTextField)
         
         //topView
         topView.addSubview(titleLabel)
@@ -84,21 +89,24 @@ class AddQuizAndExamViewController: UIViewController {
         reminderButton.isHidden = true
         reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
         
-        saveButton.anchor(top: reminderButton.bottomAnchor, paddingTop: UIScreen.main.bounds.height/10)
+        locationHeading.anchor(top: reminderButton.bottomAnchor, left: reminderButton.leftAnchor, paddingTop: UIScreen.main.bounds.height/25)
+        locationTextField.anchor(top: locationHeading.bottomAnchor, left: locationHeading.leftAnchor, paddingTop: 15)
+        
+        saveButton.anchor(top: locationTextField.bottomAnchor, paddingTop: UIScreen.main.bounds.height/10)
         saveButton.centerX(in: view)
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         
         if let quizIndex = QuizService.shared.getQuizIndex(){
             if let quiz = CourseService.shared.getQuiz(atIndex: quizIndex) {
                 datePicker.date = quiz.startDate
-                endTimePicker.date = quiz.endTime
+                endTimePicker.date = quiz.endDate
             }
         }
         
         if let examIndex = ExamService.shared.getExamIndex(){
             if let exam = CourseService.shared.getExam(atIndex: examIndex) {
                 datePicker.date = exam.startDate
-                endTimePicker.date = exam.endTime
+                endTimePicker.date = exam.endDate
             }
         }
     }
@@ -119,11 +127,12 @@ class AddQuizAndExamViewController: UIViewController {
                 if CourseService.shared.getQuizOrExam() == 0 {
                     var quiz = Quiz()
                     quiz.startDate = datePicker.date
-                    quiz.endTime = endTimePicker.date
+                    quiz.endDate = endTimePicker.date
+                    
                     if let quizIndex = QuizService.shared.getQuizIndex() {
                         var quizToUpdate = CourseService.shared.getQuiz(atIndex: quizIndex)
                         quizToUpdate?.startDate = quiz.startDate
-                        quizToUpdate?.endTime = quiz.endTime
+                        quizToUpdate?.endDate = quiz.endDate
                     } else {
                         realm.add(quiz, update: .modified)
                         if let course = AllCoursesService.shared.getSelectedCourse() {
@@ -133,12 +142,12 @@ class AddQuizAndExamViewController: UIViewController {
                 } else {
                     var exam = Exam()
                     exam.startDate = datePicker.date
-                    exam.endTime = endTimePicker.date
+                    exam.endDate = endTimePicker.date
                     
                     if let examIndex = ExamService.shared.getExamIndex(){
                         var examToUpdate = CourseService.shared.getExam(atIndex: examIndex)
                         examToUpdate?.startDate = exam.startDate
-                        examToUpdate?.endTime = exam.endTime
+                        examToUpdate?.endDate = exam.endDate
                     } else {
                         realm.add(exam, update: .modified)
                         if let course = AllCoursesService.shared.getSelectedCourse() {

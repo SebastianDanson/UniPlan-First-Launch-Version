@@ -58,12 +58,12 @@ class QuizAndExamCell: SwipeTableViewCell {
     func update(quiz: Quiz? = nil, exam: Exam? = nil) {
         if let quiz = quiz {
         dateLabel.text = formatDate(from: quiz.startDate)
-        timeLabel.text = "\(formatTime(from: quiz.startDate))-\(formatTime(from: quiz.endTime))"
+            timeLabel.text = "\(formatTime(from: quiz.startDate))-\(formatTime(from: quiz.endDate))"
         }
         
         if let exam = exam {
             dateLabel.text = formatDate(from: exam.startDate)
-            timeLabel.text = "\(formatTime(from: exam.startDate))-\(formatTime(from: exam.endTime))"
+            timeLabel.text = "\(formatTime(from: exam.startDate))-\(formatTime(from: exam.endDate))"
         }
         
     }

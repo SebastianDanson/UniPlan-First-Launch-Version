@@ -24,6 +24,7 @@ class TabBarController: UITabBarController {
 
         let tabBarList = [scheduleNav, coursesNav, summativesNav]
         tabBar.tintColor = .mainBlue
+        //tabBar.barTintColor = .clouds
 
         //tabBarController.to
 

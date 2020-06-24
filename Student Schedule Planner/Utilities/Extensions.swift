@@ -13,7 +13,7 @@ extension UIColor {
     static let backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
     static let mainBlue = UIColor(red: 41/255, green: 128/255, blue: 185/255, alpha: 1)
     static let darkBlue = UIColor(red: 52/255, green: 73/255, blue: 94/255, alpha: 1)
-    
+    static let clouds = UIColor(red: 236/255, green: 240/255, blue: 241/255, alpha: 1)
     static let turquoise = UIColor(red: 0/255, green: 188/255, blue: 212/255, alpha: 1)
     static let emerald = UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1)
     static let riverBlue = UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1)
@@ -22,8 +22,9 @@ extension UIColor {
     static let sunflower = UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1)
     static let carrot = UIColor(red: 230/255, green: 126/255, blue: 34/255, alpha: 1)
     static let alizarin = UIColor(red: 231/255, green: 76/255, blue: 60/255, alpha: 1)
+    static let silver = UIColor(red: 178/255, green: 190/255, blue: 195/255, alpha: 1)
+    static let darkGray = UIColor(red: 99/255, green: 110/255, blue: 114/255, alpha: 1)
 }
-
 //MARK: - UIView
 extension UIView {
     

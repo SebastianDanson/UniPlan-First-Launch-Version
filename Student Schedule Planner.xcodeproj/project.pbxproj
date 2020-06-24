@@ -16,6 +16,8 @@
 		3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E772486B45B00D2A5D1 /* Extensions.swift */; };
 		3F383E7A2486BD0600D2A5D1 /* Factories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E792486BD0600D2A5D1 /* Factories.swift */; };
 		3F592344249FA379008F45D6 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F592343249FA379008F45D6 /* HelperFunctions.swift */; };
+		3F59234624A13798008F45D6 /* Assignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F59234524A13798008F45D6 /* Assignment.swift */; };
+		3F59239C24A17677008F45D6 /* PentagonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F59239B24A17677008F45D6 /* PentagonView.swift */; };
 		3F67BBF124872A4C00BFD6E5 /* AddTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */; };
 		3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */; };
 		3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFB24893AF100BFD6E5 /* Task.swift */; };
@@ -38,8 +40,6 @@
 		3F94E3292496A90500B0F958 /* AddClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3282496A90500B0F958 /* AddClassViewController.swift */; };
 		3F94E32D2496E15E00B0F958 /* ClassTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */; };
 		3FAEC8262496F816000ADD9D /* SingleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC8252496F816000ADD9D /* SingleClass.swift */; };
-		3FAEC8282496FA94000ADD9D /* Assignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC8272496FA94000ADD9D /* Assignment.swift */; };
-		3FAEC82A2496FAB0000ADD9D /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC8292496FAB0000ADD9D /* Quiz.swift */; };
 		3FAEC82E2496FCC1000ADD9D /* SingleClassService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */; };
 		3FAEC8302497D2B7000ADD9D /* SetClassTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC82F2497D2B7000ADD9D /* SetClassTimeViewController.swift */; };
 		3FAEC8382497EA08000ADD9D /* SetClassDatesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC8372497EA08000ADD9D /* SetClassDatesViewController.swift */; };
@@ -64,6 +64,8 @@
 		3F383E772486B45B00D2A5D1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3F383E792486BD0600D2A5D1 /* Factories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factories.swift; sourceTree = "<group>"; };
 		3F592343249FA379008F45D6 /* HelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
+		3F59234524A13798008F45D6 /* Assignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assignment.swift; sourceTree = "<group>"; };
+		3F59239B24A17677008F45D6 /* PentagonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PentagonView.swift; sourceTree = "<group>"; };
 		3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskViewController.swift; sourceTree = "<group>"; };
 		3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		3F67BBFB24893AF100BFD6E5 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
@@ -85,8 +87,6 @@
 		3F94E3282496A90500B0F958 /* AddClassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClassViewController.swift; sourceTree = "<group>"; };
 		3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassTypeViewController.swift; sourceTree = "<group>"; };
 		3FAEC8252496F816000ADD9D /* SingleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleClass.swift; sourceTree = "<group>"; };
-		3FAEC8272496FA94000ADD9D /* Assignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assignment.swift; sourceTree = "<group>"; };
-		3FAEC8292496FAB0000ADD9D /* Quiz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz.swift; sourceTree = "<group>"; };
 		3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleClassService.swift; sourceTree = "<group>"; };
 		3FAEC82F2497D2B7000ADD9D /* SetClassTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetClassTimeViewController.swift; sourceTree = "<group>"; };
 		3FAEC8372497EA08000ADD9D /* SetClassDatesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetClassDatesViewController.swift; sourceTree = "<group>"; };
@@ -168,6 +168,7 @@
 				3F94E2CC2492A68B00B0F958 /* CourseCell.swift */,
 				3F94E3242496895900B0F958 /* AssignmentCell.swift */,
 				3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */,
+				3F59239B24A17677008F45D6 /* PentagonView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -211,10 +212,9 @@
 				3F94E2C824929CF600B0F958 /* AllCoursesService.swift */,
 				3FAEC8252496F816000ADD9D /* SingleClass.swift */,
 				3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */,
-				3FAEC8292496FAB0000ADD9D /* Quiz.swift */,
 				3FAEC845249A8AA8000ADD9D /* QuizService.swift */,
 				3FAEC847249A8AB3000ADD9D /* ExamService.swift */,
-				3FAEC8272496FA94000ADD9D /* Assignment.swift */,
+				3F59234524A13798008F45D6 /* Assignment.swift */,
 				3FAEC83D24992767000ADD9D /* AssignmentService.swift */,
 			);
 			path = Course;
@@ -410,11 +410,12 @@
 				3F94E3292496A90500B0F958 /* AddClassViewController.swift in Sources */,
 				3F94E3212495A35B00B0F958 /* SingleClassCell.swift in Sources */,
 				3F94E2D52492E3B700B0F958 /* SwipeViewController.swift in Sources */,
+				3F59234624A13798008F45D6 /* Assignment.swift in Sources */,
 				3FAEC84024992C2A000ADD9D /* AddQuizAndExamViewController.swift in Sources */,
 				3F67BC05248C7B9E00BFD6E5 /* TaskService.swift in Sources */,
+				3F59239C24A17677008F45D6 /* PentagonView.swift in Sources */,
 				3F383E7A2486BD0600D2A5D1 /* Factories.swift in Sources */,
 				3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */,
-				3FAEC82A2496FAB0000ADD9D /* Quiz.swift in Sources */,
 				3FAEC84224993A56000ADD9D /* SetClassReminderViewController.swift in Sources */,
 				3FAEC83C2499242C000ADD9D /* AddAssignmentViewController.swift in Sources */,
 				3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */,
@@ -424,7 +425,6 @@
 				3FAEC83A2497FD1A000ADD9D /* CourseService.swift in Sources */,
 				3FAEC8382497EA08000ADD9D /* SetClassDatesViewController.swift in Sources */,
 				3FAEC84A249BF85A000ADD9D /* AddCourseViewController.swift in Sources */,
-				3FAEC8282496FA94000ADD9D /* Assignment.swift in Sources */,
 				3F94E3252496895900B0F958 /* AssignmentCell.swift in Sources */,
 				3F592344249FA379008F45D6 /* HelperFunctions.swift in Sources */,
 				3FAEC8302497D2B7000ADD9D /* SetClassTimeViewController.swift in Sources */,

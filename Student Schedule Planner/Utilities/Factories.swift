@@ -96,7 +96,7 @@ func makeDateAndTimePicker(height: CGFloat) -> UIDatePicker{
 
 func makeTextField(withPlaceholder text: String) -> UITextField {
     let textField = UITextField()
-    textField.setDimensions(width: UIScreen.main.bounds.width - 40, height: 45)
+    textField.setDimensions(width: UIScreen.main.bounds.width - 40, height:UIScreen.main.bounds.height/20 )
     textField.placeholder = text
     textField.backgroundColor = .clear
     textField.textColor = .gray
@@ -138,7 +138,7 @@ func setValueButton(withPlaceholder text: String) -> UIButton {
     button.titleLabel?.alpha = 0.4
     button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
     button.imageEdgeInsets = UIEdgeInsets(top: 0, left: UIScreen.main.bounds.width - 65, bottom: 0, right: 0)
-    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: 45)
+    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.height/20)
     button.backgroundColor = .clear
     button.layer.borderColor = UIColor.mainBlue.cgColor
     button.layer.borderWidth = 2
@@ -157,13 +157,20 @@ func setValueButtonNoWidth(withPlaceholder text: String) -> UIButton {
     button.titleLabel?.alpha = 0.4
     button.layer.borderColor = UIColor.mainBlue.cgColor
     button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
-    button.setDimensions(height: 45)
+    button.setDimensions(height: UIScreen.main.bounds.height/20)
     button.layer.borderWidth = 2
     button.layer.cornerRadius = 3
     let nextIcon = UIImage(named: "nextMenuButtonGray")
     button.setImage(nextIcon, for: .normal)
     
     return button
+}
+
+func makeAnimatedView(height: CGFloat) -> UIView {
+    let view = UIView()
+    view.backgroundColor = .backgroundColor
+    view.setDimensions(width: UIScreen.main.bounds.width-40, height: height)
+    return view
 }
 
 //MARK: - Task Cell
