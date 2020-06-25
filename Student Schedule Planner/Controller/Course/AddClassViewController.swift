@@ -46,7 +46,7 @@ class AddClassViewController: UIViewController {
     
     //MARK: - Properties
     //topView
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Add Class")
     let backButton = makeBackButton()
     let deleteButton = makeDeleteButton()
@@ -81,7 +81,7 @@ class AddClassViewController: UIViewController {
     let everyMonthButton = makeRepeatsButton(withText: "Month")
     
     //Others
-    let locationTextField = makeTextField(withPlaceholder: "Location")
+    let locationTextField = makeTextField(withPlaceholder: "Location", height: UIScreen.main.bounds.height/20 )
     let saveButton = makeSaveButton()
     let classTypeButton = setValueButton(withPlaceholder: "Class")
     let classTimeButton = setValueButtonNoWidth(withPlaceholder: "Set...")

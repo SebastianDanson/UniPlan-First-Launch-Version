@@ -11,12 +11,14 @@ import UIKit
 //MARK: - UIColor
 extension UIColor {
     static let backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
-    static let mainBlue = UIColor(red: 41/255, green: 128/255, blue: 185/255, alpha: 1)
+    //static let mainBlue = UIColor(red: 41/255, green: 128/255, blue: 185/255, alpha: 1)
+    static let mainBlue = UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1)
+
     static let darkBlue = UIColor(red: 52/255, green: 73/255, blue: 94/255, alpha: 1)
     static let clouds = UIColor(red: 236/255, green: 240/255, blue: 241/255, alpha: 1)
     static let turquoise = UIColor(red: 0/255, green: 188/255, blue: 212/255, alpha: 1)
     static let emerald = UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1)
-    static let riverBlue = UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1)
+    static let riverBlue = UIColor(red: 41/255, green: 128/255, blue: 185/255, alpha: 1)
     static let amethyst = UIColor(red: 155/255, green: 89/255, blue: 182/255, alpha: 1)
     static let midnightBlue = UIColor(red: 52/255, green: 73/255, blue: 94/255, alpha: 1)
     static let sunflower = UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1)
@@ -93,7 +95,8 @@ extension Date {
     }
 }
 
-//MARK: - Dismiss Keyboard
+
+//MARK: -  UIViewController
 extension UIViewController {
     func dismissKey() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
@@ -102,5 +105,19 @@ extension UIViewController {
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+}
+
+//MARK: - TextField
+extension UITextField {
+    func setIcon(_ image: UIImage) {
+        let iconView = UIImageView(frame:
+            CGRect(x: 10, y: 0, width: 30, height: 28))
+        iconView.image = image
+        let iconContainerView: UIView = UIView(frame:
+            CGRect(x: 30, y: 0, width: 40, height: 30))
+        iconContainerView.addSubview(iconView)
+        leftView = iconContainerView
+        leftViewMode = .always
     }
 }

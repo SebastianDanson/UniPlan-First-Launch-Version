@@ -23,19 +23,20 @@ class AssignmentCell: SwipeTableViewCell {
     }
     
     //MARK: - Properties
-    
+    let reminderIcon = UIImage(systemName: "alarm")
+    let reminderLabel = makeLabel(ofSize: 14, weight: .semibold)
     let taskView = makeTaskView()
     let titleLabel = makeLabel(ofSize: 18, weight: .semibold)
     let dueLabel = makeLabel(ofSize: 14, weight: .semibold)
     let dateLabel = makeLabel(ofSize: 16, weight: .regular)
     let timeLabel = makeLabel(ofSize: 16, weight: .regular)
     let nextIcon = UIImage(named: "nextMenuButton")
-
     
     //MARK: - setupUI
     func setupViews() {
         let nextImage = UIImageView(image: nextIcon!)
-
+        let reminderImage = UIImageView(image: reminderIcon!)
+        
         backgroundColor = .backgroundColor
         addSubview(taskView)
         
@@ -44,9 +45,17 @@ class AssignmentCell: SwipeTableViewCell {
         taskView.addSubview(dateLabel)
         taskView.addSubview(timeLabel)
         taskView.addSubview(nextImage)
+        taskView.addSubview(reminderImage)
+        taskView.addSubview(reminderLabel)
         
-        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 5,
-                        paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
+        taskView.anchor(top: topAnchor,
+                        left: leftAnchor,
+                        right: rightAnchor,
+                        bottom: bottomAnchor,
+                        paddingTop: 5,
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        paddingBottom: 5)
         
         titleLabel.centerY(in: taskView)
         titleLabel.anchor(left: taskView.leftAnchor, paddingLeft: 20)
@@ -54,11 +63,16 @@ class AssignmentCell: SwipeTableViewCell {
         dueLabel.anchor(top: taskView.topAnchor, left: dateLabel.leftAnchor, paddingTop: 5)
         dueLabel.text = "Due:"
         dateLabel.anchor(top: dueLabel.bottomAnchor, right: nextImage.rightAnchor, paddingRight: 20)
-
+        
         timeLabel.anchor(top: dateLabel.bottomAnchor, left: dateLabel.leftAnchor)
         
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
+        
+        reminderImage.anchor(left: titleLabel.leftAnchor, bottom: taskView.bottomAnchor, paddingBottom: 5)
+        reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 2, paddingBottom: 5)
+        reminderImage.setDimensions(width: 15, height: 15)
+        reminderImage.tintColor = .mainBlue
     }
     
     //MARK: - Actions
@@ -66,6 +80,11 @@ class AssignmentCell: SwipeTableViewCell {
         titleLabel.text = assignment.title
         dateLabel.text = formatDate(from: assignment.dueDate)
         timeLabel.text = formatTime(from: assignment.dueDate)
+        if assignment.reminder {
+            reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: assignment.dateOrTime, reminderTime: [assignment.reminderTime[0], assignment.reminderTime[1]], reminderDate: assignment.reminderDate)
+        } else {
+            reminderLabel.text = "None"
+        }
     }
 }
 

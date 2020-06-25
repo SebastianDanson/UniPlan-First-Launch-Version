@@ -24,13 +24,13 @@ class AddCourseViewController: PickerViewController {
     
     //MARK: - properties
     //topView
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Add Course")
     let backButton = makeBackButton()
     
     //Not topView
     let titleHeading = makeHeading(withText: "Course Name:")
-    let titleTextField = makeTextField(withPlaceholder: "Course Name:")
+    let titleTextField = makeTextField(withPlaceholder: "Course Name:", height: UIScreen.main.bounds.height/20 )
     let dateHeading = makeHeading(withText: "Start Date/End Date")
     let setDateButton = setValueButton(withPlaceholder: "Set...")
     let colorHeading = makeHeading(withText: "Color:")

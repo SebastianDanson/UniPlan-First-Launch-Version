@@ -94,9 +94,9 @@ func makeDateAndTimePicker(height: CGFloat) -> UIDatePicker{
     return startDatePicker
 }
 
-func makeTextField(withPlaceholder text: String) -> UITextField {
+func makeTextField(withPlaceholder text: String, height: CGFloat) -> UITextField {
     let textField = UITextField()
-    textField.setDimensions(width: UIScreen.main.bounds.width - 40, height:UIScreen.main.bounds.height/20 )
+    textField.setDimensions(width: UIScreen.main.bounds.width - 40, height: height)
     textField.placeholder = text
     textField.backgroundColor = .clear
     textField.textColor = .gray
@@ -149,6 +149,30 @@ func setValueButton(withPlaceholder text: String) -> UIButton {
     return button
 }
 
+func setCalendarButton(withPlaceholder text: String) -> UIButton {
+    let button = UIButton()
+    button.setTitle(text, for: .normal)
+    button.setTitleColor(.darkBlue, for: .normal)
+    button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+    button.titleLabel?.alpha = 0.3
+    button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+    button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 42, bottom: 0, right: 0)
+    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: 45)
+    button.backgroundColor = .clear
+    button.layer.borderColor = UIColor.mainBlue.cgColor
+    button.layer.borderWidth = 2
+    button.layer.cornerRadius = 5
+    let calendarIcon = UIImage(systemName: "calendar")
+    let imageView = UIImageView(image: calendarIcon)
+    button.addSubview(imageView)
+    imageView.centerY(in: button)
+    imageView.anchor(left: button.leftAnchor, paddingLeft: 10)
+    imageView.setDimensions(width: 30, height: 30)
+    imageView.tintColor = .mainBlue
+    
+    return button
+}
+
 func setValueButtonNoWidth(withPlaceholder text: String) -> UIButton {
     let button = UIButton()
     button.setTitle(text, for: .normal)
@@ -166,10 +190,10 @@ func setValueButtonNoWidth(withPlaceholder text: String) -> UIButton {
     return button
 }
 
-func makeAnimatedView(height: CGFloat) -> UIView {
+func makeAnimatedView() -> UIView {
     let view = UIView()
     view.backgroundColor = .backgroundColor
-    view.setDimensions(width: UIScreen.main.bounds.width-40, height: height)
+    view.setDimensions(width: UIScreen.main.bounds.width-40)
     return view
 }
 

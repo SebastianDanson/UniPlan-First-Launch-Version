@@ -39,7 +39,7 @@ class CourseDetailsViewController: SwipeViewController {
     let quizzesTableView = makeTableView(withRowHeight: 55)
     let examsTableView = makeTableView(withRowHeight: 55)
     
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "")
     let backButton = makeBackButton()
     let deleteButton = makeDeleteButton()

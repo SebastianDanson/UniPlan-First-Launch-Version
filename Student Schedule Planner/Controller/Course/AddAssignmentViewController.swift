@@ -24,12 +24,12 @@ class AddAssignmentViewController: UIViewController {
     }
     
     //MARK: - Properties
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Add Assignment")
     let backButton = makeBackButton()
     let saveButton = makeSaveButton()
     let titleHeading = makeHeading(withText: "Title:")
-    let titleTextField = makeTextField(withPlaceholder: "Assignment Title")
+    let titleTextField = makeTextField(withPlaceholder: "Assignment Title", height: UIScreen.main.bounds.height/20 )
     let dateHeading = makeHeading(withText: "Date:")
     let datePicker = makeDateAndTimePicker(height: UIScreen.main.bounds.height/6)
     let reminderHeading = makeHeading(withText: "Reminder")
@@ -107,12 +107,28 @@ class AddAssignmentViewController: UIViewController {
         var assignment = Assignment()
         assignment.title = titleTextField.text ?? "Untitled"
         assignment.dueDate = datePicker.date
+        assignment.dateOrTime = TaskService.shared.getDateOrTime()
+        assignment.reminder = reminderSwitch.isOn
+        
+        if assignment.dateOrTime == 0 {
+            let reminderTime = TaskService.shared.getReminderTime()
+            assignment.reminderTime[0] = reminderTime[0]
+            assignment.reminderTime[1] = reminderTime[1]
+        } else {
+            assignment.reminderDate = TaskService.shared.getReminderDate()
+        }
+        
         do {
             try realm.write {
                 if let assignmentIndex = AssignmentService.shared.getAssignmentIndex() {
                     var assignmentToUpdate = CourseService.shared.getAssignment(atIndex: assignmentIndex)
                     assignmentToUpdate?.title = assignment.title
                     assignmentToUpdate?.dueDate = assignment.dueDate
+                    assignmentToUpdate?.reminderTime[0] = assignment.reminderTime[0]
+                    assignmentToUpdate?.reminderTime[1] = assignment.reminderTime[1]
+                    assignmentToUpdate?.reminderDate = assignment.reminderDate
+                    assignmentToUpdate?.reminder = assignment.reminder
+                    assignmentToUpdate?.dateOrTime = assignment.dateOrTime
                 } else {
                     realm.add(assignment, update: .modified)
                     if let course = AllCoursesService.shared.getSelectedCourse() {

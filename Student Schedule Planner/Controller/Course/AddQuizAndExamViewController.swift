@@ -36,7 +36,7 @@ class AddQuizAndExamViewController: UIViewController {
     let reminderSwitch = UISwitch()
     let reminderButton = setValueButton(withPlaceholder: "When Task Starts")
     let locationHeading = makeHeading(withText: "Location")
-    let locationTextField = makeTextField(withPlaceholder: "Location")
+    let locationTextField = makeTextField(withPlaceholder: "Location", height: UIScreen.main.bounds.height/20 )
 
     
     //MARK: - UI Setup

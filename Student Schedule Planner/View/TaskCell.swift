@@ -71,9 +71,12 @@ class TaskCell: SwipeTableViewCell {
         durationEndLabel.text = dateFormatter.string(from: task.endDate)
         durationEndLabel.textColor = .backgroundColor
 
-        reminderLabel.text = TaskService.shared.setupReminderString(task: task)
+        if task.reminder {
+            reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: task.dateOrTime, reminderTime: [task.reminderTime[0], task.reminderTime[1]], reminderDate: task.reminderDate)
+        } else {
+            reminderLabel.text = "None"
+        }
         reminderLabel.textColor = .backgroundColor
-
         
         taskLabel.text = task.title
         taskLabel.textColor = .backgroundColor
@@ -84,8 +87,7 @@ class TaskCell: SwipeTableViewCell {
         
         if let text = taskLabel.text {
             let nsString = text as NSString
-            if nsString.length >= 25
-            {
+            if nsString.length >= 25 {
                 taskLabel.text = nsString.substring(with: NSRange(location: 0, length: 20))
                 taskLabel.text?.append("\n\(nsString.substring(with: NSRange(location: 20, length: nsString.length - 20 > 20 ? 20 : nsString.length - 20)))")
 

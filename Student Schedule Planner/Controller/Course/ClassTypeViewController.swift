@@ -42,7 +42,7 @@ class ClassTypeViewController: UIViewController {
     
     //MARK: - Properties
     var tableView = makeTableView(withRowHeight: 50)
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let backButton = makeBackButton()
     let titleLabel = makeTitleLabel(withText: "Select Class Type")
     

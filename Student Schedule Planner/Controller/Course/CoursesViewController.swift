@@ -24,7 +24,7 @@ class CoursesViewController: SwipeViewController {
     }
     
     //MARK: - Properties
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Courses")
     let addButton = makeAddButton()
     let tableView = makeTableView(withRowHeight: 80)

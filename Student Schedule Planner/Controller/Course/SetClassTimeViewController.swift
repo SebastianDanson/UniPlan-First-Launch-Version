@@ -18,7 +18,7 @@ class SetClassTimeViewController: PickerViewController {
     
     //MARK: - properties
     //topView
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Set Class Time")
     let backButton = makeBackButton()
     

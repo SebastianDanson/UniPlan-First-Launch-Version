@@ -109,11 +109,11 @@ class TaskService {
     }
     
     func setStartTime(time: Date){
-           startTime = time
+        startTime = time
     }
     
     func getEndTime() -> Date {
-          return endTime
+        return endTime
     }
     
     func setEndTime(time: Date){
@@ -139,18 +139,13 @@ class TaskService {
         }
     }
     
-    func setupReminderString(task: Task) -> String {
-        if task.reminder {
-            if task.dateOrTime == 0 {
-                let reminderTime: [Int] = [task.reminderTime[0], task.reminderTime[1]]
-                return formatReminderString(reminderTime: reminderTime)
-            } else {
-                let date = formatDate(from: task.reminderDate)
-                return "\(date)"
-            }
-        } else {
-            return ""
-        }
+    func setupReminderString(dateOrTime: Int, reminderTime: [Int], reminderDate: Date) -> String {
+                if dateOrTime == 0 {
+                    return formatReminderString(reminderTime: reminderTime)
+                } else {
+                    let date = formatDate(from: reminderDate)
+                    return "\(date)"
+                }
     }
     
     func formatReminderString(reminderTime: [Int]) -> String{
