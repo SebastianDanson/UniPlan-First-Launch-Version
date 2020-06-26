@@ -22,7 +22,8 @@ class SingleClassService {
     private var reminder = false
     private var classIndex: Int?
     private var initialLocation = ""
-    
+    private var isClassType = false
+
     static let shared = SingleClassService()
     
     private init(){}
@@ -107,6 +108,14 @@ class SingleClassService {
         }
     }
     
+    //MARK: - isClassType
+    func getIsClassType() -> Bool {
+        return isClassType
+    }
+    
+    func setIsClassType(bool: Bool) {
+        isClassType = bool
+    }
     //MARK: - reminderTime
     func getReminderTime() -> [Int] {
         return reminderTime

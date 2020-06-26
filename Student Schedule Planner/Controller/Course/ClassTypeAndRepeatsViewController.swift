@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 
 enum ClassType: Int, CustomStringConvertible, CaseIterable{
-   
+    
     case Class
     case Lecture
     case Lab
@@ -36,7 +36,26 @@ enum ClassType: Int, CustomStringConvertible, CaseIterable{
     }
 }
 
-class ClassTypeViewController: UIViewController {
+enum RepeatOptions: Int, CustomStringConvertible, CaseIterable{
+    case Week
+    case twoWeeks
+    case Month
+    case Never
+    
+    var description: String {
+        switch self {
+        case .Week:
+            return "Week"
+        case .twoWeeks:
+            return "Two Weeks"
+        case .Month:
+            return "Month"
+        case .Never:
+            return "Never"
+        }
+    }
+}
+class ClassTypeAndRepeatsViewController: UIViewController {
     
     let realm = try! Realm()
     
@@ -45,7 +64,6 @@ class ClassTypeViewController: UIViewController {
     let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let backButton = makeBackButton()
     let titleLabel = makeTitleLabel(withText: "Select Class Type")
-    
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -68,7 +86,6 @@ class ClassTypeViewController: UIViewController {
     
     //MARK: - setup UI
     func setupViews() {
-        
         view.backgroundColor = .backgroundColor
         
         view.addSubview(topView)
@@ -80,6 +97,10 @@ class ClassTypeViewController: UIViewController {
         
         titleLabel.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
         titleLabel.centerX(in: topView)
+        
+        if SingleClassService.shared.getIsClassType() == false {
+            titleLabel.text = "Set Frequency"
+        }
         
         backButton.anchor(left: topView.leftAnchor, paddingLeft: 20)
         backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
@@ -97,29 +118,37 @@ class ClassTypeViewController: UIViewController {
         dismiss(animated: true)
     }
 }
-    // MARK: - Table view data source and delegate
-    extension ClassTypeViewController: UITableViewDataSource, UITableViewDelegate {
-        func numberOfSections(in tableView: UITableView) -> Int {
-            return 1
-        }
-        
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+// MARK: - Table view data source and delegate
+extension ClassTypeAndRepeatsViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if SingleClassService.shared.getIsClassType() == true {
             return ClassType.allCases.count
         }
-        
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath)
+        return RepeatOptions.allCases.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath)
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: .regular)
+        if SingleClassService.shared.getIsClassType() == true {
             guard let classType = ClassType(rawValue: indexPath.row) else {return cell}
-            
             cell.textLabel?.text = classType.description
-            
-            return cell
+        } else {
+            guard let RepeatOption = RepeatOptions(rawValue: indexPath.row) else {return cell}
+            cell.textLabel?.text = RepeatOption.description
         }
-        
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if SingleClassService.shared.getIsClassType() == true {
             SingleClassService.shared.setType(classType: ClassType(rawValue: indexPath.row) ?? .Class)
-            dismissVC()
+        } else {
+            SingleClassService.shared.setRepeats(every: RepeatOptions(rawValue: indexPath.row)?.description ?? "Never")
         }
+        dismissVC()
+    }
 }
 
 

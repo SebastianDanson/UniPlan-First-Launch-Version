@@ -38,7 +38,7 @@
 		3F94E3252496895900B0F958 /* AssignmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3242496895900B0F958 /* AssignmentCell.swift */; };
 		3F94E32724968FED00B0F958 /* QuizAndExamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */; };
 		3F94E3292496A90500B0F958 /* AddClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3282496A90500B0F958 /* AddClassViewController.swift */; };
-		3F94E32D2496E15E00B0F958 /* ClassTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */; };
+		3F94E32D2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */; };
 		3FAEC8262496F816000ADD9D /* SingleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC8252496F816000ADD9D /* SingleClass.swift */; };
 		3FAEC82E2496FCC1000ADD9D /* SingleClassService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */; };
 		3FAEC8302497D2B7000ADD9D /* SetClassTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC82F2497D2B7000ADD9D /* SetClassTimeViewController.swift */; };
@@ -85,7 +85,7 @@
 		3F94E3242496895900B0F958 /* AssignmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentCell.swift; sourceTree = "<group>"; };
 		3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizAndExamCell.swift; sourceTree = "<group>"; };
 		3F94E3282496A90500B0F958 /* AddClassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClassViewController.swift; sourceTree = "<group>"; };
-		3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassTypeViewController.swift; sourceTree = "<group>"; };
+		3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassTypeAndRepeatsViewController.swift; sourceTree = "<group>"; };
 		3FAEC8252496F816000ADD9D /* SingleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleClass.swift; sourceTree = "<group>"; };
 		3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleClassService.swift; sourceTree = "<group>"; };
 		3FAEC82F2497D2B7000ADD9D /* SetClassTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetClassTimeViewController.swift; sourceTree = "<group>"; };
@@ -243,7 +243,7 @@
 			children = (
 				3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */,
 				3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */,
-				3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */,
+				3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */,
 				3FAEC82F2497D2B7000ADD9D /* SetClassTimeViewController.swift */,
 				3FAEC8372497EA08000ADD9D /* SetClassDatesViewController.swift */,
 				3FAEC84124993A56000ADD9D /* SetClassReminderViewController.swift */,
@@ -435,7 +435,7 @@
 				3F383E5C2486B25E00D2A5D1 /* AppDelegate.swift in Sources */,
 				3FAEC83E24992767000ADD9D /* AssignmentService.swift in Sources */,
 				3F94E2CD2492A68B00B0F958 /* CourseCell.swift in Sources */,
-				3F94E32D2496E15E00B0F958 /* ClassTypeViewController.swift in Sources */,
+				3F94E32D2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift in Sources */,
 				3FAEC82E2496FCC1000ADD9D /* SingleClassService.swift in Sources */,
 				3FAEC8262496F816000ADD9D /* SingleClass.swift in Sources */,
 				3F383E5E2486B25E00D2A5D1 /* SceneDelegate.swift in Sources */,

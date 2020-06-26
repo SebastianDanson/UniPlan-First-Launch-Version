@@ -51,8 +51,8 @@ class AddTaskViewController: PickerViewController {
     let locationTextField = makeTextField(withPlaceholder: "Location", height: 45)
     let locationView = makeAnimatedView()
     
-    let dateButton = setCalendarButton(withPlaceholder: "Today")
-
+    let dateButton = setImageButton(withPlaceholder: "Today", imageName: "calendar")
+    
     let startTimeView = PentagonView()
     let endTimeView = UIView()
     let timePickerView = makeTimePicker()
@@ -61,18 +61,18 @@ class AddTaskViewController: PickerViewController {
     let endTime = makeLabel(ofSize: 20, weight: .semibold)
     
     let reminderHeading = makeHeading(withText: "Reminder:")
-    let reminderButton = setValueButton(withPlaceholder: "None")
+    let reminderButton = setValueButton(withPlaceholder: "None", height: 45)
     let reminderSwitch = UISwitch()
     let reminderView = makeAnimatedView()
-
+    
     let colorHeading = makeHeading(withText: "Color:")
     let colorView = makeAnimatedView()
-
+    
     let saveButton = makeSaveButton()
     
     let clockIcon = UIImage(systemName: "clock.fill")
     var clockImage = UIImageView(image: nil)
-        
+    
     var reminderTopAnchorConstaint = NSLayoutConstraint()
     var reminderOtherAnchorConstaint = NSLayoutConstraint()
     
@@ -95,12 +95,12 @@ class AddTaskViewController: PickerViewController {
     
     //MARK: - setup UI
     func setupViews() {
-//        reminderView.backgroundColor = .red
-//        locationView.backgroundColor = .green
-//        colorView.backgroundColor = .purple
-
+        //        reminderView.backgroundColor = .red
+        //        locationView.backgroundColor = .green
+        //        colorView.backgroundColor = .purple
+        
         clockImage = UIImageView(image: clockIcon!)
-
+        
         view.backgroundColor = .backgroundColor
         view.addSubview(topView)
         view.addSubview(titleTextField)
@@ -109,18 +109,18 @@ class AddTaskViewController: PickerViewController {
         view.addSubview(timePickerView)
         view.addSubview(locationView)
         view.addSubview(saveButton)
-              
+        
         locationView.addSubview(dateButton)
         locationView.addSubview(datePickerView)
         locationView.addSubview(reminderView)
-
-
+        
+        
         reminderView.addSubview(locationTextField)
         reminderView.addSubview(reminderHeading)
         reminderView.addSubview(reminderButton)
         reminderView.addSubview(reminderSwitch)
         reminderView.addSubview(colorView)
- 
+        
         colorView.addSubview(colorHeading)
         colorView.addSubview(colorStackView)
         
@@ -173,7 +173,7 @@ class AddTaskViewController: PickerViewController {
         clockImage.anchor(left: startTimeView.leftAnchor, paddingLeft: 25)
         clockImage.centerY(in: startTimeView)
         clockImage.tintColor = .darkGray
-      
+        
         let endTap = UITapGestureRecognizer(target: self, action: #selector(endDateViewTapped))
         endTimeView.addGestureRecognizer(endTap)
         endTimeView.layer.borderColor = UIColor.silver.cgColor
@@ -214,46 +214,43 @@ class AddTaskViewController: PickerViewController {
         reminderView.anchor(left: view.leftAnchor, paddingLeft: 20)
         reminderView.setDimensions(height: 275)
         reminderHeading.anchor(top: locationTextField.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/50, paddingLeft: 20)
-                
+        
         reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
         reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
         reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
         reminderSwitch.isOn = !reminderButton.isHidden
-
+        
         reminderButton.centerX(in: view)
         reminderButton.anchor(top: reminderHeading.bottomAnchor, paddingTop: UIScreen.main.bounds.height/80)
         reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
         reminderButton.isHidden = TaskService.shared.getHideReminder()
         reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)
         
-//        locationView.topAnchor.constraint(equalTo: startTimeView.bottomAnchor)
         locationView.anchor(left: reminderButton.leftAnchor,
                             bottom: saveButton.topAnchor)
         
-//        locationView.setDimensions(height: UIScreen.main.bounds.height/2.75)
         reminderTopAnchorConstaint = locationView.topAnchor.constraint(equalTo: startTimeView.bottomAnchor)
         reminderOtherAnchorConstaint = locationView.topAnchor.constraint(equalTo: timePickerView.bottomAnchor)
         reminderTopAnchorConstaint.isActive = true
-
+        
         locationTextField.anchor(top: reminderView.topAnchor,
                                  left: reminderButton.leftAnchor,
                                  paddingTop: 10)
         
         locationTextField.setIcon(UIImage(named: "location")!)
-        locationTextField.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         locationTextField.delegate = self
         colorHeading.anchor(top: colorView.topAnchor,
                             left: reminderHeading.leftAnchor,
                             paddingTop: UIScreen.main.bounds.height/50)
         
         colorStackView.anchor(top: colorHeading.bottomAnchor,
-                                left: colorHeading.leftAnchor,
-                                paddingTop: 5)
+                              left: colorHeading.leftAnchor,
+                              paddingTop: 5)
         
         saveButton.centerX(in: view)
         saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: UIScreen.main.bounds.height/15)
         saveButton.addTarget(self, action: #selector(saveTask), for: .touchUpInside)
-  
+        
         setupTimePickerView()
         
         startTime.text = "\(formatTime(from: Date()))"
@@ -359,23 +356,28 @@ class AddTaskViewController: PickerViewController {
         } else if self.endTimeView.backgroundColor == UIColor.mainBlue {
             self.endDateViewTapped()
         }
+        
         if reminderView.frame.origin.y == dateButton.frame.maxY {
-            UIView.animate(withDuration: 0.3, animations: {
-                self.reminderView.frame.origin.y = self.datePickerView.frame.maxY
-            })
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.reminderView.frame.origin.y = self.datePickerView.frame.maxY
+                })
+            }
         } else {
-            UIView.animate(withDuration: 0.3, animations: {
-                self.reminderView.frame.origin.y = self.dateButton.frame.maxY
-            })
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.reminderView.frame.origin.y = self.dateButton.frame.maxY
+                })
+            }
         }
     }
     
     @objc func startDateViewTapped() {
         if reminderView.frame.origin.y == datePickerView.frame.maxY {
-                   UIView.animate(withDuration: 0.3, animations: {
-                       self.reminderView.frame.origin.y = self.dateButton.frame.maxY
-                   })
-               }
+            UIView.animate(withDuration: 0.3, animations: {
+                self.reminderView.frame.origin.y = self.dateButton.frame.maxY
+            })
+        }
         
         if startTimeView.color != UIColor.mainBlue {
             timePickerView.date = TaskService.shared.getStartTime()
@@ -528,16 +530,11 @@ class AddTaskViewController: PickerViewController {
             TaskService.shared.askToSendNotifications()
             UIView.animate(withDuration: 0.3, animations: {
                 self.colorView.frame.origin.y = self.reminderButton.frame.maxY
-              //  self.colorOtherAnchorConstaint.isActive = true
-                //self.colorTopAnchorConstaint.isActive = false
-
             })
         } else {
             reminderButton.isHidden = true
             TaskService.shared.setHideReminder(bool: true)
             UIView.animate(withDuration: 0.3, animations: {
-                //self.colorOtherAnchorConstaint.isActive = false
-                //self.colorTopAnchorConstaint.isActive = true
                 self.colorView.frame.origin.y = self.reminderSwitch.frame.maxY
             })
         }
@@ -607,6 +604,7 @@ class AddTaskViewController: PickerViewController {
     }
 }
 
+//MARK: - TextField Delegate
 extension AddTaskViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

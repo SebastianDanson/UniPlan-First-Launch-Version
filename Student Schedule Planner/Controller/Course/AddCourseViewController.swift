@@ -13,6 +13,7 @@ class AddCourseViewController: PickerViewController {
     //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.dismissKey()
         setupViews()
     }
     
@@ -32,7 +33,7 @@ class AddCourseViewController: PickerViewController {
     let titleHeading = makeHeading(withText: "Course Name:")
     let titleTextField = makeTextField(withPlaceholder: "Course Name:", height: UIScreen.main.bounds.height/20 )
     let dateHeading = makeHeading(withText: "Start Date/End Date")
-    let setDateButton = setValueButton(withPlaceholder: "Set...")
+    let setDateButton = setValueButton(withPlaceholder: "Set...", height: 45)
     let colorHeading = makeHeading(withText: "Color:")
     let colorStackView = makeStackView(withOrientation: .horizontal, spacing: 3)
     let saveButton = makeSaveButton()
@@ -82,6 +83,7 @@ class AddCourseViewController: PickerViewController {
         
         titleHeading.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
         titleTextField.anchor(top: titleHeading.bottomAnchor, left: titleHeading.leftAnchor, paddingTop: 5)
+        titleTextField.delegate = self
         
         dateHeading.anchor(top: titleTextField.bottomAnchor, left: titleTextField.leftAnchor, paddingTop: 20)
         setDateButton.anchor(top: dateHeading.bottomAnchor, left: dateHeading.leftAnchor, paddingTop: 5)
@@ -160,5 +162,13 @@ class AddCourseViewController: PickerViewController {
     func setClassDates() {
         setDateButton.setTitle("\(CourseService.shared.getStartDateAsString()) - \(CourseService.shared.getEndDateAsString())",
             for: .normal)
+    }
+}
+
+//MARK: - TextField Delegate
+extension AddCourseViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

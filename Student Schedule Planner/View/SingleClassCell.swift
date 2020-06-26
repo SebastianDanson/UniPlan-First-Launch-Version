@@ -84,8 +84,8 @@ class SingleClassCell: SwipeTableViewCell {
         
         locationImage.anchor(top: classDayStackView.bottomAnchor, left: taskView.leftAnchor, paddingTop: 7, paddingLeft: 15)
         locationLabel.anchor(top: classDayStackView.bottomAnchor, left: locationImage.rightAnchor,
-                             paddingTop: 7, paddingLeft: 5)
-        locationImage.setDimensions(width: 9, height: 13)
+                             paddingTop: 7, paddingLeft: 4)
+        locationImage.setDimensions(width: 14, height: 14)
         
         startTimeLabel.anchor(top: taskView.topAnchor, right: nextImage.leftAnchor, paddingTop: 16, paddingRight: UIScreen.main.bounds.height/36)
         endTimeLabel.anchor(top: startTimeLabel.bottomAnchor,

@@ -99,7 +99,7 @@ func makeTextField(withPlaceholder text: String, height: CGFloat) -> UITextField
     textField.setDimensions(width: UIScreen.main.bounds.width - 40, height: height)
     textField.placeholder = text
     textField.backgroundColor = .clear
-    textField.textColor = .gray
+    textField.textColor = .darkBlue
     textField.layer.borderColor = UIColor.mainBlue.cgColor
     textField.layer.borderWidth = 2
     textField.layer.cornerRadius = 5
@@ -107,6 +107,7 @@ func makeTextField(withPlaceholder text: String, height: CGFloat) -> UITextField
     let spacerView = UIView(frame:CGRect(x:0, y:0, width:10, height:10))
     textField.leftViewMode = UITextField.ViewMode.always
     textField.leftView = spacerView
+    textField.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     
     return textField
 }
@@ -130,15 +131,14 @@ func makeDeleteButton() -> UIButton {
     return deleteButton
 }
 
-func setValueButton(withPlaceholder text: String) -> UIButton {
+func setValueButton(withPlaceholder text: String, height: CGFloat) -> UIButton {
     let button = UIButton()
     button.setTitle(text, for: .normal)
     button.setTitleColor(.darkBlue, for: .normal)
-    button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-    button.titleLabel?.alpha = 0.4
+    button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
     button.imageEdgeInsets = UIEdgeInsets(top: 0, left: UIScreen.main.bounds.width - 65, bottom: 0, right: 0)
-    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.height/20)
+    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: height)
     button.backgroundColor = .clear
     button.layer.borderColor = UIColor.mainBlue.cgColor
     button.layer.borderWidth = 2
@@ -149,12 +149,12 @@ func setValueButton(withPlaceholder text: String) -> UIButton {
     return button
 }
 
-func setCalendarButton(withPlaceholder text: String) -> UIButton {
+func setImageButton(withPlaceholder text: String, imageName: String) -> UIButton {
     let button = UIButton()
     button.setTitle(text, for: .normal)
     button.setTitleColor(.darkBlue, for: .normal)
     button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-    button.titleLabel?.alpha = 0.3
+   // button.titleLabel?.alpha = 0.3
     button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
     button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 42, bottom: 0, right: 0)
     button.setDimensions(width: UIScreen.main.bounds.width - 40, height: 45)
@@ -162,7 +162,7 @@ func setCalendarButton(withPlaceholder text: String) -> UIButton {
     button.layer.borderColor = UIColor.mainBlue.cgColor
     button.layer.borderWidth = 2
     button.layer.cornerRadius = 5
-    let calendarIcon = UIImage(systemName: "calendar")
+    let calendarIcon = UIImage(systemName: imageName)
     let imageView = UIImageView(image: calendarIcon)
     button.addSubview(imageView)
     imageView.centerY(in: button)
@@ -177,16 +177,15 @@ func setValueButtonNoWidth(withPlaceholder text: String) -> UIButton {
     let button = UIButton()
     button.setTitle(text, for: .normal)
     button.setTitleColor(.darkBlue, for: .normal)
-    button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-    button.titleLabel?.alpha = 0.4
+    button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     button.layer.borderColor = UIColor.mainBlue.cgColor
     button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
-    button.setDimensions(height: UIScreen.main.bounds.height/20)
+    button.setDimensions(height: 45)
     button.layer.borderWidth = 2
     button.layer.cornerRadius = 3
     let nextIcon = UIImage(named: "nextMenuButtonGray")
     button.setImage(nextIcon, for: .normal)
-    
+
     return button
 }
 
@@ -252,9 +251,11 @@ func makeAddButtonWithFill() -> UIButton {
 func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
     let button = UIButton()
     button.setTitle(day, for: .normal)
-    button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
+    button.setDimensions(width: 49, height: 49)
+    button.layer.cornerRadius = 24.5
     button.clipsToBounds = true
     button.unhighlight()
+    button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
     
     return button
 }
@@ -269,10 +270,10 @@ func makeRepeatsButton(withText text: String) -> UIButton{
     return button
 }
 
-func makeSpacerView() -> UIView {
+func makeSpacerView(height: CGFloat) -> UIView {
     let view = UIView()
     view.backgroundColor = .backgroundColor
-    view.setDimensions(height: UIScreen.main.bounds.height/128)
+    view.setDimensions(height: height)
     
     return view
 }

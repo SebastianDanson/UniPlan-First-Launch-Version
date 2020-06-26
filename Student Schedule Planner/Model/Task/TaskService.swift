@@ -22,6 +22,7 @@ class TaskService {
     private var checkForTimeConflict = true
     private var startTime = Date()
     private var endTime = Date().addingTimeInterval(3600)
+    private var isClassType = false
     
     
     let realm =  try! Realm()
@@ -140,12 +141,12 @@ class TaskService {
     }
     
     func setupReminderString(dateOrTime: Int, reminderTime: [Int], reminderDate: Date) -> String {
-                if dateOrTime == 0 {
-                    return formatReminderString(reminderTime: reminderTime)
-                } else {
-                    let date = formatDate(from: reminderDate)
-                    return "\(date)"
-                }
+        if dateOrTime == 0 {
+            return formatReminderString(reminderTime: reminderTime)
+        } else {
+            let date = formatDate(from: reminderDate)
+            return "\(date)"
+        }
     }
     
     func formatReminderString(reminderTime: [Int]) -> String{

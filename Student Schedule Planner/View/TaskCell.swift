@@ -22,19 +22,27 @@ class TaskCell: SwipeTableViewCell {
     }
     
     //MARK: - Properties
-    let taskLabel = makeLabel(ofSize: 18, weight: .bold)
+    let taskLabel = makeLabel(ofSize: 20, weight: .bold)
     let nextIcon = UIImage(named: "nextMenuButton")
-    let durationStartLabel = makeLabel(ofSize: 16, weight: .semibold)
-    let durationEndLabel = makeLabel(ofSize: 16, weight: .semibold)
+    let durationStartLabel = makeLabel(ofSize: 16, weight: .bold)
+    let durationEndLabel = makeLabel(ofSize: 16, weight: .bold)
     let reminderLabel = makeLabel(ofSize: 12, weight: .semibold)
     let taskView = makeTaskView()
-    let reminderIcon = UIImage(systemName: "alarm")
+    let reminderIcon = UIImage(systemName: "alarm.fill")
+    let locationIcon = UIImage(named: "locationWhiteFill")
+    let locationLabel = makeLabel(ofSize: 12, weight: .bold)
+    var locationImage = UIImageView()
+    var reminderImage = UIImageView()
 
+    var reminderLeftAnchorConstaint = NSLayoutConstraint()
+    var reminderOtherAnchorConstaint = NSLayoutConstraint()
+    
     //MARK: - setupUI
     func setupViews() {
         let nextImage = UIImageView(image: nextIcon!)
-        let reminderImage = UIImageView(image: reminderIcon!)
-
+        reminderImage = UIImageView(image: reminderIcon!)
+       locationImage = UIImageView(image: locationIcon!)
+        
         backgroundColor = .backgroundColor
         addSubview(taskView)
         taskView.addSubview(taskLabel)
@@ -43,7 +51,9 @@ class TaskCell: SwipeTableViewCell {
         taskView.addSubview(nextImage)
         taskView.addSubview(reminderLabel)
         taskView.addSubview(reminderImage)
-        taskView.backgroundColor = .carrot
+        taskView.addSubview(locationImage)
+        taskView.addSubview(locationLabel)
+        
         taskView.layer.borderWidth = 0
         taskLabel.lineBreakMode = .byWordWrapping
         taskLabel.numberOfLines = 0
@@ -51,32 +61,55 @@ class TaskCell: SwipeTableViewCell {
         durationStartLabel.anchor(top: taskView.topAnchor,right: nextImage.leftAnchor, paddingTop: 16, paddingRight:  25)
         durationEndLabel.anchor(top: durationStartLabel.bottomAnchor, left: durationStartLabel.leftAnchor)
         
-        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 5, paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
+        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor,
+                        paddingTop: 5, paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
+        
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
         
-        reminderImage.anchor(left: taskLabel.leftAnchor,bottom: taskView.bottomAnchor, paddingBottom: 5 )
+        reminderImage.anchor(bottom: taskView.bottomAnchor, paddingBottom: 4)
+        
         reminderImage.tintColor = .white
         reminderImage.setDimensions(width: 15, height: 15)
-        reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 3, paddingBottom: 5)
+        reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 2, paddingBottom: 5)
+        
+        locationImage.anchor(left: taskLabel.leftAnchor, bottom: taskView.bottomAnchor, paddingBottom: 5 )
+        locationImage.setDimensions(width: 15, height: 15)
+        locationLabel.anchor(left: locationImage.rightAnchor,
+                             bottom: taskView.bottomAnchor,
+                             paddingLeft: 2,
+                             paddingBottom: 5 )
+        
+        reminderLeftAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: locationLabel.rightAnchor, constant: 10)
+        reminderOtherAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: taskLabel.leftAnchor)
+        reminderLeftAnchorConstaint.isActive = true
     }
     
     //MARK: - Actions
     func update(task: Task) {
+        reminderImage.isHidden = false
+        reminderLabel.isHidden = false
+        locationImage.isHidden = false
+        locationLabel.isHidden = false
+
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mma"
         durationStartLabel.text = "\(dateFormatter.string(from: task.startDate))-"
         durationStartLabel.textColor = .backgroundColor
-
+        
         durationEndLabel.text = dateFormatter.string(from: task.endDate)
         durationEndLabel.textColor = .backgroundColor
-
+        
         if task.reminder {
             reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: task.dateOrTime, reminderTime: [task.reminderTime[0], task.reminderTime[1]], reminderDate: task.reminderDate)
         } else {
-            reminderLabel.text = "None"
+            reminderLabel.isHidden = true
+            reminderImage.isHidden = true
         }
         reminderLabel.textColor = .backgroundColor
+        locationLabel.textColor = .white
+        locationLabel.text = task.location
         
         taskLabel.text = task.title
         taskLabel.textColor = .backgroundColor
@@ -87,19 +120,29 @@ class TaskCell: SwipeTableViewCell {
         
         if let text = taskLabel.text {
             let nsString = text as NSString
-            if nsString.length >= 25 {
-                taskLabel.text = nsString.substring(with: NSRange(location: 0, length: 20))
-                taskLabel.text?.append("\n\(nsString.substring(with: NSRange(location: 20, length: nsString.length - 20 > 20 ? 20 : nsString.length - 20)))")
-
-                if task.reminder {
-                    taskLabel.anchor(top: taskView.topAnchor ,left: taskView.leftAnchor, right: durationStartLabel.leftAnchor, paddingTop: 5, paddingLeft: 30)
-                    return
-                }
+            if nsString.length >= 21 {
+                taskLabel.text = nsString.substring(with: NSRange(location: 0, length: 21))
+                taskLabel.text?.append("\n\(nsString.substring(with: NSRange(location: 21, length: nsString.length - 21 > 21 ? 21 : nsString.length - 21)))")
+                
+//                if task.reminder {
+                    taskLabel.anchor(top: taskView.topAnchor, left: taskView.leftAnchor, right: durationStartLabel.leftAnchor, paddingTop: 5, paddingLeft: 20)
+//                    return
+//                }
+            } else {
+                taskLabel.anchor(left: taskView.leftAnchor, right: durationStartLabel.leftAnchor, paddingLeft: 20)
+                taskLabel.centerY(in: taskView)
             }
         }
-        taskLabel.centerY(in: taskView)
-        taskLabel.anchor(left: taskView.leftAnchor, right: durationStartLabel.leftAnchor, paddingLeft: 30)
-        
+//        taskLabel.centerY(in: taskView)
+//        taskLabel.anchor(left: taskView.leftAnchor, right: durationStartLabel.leftAnchor, paddingLeft: 30)
+
+        if task.location == "" {
+            locationImage.isHidden = true
+            locationLabel.isHidden = true
+            
+            reminderOtherAnchorConstaint.isActive = true
+            reminderLeftAnchorConstaint.isActive = false
+        }
         taskView.backgroundColor = getColor(colorAsInt: task.color)
     }
 }

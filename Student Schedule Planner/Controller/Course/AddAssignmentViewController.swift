@@ -20,7 +20,7 @@ class AddAssignmentViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupReminderTime()
+        reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)
     }
     
     //MARK: - Properties
@@ -28,27 +28,26 @@ class AddAssignmentViewController: UIViewController {
     let titleLabel = makeTitleLabel(withText: "Add Assignment")
     let backButton = makeBackButton()
     let saveButton = makeSaveButton()
-    let titleHeading = makeHeading(withText: "Title:")
-    let titleTextField = makeTextField(withPlaceholder: "Assignment Title", height: UIScreen.main.bounds.height/20 )
-    let dateHeading = makeHeading(withText: "Date:")
-    let datePicker = makeDateAndTimePicker(height: UIScreen.main.bounds.height/6)
+    let titleTextField = makeTextField(withPlaceholder: "Title", height: 50)
+    let dateHeading = makeHeading(withText: "Due Date:")
+    let datePicker = makeDateAndTimePicker(height: UIScreen.main.bounds.height/5)
     let reminderHeading = makeHeading(withText: "Reminder")
     let reminderSwitch = UISwitch()
-    let reminderButton = setValueButton(withPlaceholder: "When Task Starts")
+    let reminderButton = setValueButton(withPlaceholder: "When Task Starts", height: 45)
+    let hideReminderView = makeAnimatedView()
     
     //MARK: - UI Setup
     func setupViews() {
-        
         view.backgroundColor = .backgroundColor
         view.addSubview(topView)
         view.addSubview(saveButton)
-        view.addSubview(titleHeading)
         view.addSubview(titleTextField)
         view.addSubview(dateHeading)
         view.addSubview(datePicker)
         view.addSubview(reminderButton)
         view.addSubview(reminderSwitch)
         view.addSubview(reminderHeading)
+        view.addSubview(hideReminderView)
         
         //topView
         topView.addSubview(titleLabel)
@@ -64,9 +63,11 @@ class AddAssignmentViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
         //Not topView
-        titleHeading.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
-        titleTextField.anchor(top: titleHeading.bottomAnchor, left: titleHeading.leftAnchor, paddingTop: 5)
+        titleTextField.layer.borderWidth = 5
+        titleTextField.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        titleTextField.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
         dateHeading.anchor(top: titleTextField.bottomAnchor, left: titleTextField.leftAnchor, paddingTop: 25)
+        
         datePicker.anchor(top: dateHeading.bottomAnchor)
         datePicker.centerX(in: view)
         
@@ -77,8 +78,11 @@ class AddAssignmentViewController: UIViewController {
         
         reminderButton.centerX(in: view)
         reminderButton.anchor(top: reminderHeading.bottomAnchor, paddingTop: UIScreen.main.bounds.height/80)
-        reminderButton.isHidden = true
         reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
+        
+        hideReminderView.anchor(top: reminderSwitch.bottomAnchor)
+        hideReminderView.centerX(in: view)
+        hideReminderView.setDimensions(height: 55)
         
         saveButton.anchor(top: reminderButton.bottomAnchor, paddingTop: UIScreen.main.bounds.height/10)
         saveButton.centerX(in: view)
@@ -88,14 +92,17 @@ class AddAssignmentViewController: UIViewController {
             if let assignment = CourseService.shared.getAssignment(atIndex: assignmentIndex) {
                 titleTextField.text = assignment.title
                 datePicker.date = assignment.dueDate
+                reminderSwitch.isOn = assignment.reminder
+                
+                if assignment.reminder {
+                    reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: assignment.dateOrTime,
+                                                                                   reminderTime: [assignment.reminderTime[0],
+                                                                                                  assignment.reminderTime[1]],
+                                                                                   reminderDate: assignment.reminderDate), for: .normal)
+                }
+                
             }
         }
-    }
-    
-    func setupReminderTime() {
-        reminderButton.isHidden = TaskService.shared.getHideReminder()
-        reminderSwitch.isOn = !reminderButton.isHidden
-        reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)
     }
     
     //MARK: - Actions
@@ -147,15 +154,19 @@ class AddAssignmentViewController: UIViewController {
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
     }
-    
+
     @objc func reminderSwitchToggled() {
         if reminderSwitch.isOn {
-            reminderButton.isHidden = false
             TaskService.shared.setHideReminder(bool: false)
             TaskService.shared.askToSendNotifications()
+            UIView.animate(withDuration: 0.3, animations: {
+                self.hideReminderView.frame.origin.y = self.hideReminderView.frame.origin.y+55
+            })
         } else {
-            reminderButton.isHidden = true
             TaskService.shared.setHideReminder(bool: true)
+            UIView.animate(withDuration: 0.3, animations: {
+                self.hideReminderView.frame.origin.y = self.reminderSwitch.frame.maxY
+            })
         }
     }
 }
