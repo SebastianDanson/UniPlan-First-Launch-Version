@@ -231,6 +231,10 @@ class CourseDetailsViewController: SwipeViewController {
 
 //MARK: - Tableview Delegate and Datasource
 extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 4
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case classTableView:

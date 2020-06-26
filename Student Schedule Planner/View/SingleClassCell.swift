@@ -25,15 +25,16 @@ class SingleClassCell: SwipeTableViewCell {
     //MARK: - Properties
     let classTypeLabel = makeLabel(ofSize: 14, weight: .regular)
     let classDayStackView = makeStackView(withOrientation: .horizontal, spacing: UIScreen.main.bounds.height/179)
-    let nextIcon = UIImage(named: "nextMenuButton")
+    let nextIcon = UIImage(named: "nextMenuButtonGray")
     let locationIcon = UIImage(named: "location")
     let locationLabel = makeLabel(ofSize: 14, weight: .semibold)
     let startTimeLabel = makeLabel(ofSize: 18, weight: .regular)
     let endTimeLabel = makeLabel(ofSize: 18, weight: .regular)
     let classFrequencyLabel = makeLabel(ofSize: 16, weight: .semibold)
-    let reminderLabel = makeLabel(ofSize: 14, weight: .regular)
-    let reminderIcon = UIImage(systemName: "alarm")
+    let reminderLabel = makeLabel(ofSize: 14, weight: .semibold)
+    let reminderIcon = UIImage(systemName: "alarm.fill")
     let taskView = makeTaskView()
+    let scrollView = UIScrollView()
     
     //Day Circles
     let sunday = makeDayCircleButton(withLetter: "S")
@@ -85,7 +86,7 @@ class SingleClassCell: SwipeTableViewCell {
         locationImage.anchor(top: classDayStackView.bottomAnchor, left: taskView.leftAnchor, paddingTop: 7, paddingLeft: 15)
         locationLabel.anchor(top: classDayStackView.bottomAnchor, left: locationImage.rightAnchor,
                              paddingTop: 7, paddingLeft: 4)
-        locationImage.setDimensions(width: 14, height: 14)
+        locationImage.setDimensions(width: 15, height: 15)
         
         startTimeLabel.anchor(top: taskView.topAnchor, right: nextImage.leftAnchor, paddingTop: 16, paddingRight: UIScreen.main.bounds.height/36)
         endTimeLabel.anchor(top: startTimeLabel.bottomAnchor,
@@ -95,8 +96,7 @@ class SingleClassCell: SwipeTableViewCell {
         
         reminderImage.anchor(left: taskView.leftAnchor, bottom: taskView.bottomAnchor, paddingLeft: 15, paddingBottom: 5)
         reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 5, paddingBottom: 5)
-        reminderImage.setDimensions(width: 11, height: 13)
-        
+        reminderImage.setDimensions(width: 14, height: 14)
     }
     
     //MARK: - Actions
@@ -135,7 +135,8 @@ class SingleClassCell: SwipeTableViewCell {
             }
         }
         
-        locationLabel.text = theClass.location
+        locationLabel.text = theClass.location == "" ? "Not set": theClass.location
+        
         startTimeLabel.text = "\(formatTime(from: theClass.startTime))-"
         
         endTimeLabel.text = formatTime(from: theClass.endTime)

@@ -251,8 +251,8 @@ func makeAddButtonWithFill() -> UIButton {
 func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
     let button = UIButton()
     button.setTitle(day, for: .normal)
-    button.setDimensions(width: 49, height: 49)
-    button.layer.cornerRadius = 24.5
+    button.setDimensions(width: (UIScreen.main.bounds.width - 70)/7, height: (UIScreen.main.bounds.width - 70)/7)
+    button.layer.cornerRadius = (UIScreen.main.bounds.width - 70)/14
     button.clipsToBounds = true
     button.unhighlight()
     button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .semibold)

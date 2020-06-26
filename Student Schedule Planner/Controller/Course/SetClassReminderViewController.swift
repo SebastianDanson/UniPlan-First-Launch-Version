@@ -24,8 +24,6 @@ class SetClassReminderViewController: PickerViewController {
       
     //Not topView
     let timeBeforeHeading = makeHeading(withText: "Time Before Each Class:")
-    let remindMeHeading = makeHeading(withText: "Remind Me:")
-    let reminderSwitch = UISwitch()
     let timeBeforePickerView = UIPickerView()
     let saveButton = makeSaveButton()
     
@@ -36,8 +34,6 @@ class SetClassReminderViewController: PickerViewController {
         view.addSubview(timeBeforePickerView)
         view.addSubview(timeBeforeHeading)
         view.addSubview(saveButton)
-        view.addSubview(remindMeHeading)
-        view.addSubview(reminderSwitch)
         
         //topView
         topView.addSubview(titleLabel)
@@ -53,12 +49,7 @@ class SetClassReminderViewController: PickerViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
         //Not topView
-        remindMeHeading.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
-        reminderSwitch.anchor(left: remindMeHeading.rightAnchor, bottom: remindMeHeading.bottomAnchor, paddingLeft: 10)
-        reminderSwitch.isOn = true
-        reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
-        
-        timeBeforeHeading.anchor(top: remindMeHeading.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        timeBeforeHeading.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
         setupTimeBeforePickerView()
         
         saveButton.centerX(in: view)
@@ -92,19 +83,7 @@ class SetClassReminderViewController: PickerViewController {
     @objc func saveButtonPressed() {
          let time = [self.hour, self.minutes]
         
-        SingleClassService.shared.setReminderTime(time)
-        SingleClassService.shared.setReminder(reminderSwitch.isOn)
-        
+        SingleClassService.shared.setReminderTime(time)        
         dismiss(animated: true)
      }
-    
-    @objc func reminderSwitchToggled() {
-        if reminderSwitch.isOn {
-            timeBeforePickerView.isHidden = false
-            timeBeforeHeading.isHidden = false
-        } else {
-            timeBeforePickerView.isHidden = true
-            timeBeforeHeading.isHidden = true
-        }
-    }
 }

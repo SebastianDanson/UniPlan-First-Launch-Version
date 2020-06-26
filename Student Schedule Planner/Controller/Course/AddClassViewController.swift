@@ -17,6 +17,7 @@ class AddClassViewController: UIViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        SingleClassService.shared.setReminder(false)
         SingleClassService.shared.setRepeats(every: "Week")
         self.dismissKey()
         setupViews()
@@ -27,13 +28,16 @@ class AddClassViewController: UIViewController {
         classTypeButton.setTitle(SingleClassService.shared.getType().description, for: .normal)
         reminderButton.setTitle(SingleClassService.shared.setupReminderString(), for: .normal)
         repeatsButton.setTitle(SingleClassService.shared.getRepeats(), for: .normal)
-        //setClassDates()
         SingleClassService.shared.setInitialLocation(location: locationTextField.text ?? "")
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         reminderButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: reminderButton.frame.width-30, bottom: 0, right: 0)
+        if SingleClassService.shared.getReminder() {
+            reminderSwitch.isOn = true
+            reminderSwitchToggled()
+        }
     }
     
     //MARK: - Properties
@@ -220,8 +224,7 @@ class AddClassViewController: UIViewController {
         reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
         reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
         reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
-        reminderSwitch.isOn = false
-
+        
         hideReminderView.anchor(top: reminderSwitch.bottomAnchor)
         hideReminderView.centerX(in: view)
         hideReminderView.setDimensions(height: 55)
@@ -256,16 +259,18 @@ class AddClassViewController: UIViewController {
         classTypeButton.addTarget(self, action: #selector(presentClassTypeAndRepeatsVC), for: .touchUpInside)
         repeatsButton.addTarget(self, action: #selector(presentClassTypeAndRepeatsVC), for: .touchUpInside)
         
-        //        everyWeekButton.addTarget(self, action: #selector(repeatsButtonTapped), for: .touchUpInside)
-        //        everyTwoWeeksButton.addTarget(self, action: #selector(repeatsButtonTapped), for: .touchUpInside)
-        //        everyMonthButton.addTarget(self, action: #selector(repeatsButtonTapped), for: .touchUpInside)
-        
         reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
         
         if let classIndex = SingleClassService.shared.getClassIndex() {
             if let theClass = CourseService.shared.getClass(atIndex: classIndex) {
                 SingleClassService.shared.setTypeAsString(classTypeString: theClass.type)
                 SingleClassService.shared.setReminderTime([theClass.reminderTime[0],theClass.reminderTime[1]])
+                
+                SingleClassService.shared.setStartTime(time: theClass.startTime)
+                SingleClassService.shared.setEndTime(time: theClass.endTime)
+                
+                startTime.text = formatTime(from: theClass.startTime)
+                endTime.text = formatTime(from: theClass.endTime)
                 
                 for (index, day) in theClass.classDays.enumerated() {
                     if day == 1 {
@@ -294,7 +299,7 @@ class AddClassViewController: UIViewController {
                 
                 if theClass.reminder {
                     reminderButton.setTitle(SingleClassService.shared.setupReminderString(theClass: theClass), for: .normal)
-                    reminderSwitch.isOn = true
+                    SingleClassService.shared.setReminder(true)
                 }
             }
         }
@@ -310,14 +315,16 @@ class AddClassViewController: UIViewController {
     //MARK: - Actions
     @objc func reminderSwitchToggled() {
         if reminderSwitch.isOn {
-            // reminderButton.isHidden = false
-            TaskService.shared.setHideReminder(bool: false)
+            SingleClassService.shared.setReminder(true)
+            reminderButton.setTitle(SingleClassService.shared.setupReminderString(), for: .normal)
+            //            TaskService.shared.setHideReminder(bool: false)
             TaskService.shared.askToSendNotifications()
             UIView.animate(withDuration: 0.3, animations: {
                 self.hideReminderView.frame.origin.y = self.reminderButton.frame.maxY
             })
         } else {
-            TaskService.shared.setHideReminder(bool: true)
+            SingleClassService.shared.setReminder(false)
+            //            TaskService.shared.setHideReminder(bool: true)
             UIView.animate(withDuration: 0.3, animations: {
                 self.hideReminderView.frame.origin.y = self.hideReminderView.frame.origin.y-45
             })
@@ -339,7 +346,7 @@ class AddClassViewController: UIViewController {
     
     @objc func startDateViewTapped() {
         if startTimeView.color != UIColor.mainBlue {
-            timePickerView.date = TaskService.shared.getStartTime()
+            timePickerView.date = SingleClassService.shared.getStartTime()
             startTimeView.color = .mainBlue
             startTimeView.borderColor = .clear
             clockImage.tintColor = .white
@@ -364,7 +371,7 @@ class AddClassViewController: UIViewController {
     @objc func endDateViewTapped() {
         
         if endTimeView.backgroundColor != UIColor.mainBlue {
-            timePickerView.date = TaskService.shared.getEndTime()
+            timePickerView.date = SingleClassService.shared.getEndTime()
             endTimeView.backgroundColor = .mainBlue
             endTimeView.layer.borderColor = UIColor.clear.cgColor
             endTime.textColor = .backgroundColor
@@ -468,6 +475,7 @@ class AddClassViewController: UIViewController {
     @objc func backButtonPressed() {
         dismiss(animated: true)
     }
+    
     //MARK: - Helper methods
     func configureClassDays() -> List<Int> {
         let days = List<Int>()
