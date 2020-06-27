@@ -203,7 +203,9 @@ class AddClassViewController: UIViewController {
         
         startTime.text = "\(formatTime(from: Date()))"
         endTime.text = "\(formatTime(from: Date().addingTimeInterval(3600)))"
-        
+        SingleClassService.shared.setStartTime(time: Date())
+        SingleClassService.shared.setEndTime(time: Date().addingTimeInterval(3600))
+
         setupTimePickerView()
         
         stackViewContainer.anchor(bottom: view.bottomAnchor)

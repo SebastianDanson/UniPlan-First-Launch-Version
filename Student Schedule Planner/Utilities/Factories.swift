@@ -68,7 +68,7 @@ func makeBackButton() -> UIButton {
 
 func makeTableView(withRowHeight height: CGFloat) -> UITableView {
     let tableView = UITableView()
-    //tableView.separatorColor = .clear
+    tableView.separatorColor = .clear
     tableView.rowHeight = height
     tableView.isScrollEnabled = true
     
@@ -304,7 +304,7 @@ func formatTime(from time: Date) -> String {
 
 func formatDate(from date: Date) -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "MMM d, Y"
+    dateFormatter.dateFormat = "E MMM d, Y"
     let date = dateFormatter.string(from: date)
     return date
 }

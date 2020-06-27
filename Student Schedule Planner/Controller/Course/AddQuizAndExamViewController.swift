@@ -36,7 +36,7 @@ class AddQuizAndExamViewController: UIViewController {
     //MARK: - Properties
     //topView
     let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
-    let titleLabel = makeTitleLabel(withText: "Add Class")
+    let titleLabel = makeTitleLabel(withText: "Add Quiz")
     let backButton = makeBackButton()
     let deleteButton = makeDeleteButton()
     
@@ -198,12 +198,21 @@ class AddQuizAndExamViewController: UIViewController {
         
         startTime.text = "\(formatTime(from: Date()))"
         endTime.text = "\(formatTime(from: Date().addingTimeInterval(3600)))"
+      
+        TaskService.shared.setStartTime(time: Date())
+        TaskService.shared.setEndTime(time: Date().addingTimeInterval(3600))
         
+        if CourseService.shared.getQuizOrExam() != 0 {
+            titleLabel.text = "Add Exam"
+        }
         
         if let quizIndex = QuizService.shared.getQuizIndex(){
             if let quiz = CourseService.shared.getQuiz(atIndex: quizIndex) {
                 startTime.text = formatTime(from: quiz.startDate)
                 endTime.text = formatTime(from: quiz.endDate)
+                TaskService.shared.setStartTime(time: quiz.startDate)
+                TaskService.shared.setEndTime(time: quiz.endDate)
+                
                 locationTextField.text = quiz.location
                 if quiz.reminder {
                     reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: quiz.dateOrTime, reminderTime: [quiz.reminderTime[0],quiz.reminderTime[1]],reminderDate: quiz.reminderDate), for: .normal)
@@ -216,6 +225,9 @@ class AddQuizAndExamViewController: UIViewController {
             if let exam = CourseService.shared.getExam(atIndex: examIndex) {
                 startTime.text = formatTime(from: exam.startDate)
                 endTime.text = formatTime(from: exam.endDate)
+                TaskService.shared.setStartTime(time: exam.startDate)
+                TaskService.shared.setEndTime(time: exam.endDate)
+                
                 locationTextField.text = exam.location
                 if exam.reminder {
                     reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: exam.dateOrTime, reminderTime: [exam.reminderTime[0], exam.reminderTime[1]], reminderDate: exam.reminderDate), for: .normal)

@@ -238,9 +238,9 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
         case 1:
             return 75
         case 2:
-            return 75
+            return 65
         default:
-            return 75
+            return 65
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -280,7 +280,6 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.section)
         switch indexPath.section {
         case 0:
             SingleClassService.shared.setClassIndex(index: indexPath.row)

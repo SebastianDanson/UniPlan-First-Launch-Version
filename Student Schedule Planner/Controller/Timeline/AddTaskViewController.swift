@@ -255,6 +255,9 @@ class AddTaskViewController: PickerViewController {
         
         startTime.text = "\(formatTime(from: Date()))"
         endTime.text = "\(formatTime(from: Date().addingTimeInterval(3600)))"
+        TaskService.shared.setStartTime(time: Date())
+        TaskService.shared.setEndTime(time: Date().addingTimeInterval(3600))
+
         
         red.tag = 0
         orange.tag = 1

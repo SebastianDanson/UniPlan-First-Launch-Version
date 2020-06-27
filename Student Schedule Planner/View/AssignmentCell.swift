@@ -30,7 +30,7 @@ class AssignmentCell: SwipeTableViewCell {
     let dueLabel = makeLabel(ofSize: 14, weight: .semibold)
     let dateLabel = makeLabel(ofSize: 16, weight: .regular)
     let timeLabel = makeLabel(ofSize: 16, weight: .regular)
-    let nextIcon = UIImage(named: "nextMenuButton")
+    let nextIcon = UIImage(named: "nextMenuButtonGray")
     
     //MARK: - setupUI
     func setupViews() {
@@ -79,6 +79,10 @@ class AssignmentCell: SwipeTableViewCell {
         titleLabel.text = assignment.title
         dateLabel.text = formatDate(from: assignment.dueDate)
         timeLabel.text = formatTime(from: assignment.dueDate)
+        
+        if assignment.title == "" {
+            titleLabel.text = "Untitled"
+        }
         if assignment.reminder {
             reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: assignment.dateOrTime, reminderTime: [assignment.reminderTime[0], assignment.reminderTime[1]], reminderDate: assignment.reminderDate)
         } else {
