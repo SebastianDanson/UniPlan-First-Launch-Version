@@ -23,7 +23,7 @@ class AssignmentCell: SwipeTableViewCell {
     }
     
     //MARK: - Properties
-    let reminderIcon = UIImage(systemName: "alarm")
+    let reminderIcon = UIImage(systemName: "alarm.fill")
     let reminderLabel = makeLabel(ofSize: 14, weight: .semibold)
     let taskView = makeTaskView()
     let titleLabel = makeLabel(ofSize: 18, weight: .semibold)
@@ -57,8 +57,7 @@ class AssignmentCell: SwipeTableViewCell {
                         paddingRight: 10,
                         paddingBottom: 5)
         
-        titleLabel.centerY(in: taskView)
-        titleLabel.anchor(left: taskView.leftAnchor, paddingLeft: 20)
+        titleLabel.anchor(top: taskView.topAnchor, left: taskView.leftAnchor, paddingTop: 20, paddingLeft: 20)
         
         dueLabel.anchor(top: taskView.topAnchor, left: dateLabel.leftAnchor, paddingTop: 5)
         dueLabel.text = "Due:"

@@ -68,7 +68,6 @@ class TaskCell: SwipeTableViewCell {
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
         
         reminderImage.anchor(bottom: taskView.bottomAnchor, paddingBottom: 4)
-        
         reminderImage.tintColor = .white
         reminderImage.setDimensions(width: 15, height: 15)
         reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 2, paddingBottom: 5)
@@ -124,17 +123,13 @@ class TaskCell: SwipeTableViewCell {
                 taskLabel.text = nsString.substring(with: NSRange(location: 0, length: 21))
                 taskLabel.text?.append("\n\(nsString.substring(with: NSRange(location: 21, length: nsString.length - 21 > 21 ? 21 : nsString.length - 21)))")
                 
-//                if task.reminder {
-                    taskLabel.anchor(top: taskView.topAnchor, left: taskView.leftAnchor, right: durationStartLabel.leftAnchor, paddingTop: 5, paddingLeft: 20)
-//                    return
-//                }
+                taskLabel.anchor(top: taskView.topAnchor, left: taskView.leftAnchor, right: durationStartLabel.leftAnchor, paddingTop: 5, paddingLeft: 20)
             } else {
                 taskLabel.anchor(left: taskView.leftAnchor, right: durationStartLabel.leftAnchor, paddingLeft: 20)
                 taskLabel.centerY(in: taskView)
             }
         }
-//        taskLabel.centerY(in: taskView)
-//        taskLabel.anchor(left: taskView.leftAnchor, right: durationStartLabel.leftAnchor, paddingLeft: 30)
+
 
         if task.location == "" {
             locationImage.isHidden = true

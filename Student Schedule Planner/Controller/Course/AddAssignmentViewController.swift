@@ -15,12 +15,22 @@ class AddAssignmentViewController: UIViewController {
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
+        SingleClassService.shared.setReminder(false)
         setupViews()
+        self.dismissKey()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if SingleClassService.shared.getReminder() {
+            reminderSwitch.isOn = true
+            reminderSwitchToggled()
+        }
     }
     
     //MARK: - Properties
@@ -95,12 +105,9 @@ class AddAssignmentViewController: UIViewController {
                 reminderSwitch.isOn = assignment.reminder
                 
                 if assignment.reminder {
-                    reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: assignment.dateOrTime,
-                                                                                   reminderTime: [assignment.reminderTime[0],
-                                                                                                  assignment.reminderTime[1]],
-                                                                                   reminderDate: assignment.reminderDate), for: .normal)
-                }
-                
+                    reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: assignment.dateOrTime, reminderTime: [assignment.reminderTime[0],assignment.reminderTime[1]], reminderDate: assignment.reminderDate), for: .normal)
+                        SingleClassService.shared.setReminder(true)
+                }                
             }
         }
     }
@@ -168,5 +175,13 @@ class AddAssignmentViewController: UIViewController {
                 self.hideReminderView.frame.origin.y = self.reminderSwitch.frame.maxY
             })
         }
+    }
+}
+
+//MARK: - TextField Delegate
+extension AddAssignmentViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

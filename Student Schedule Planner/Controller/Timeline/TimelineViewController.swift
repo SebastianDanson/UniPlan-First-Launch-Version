@@ -78,7 +78,7 @@ class TimelineViewController: SwipeViewController  {
         tableView.dataSource = self
     }
     
-    override func updateModel(index: Int, tableView: UITableView) {
+    override func updateModel(index: Int, section: Int) {
         do {
             try self.realm.write {
                 if let taskToDelete = TaskService.shared.getTask(atIndex: index) {

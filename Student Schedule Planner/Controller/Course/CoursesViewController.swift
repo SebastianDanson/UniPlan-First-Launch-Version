@@ -55,7 +55,7 @@ class CoursesViewController: SwipeViewController {
         tableView.dataSource = self
     }
     //What happens when user tries to delete course
-    override func updateModel(index: Int, tableView: UITableView) {
+    override func updateModel(index: Int, section: Int) {
         
         let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "", preferredStyle: .alert)
         let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in

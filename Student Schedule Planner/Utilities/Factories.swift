@@ -68,7 +68,7 @@ func makeBackButton() -> UIButton {
 
 func makeTableView(withRowHeight height: CGFloat) -> UITableView {
     let tableView = UITableView()
-    tableView.separatorColor = .clear
+    //tableView.separatorColor = .clear
     tableView.rowHeight = height
     tableView.isScrollEnabled = true
     

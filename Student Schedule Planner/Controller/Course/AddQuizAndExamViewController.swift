@@ -15,6 +15,7 @@ class AddQuizAndExamViewController: UIViewController {
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
+        SingleClassService.shared.setReminder(false)
         setupViews()
         self.dismissKey()
     }
@@ -22,6 +23,14 @@ class AddQuizAndExamViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if SingleClassService.shared.getReminder() {
+            reminderSwitch.isOn = true
+            reminderSwitchToggled()
+        }
     }
     
     //MARK: - Properties
@@ -197,11 +206,8 @@ class AddQuizAndExamViewController: UIViewController {
                 endTime.text = formatTime(from: quiz.endDate)
                 locationTextField.text = quiz.location
                 if quiz.reminder {
-                    reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: quiz.dateOrTime,
-                                                                                   reminderTime: [quiz.reminderTime[0],
-                                                                                                  quiz.reminderTime[1]],
-                                                                                   reminderDate: quiz.reminderDate), for: .normal)
-                    reminderSwitch.isOn = true
+                    reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: quiz.dateOrTime, reminderTime: [quiz.reminderTime[0],quiz.reminderTime[1]],reminderDate: quiz.reminderDate), for: .normal)
+                    SingleClassService.shared.setReminder(true)
                 }
             }
         }
@@ -212,10 +218,7 @@ class AddQuizAndExamViewController: UIViewController {
                 endTime.text = formatTime(from: exam.endDate)
                 locationTextField.text = exam.location
                 if exam.reminder {
-                    reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: exam.dateOrTime,
-                                                                                   reminderTime: [exam.reminderTime[0],
-                                                                                                  exam.reminderTime[1]],
-                                                                                   reminderDate: exam.reminderDate), for: .normal)
+                    reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: exam.dateOrTime, reminderTime: [exam.reminderTime[0], exam.reminderTime[1]], reminderDate: exam.reminderDate), for: .normal)
                     reminderSwitch.isOn = true
                 }
             }
@@ -354,10 +357,9 @@ class AddQuizAndExamViewController: UIViewController {
             try realm.write {
                 if CourseService.shared.getQuizOrExam() == 0 {
                     var quiz = Quiz()
-                    
                     quiz.dateOrTime = TaskService.shared.getDateOrTime()
                     quiz.reminder = reminderSwitch.isOn
-                    
+                    quiz.location = locationTextField.text ?? ""
                     if quiz.dateOrTime == 0 {
                         let reminderTime = TaskService.shared.getReminderTime()
                         quiz.reminderTime[0] = reminderTime[0]
@@ -370,6 +372,7 @@ class AddQuizAndExamViewController: UIViewController {
                         var quizToUpdate = CourseService.shared.getQuiz(atIndex: quizIndex)
                         quizToUpdate?.startDate = quiz.startDate
                         quizToUpdate?.endDate = quiz.endDate
+                        quizToUpdate?.location = quiz.location
                     } else {
                         realm.add(quiz, update: .modified)
                         if let course = AllCoursesService.shared.getSelectedCourse() {
@@ -377,12 +380,20 @@ class AddQuizAndExamViewController: UIViewController {
                         }
                     }
                 } else {
-                    var exam = Exam()
-                    //                    exam.startDate = datePicker.date
-                    //                    exam.endDate = endTimePicker.date
+                    let exam = Exam()
+                    exam.dateOrTime = TaskService.shared.getDateOrTime()
+                    exam.reminder = reminderSwitch.isOn
+                    exam.location = locationTextField.text ?? ""
+                    if exam.dateOrTime == 0 {
+                        let reminderTime = TaskService.shared.getReminderTime()
+                        exam.reminderTime[0] = reminderTime[0]
+                        exam.reminderTime[1] = reminderTime[1]
+                    } else {
+                        exam.reminderDate = TaskService.shared.getReminderDate()
+                    }
                     
                     if let examIndex = ExamService.shared.getExamIndex(){
-                        var examToUpdate = CourseService.shared.getExam(atIndex: examIndex)
+                        let examToUpdate = CourseService.shared.getExam(atIndex: examIndex)
                         examToUpdate?.startDate = exam.startDate
                         examToUpdate?.endDate = exam.endDate
                     } else {
