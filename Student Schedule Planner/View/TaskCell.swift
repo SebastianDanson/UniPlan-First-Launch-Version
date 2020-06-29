@@ -91,7 +91,6 @@ class TaskCell: SwipeTableViewCell {
         locationImage.isHidden = false
         locationLabel.isHidden = false
 
-
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mma"
         durationStartLabel.text = "\(dateFormatter.string(from: task.startDate))-"
@@ -130,11 +129,9 @@ class TaskCell: SwipeTableViewCell {
             }
         }
 
-
         if task.location == "" {
             locationImage.isHidden = true
             locationLabel.isHidden = true
-            
             reminderOtherAnchorConstaint.isActive = true
             reminderLeftAnchorConstaint.isActive = false
         }

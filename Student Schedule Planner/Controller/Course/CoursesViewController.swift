@@ -24,7 +24,7 @@ class CoursesViewController: SwipeViewController {
     }
     
     //MARK: - Properties
-    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
     let titleLabel = makeTitleLabel(withText: "Courses")
     let addButton = makeAddButton()
     let tableView = makeTableView(withRowHeight: 80)
@@ -57,13 +57,14 @@ class CoursesViewController: SwipeViewController {
     //What happens when user tries to delete course
     override func updateModel(index: Int, section: Int) {
         
-        let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "All classes, exams, quizzes, and assignments associated with this class will also be deleted", preferredStyle: .alert)
         let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in
             do {
                 try self.realm.write {
                     if let courseToDelete = AllCoursesService.shared.getCourse(atIndex: index) {
                         self.realm.delete(courseToDelete)
                         AllCoursesService.shared.updateCourses()
+                        AllCoursesService.shared.setCourseIndex(index: nil)
                         self.tableView.reloadData()
                     }
                 }

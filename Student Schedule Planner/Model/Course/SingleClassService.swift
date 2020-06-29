@@ -23,7 +23,8 @@ class SingleClassService {
     private var classIndex: Int?
     private var initialLocation = ""
     private var isClassType = false
-
+    private var numClasses = 0
+    
     static let shared = SingleClassService()
     
     private init(){}
@@ -35,6 +36,10 @@ class SingleClassService {
     
     func setClassDay(day: Int) {
         classDays[day] = classDays[day] == 0 ? 1:0
+    }
+    
+    func resetClassDays() {
+        classDays = [0, 0, 0, 0, 0, 0, 0]
     }
     
     //MARK: - Location
@@ -54,6 +59,16 @@ class SingleClassService {
     func setRepeats(every: String) {
         repeats = every
     }
+    
+    //MARK: - numClasses
+    func getNumClasses() -> Int {
+        return numClasses
+    }
+    
+    func setNumClasses(num: Int) {
+        numClasses = num
+    }
+    
     //MARK: - Start Time
     func getStartTime() -> Date{
         return startTime
@@ -147,7 +162,7 @@ class SingleClassService {
         if theClass.reminder {
             let reminderTime: [Int] = [theClass.reminderTime[0], theClass.reminderTime[1]]
             let reminderString = TaskService.shared.formatReminderString(reminderTime: reminderTime).replacingOccurrences(of: "Reminder: ", with: "")
-             return reminderString
+            return reminderString
         } else {
             return "None"
         }

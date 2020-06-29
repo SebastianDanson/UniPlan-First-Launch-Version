@@ -9,7 +9,7 @@
 class ExamService {
     
     private var examIndex: Int?
-    
+    private var numExams = 0
     static let shared = ExamService()
     
     private init(){}
@@ -20,5 +20,14 @@ class ExamService {
     }
     func setExamIndex(index: Int?) {
         examIndex = index
+    }
+    
+    //MARK: - numExams
+    func getNumExams() -> Int {
+        return numExams
+    }
+    
+    func setNumExams(num: Int) {
+        numExams = num
     }
 }

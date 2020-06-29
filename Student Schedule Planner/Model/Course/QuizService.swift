@@ -9,7 +9,8 @@
 class QuizService {
     
     private var quizIndex: Int?
-    
+    private var numQuizzes = 0
+
     static let shared = QuizService()
     
     private init(){}
@@ -20,6 +21,15 @@ class QuizService {
     }
     func setQuizIndex(index: Int?) {
         quizIndex = index
+    }
+    
+    //MARK: - numQuizzes
+    func getNumQuizzes() -> Int {
+        return numQuizzes
+    }
+    
+    func setNumQuizzes(num: Int) {
+        numQuizzes = num
     }
 }
 

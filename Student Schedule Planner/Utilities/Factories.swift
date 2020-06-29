@@ -309,6 +309,12 @@ func formatDate(from date: Date) -> String {
     return date
 }
 
+func formatDateNoDay(from date: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MMM d, Y"
+    let date = dateFormatter.string(from: date)
+    return date
+}
 //MARK: - AddCourse
 func makeColorButton(ofColor color: UIColor) -> UIButton {
     let button = UIButton()

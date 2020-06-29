@@ -95,10 +95,7 @@ class AddTaskViewController: PickerViewController {
     
     //MARK: - setup UI
     func setupViews() {
-        //        reminderView.backgroundColor = .red
-        //        locationView.backgroundColor = .green
-        //        colorView.backgroundColor = .purple
-        
+    
         clockImage = UIImageView(image: clockIcon!)
         
         view.backgroundColor = .backgroundColor
@@ -257,7 +254,14 @@ class AddTaskViewController: PickerViewController {
         endTime.text = "\(formatTime(from: Date().addingTimeInterval(3600)))"
         TaskService.shared.setStartTime(time: Date())
         TaskService.shared.setEndTime(time: Date().addingTimeInterval(3600))
-
+        
+        let selectedDay = Calendar.current.dateComponents([.day], from: TaskService.shared.getDateSelected())
+        let today = Calendar.current.dateComponents([.day], from: Date())
+        if selectedDay != today  {
+            dateButton.setTitle(formatDate(from: TaskService.shared.getDateSelected()), for: .normal)
+        }
+        
+        datePickerView.date = TaskService.shared.getDateSelected()
         
         red.tag = 0
         orange.tag = 1
@@ -437,8 +441,13 @@ class AddTaskViewController: PickerViewController {
     @objc func saveTask() {
         let task = Task()
         task.title = titleTextField.text ?? ""
-        task.startDate = TaskService.shared.getStartTime()
-        task.endDate = TaskService.shared.getEndTime()
+        
+        let startComponents = Calendar.current.dateComponents([.hour, .minute], from: TaskService.shared.getStartTime())
+        let endComponents = Calendar.current.dateComponents([.hour, .minute], from: TaskService.shared.getEndTime())
+        let date = Calendar.current.startOfDay(for: datePickerView.date)
+        
+        task.startDate = date.addingTimeInterval(TimeInterval(startComponents.hour! * 3600 + startComponents.minute! * 60))
+        task.endDate = date.addingTimeInterval(TimeInterval(endComponents.hour! * 3600 + endComponents.minute! * 60))
         task.dateOrTime = TaskService.shared.getDateOrTime()
         task.reminder = reminderSwitch.isOn
         task.color = CourseService.shared.getColor()

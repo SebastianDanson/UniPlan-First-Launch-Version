@@ -42,7 +42,6 @@
 		3FAEC8262496F816000ADD9D /* SingleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC8252496F816000ADD9D /* SingleClass.swift */; };
 		3FAEC82E2496FCC1000ADD9D /* SingleClassService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */; };
 		3FAEC8302497D2B7000ADD9D /* SetClassTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC82F2497D2B7000ADD9D /* SetClassTimeViewController.swift */; };
-		3FAEC8382497EA08000ADD9D /* SetClassDatesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC8372497EA08000ADD9D /* SetClassDatesViewController.swift */; };
 		3FAEC83A2497FD1A000ADD9D /* CourseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC8392497FD1A000ADD9D /* CourseService.swift */; };
 		3FAEC83C2499242C000ADD9D /* AddAssignmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC83B2499242B000ADD9D /* AddAssignmentViewController.swift */; };
 		3FAEC83E24992767000ADD9D /* AssignmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC83D24992767000ADD9D /* AssignmentService.swift */; };
@@ -89,7 +88,6 @@
 		3FAEC8252496F816000ADD9D /* SingleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleClass.swift; sourceTree = "<group>"; };
 		3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleClassService.swift; sourceTree = "<group>"; };
 		3FAEC82F2497D2B7000ADD9D /* SetClassTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetClassTimeViewController.swift; sourceTree = "<group>"; };
-		3FAEC8372497EA08000ADD9D /* SetClassDatesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetClassDatesViewController.swift; sourceTree = "<group>"; };
 		3FAEC8392497FD1A000ADD9D /* CourseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseService.swift; sourceTree = "<group>"; };
 		3FAEC83B2499242B000ADD9D /* AddAssignmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssignmentViewController.swift; sourceTree = "<group>"; };
 		3FAEC83D24992767000ADD9D /* AssignmentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentService.swift; sourceTree = "<group>"; };
@@ -245,7 +243,6 @@
 				3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */,
 				3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */,
 				3FAEC82F2497D2B7000ADD9D /* SetClassTimeViewController.swift */,
-				3FAEC8372497EA08000ADD9D /* SetClassDatesViewController.swift */,
 				3FAEC84124993A56000ADD9D /* SetClassReminderViewController.swift */,
 				3F94E3282496A90500B0F958 /* AddClassViewController.swift */,
 				3FAEC83B2499242B000ADD9D /* AddAssignmentViewController.swift */,
@@ -423,7 +420,6 @@
 				3F94E2D72492FDD100B0F958 /* TabBarController.swift in Sources */,
 				3FAEC846249A8AA8000ADD9D /* QuizService.swift in Sources */,
 				3FAEC83A2497FD1A000ADD9D /* CourseService.swift in Sources */,
-				3FAEC8382497EA08000ADD9D /* SetClassDatesViewController.swift in Sources */,
 				3FAEC84A249BF85A000ADD9D /* AddCourseViewController.swift in Sources */,
 				3F94E3252496895900B0F958 /* AssignmentCell.swift in Sources */,
 				3F592344249FA379008F45D6 /* HelperFunctions.swift in Sources */,

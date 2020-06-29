@@ -20,6 +20,9 @@ class Task: Object {
     @objc dynamic var reminderDate: Date = Date()
     @objc dynamic var location = ""
     @objc dynamic var color = 0
+    @objc dynamic var course = ""
+    @objc dynamic var type = ""
+    @objc dynamic var index = -1 // -1 means the task is not associated with a course 
     
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
 

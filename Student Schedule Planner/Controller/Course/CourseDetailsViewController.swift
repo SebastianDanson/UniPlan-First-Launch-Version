@@ -33,23 +33,33 @@ class CourseDetailsViewController: SwipeViewController {
     //MARK: - Properties
     //table views
     let tableView = makeTableView(withRowHeight: 120)
-    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
     let titleLabel = makeTitleLabel(withText: "")
     let backButton = makeBackButton()
-    let deleteButton = makeDeleteButton()
+    
+    let editButton: UIButton = {
+        let editButton = UIButton()
+        editButton.setTitle("Edit", for: .normal)
+        editButton.titleLabel?.font = UIFont.systemFont(ofSize: 22, weight: .regular)
+        editButton.setDimensions(width: 50, height: 30)
+        editButton.backgroundColor = .mainBlue
+        editButton.setTitleColor(UIColor.backgroundColor, for: .normal)
+        return editButton
+    }()
     
     //MARK: - UISetup
     func setupViews() {
         view.backgroundColor = .backgroundColor
+        tableView.backgroundColor = .backgroundColor
         
         view.addSubview(topView)
         view.addSubview(backButton)
-        view.addSubview(deleteButton)
+        view.addSubview(editButton)
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.setDimensions(width: UIScreen.main.bounds.width)
-
+        
         tableView.register(QuizAndExamCell.self, forCellReuseIdentifier: "QuizAndExam")
         tableView.register(AssignmentCell.self, forCellReuseIdentifier: "Assignment")
         tableView.register(SingleClassCell.self, forCellReuseIdentifier: "Class")
@@ -64,14 +74,16 @@ class CourseDetailsViewController: SwipeViewController {
         backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
-        deleteButton.anchor(right: topView.rightAnchor, paddingRight: 20)
-        deleteButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
-        deleteButton.addTarget(self, action: #selector(deleteCourse), for: .touchUpInside)
+        editButton.anchor(right: topView.rightAnchor, paddingRight: 20)
+        editButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        editButton.addTarget(self, action: #selector(editButtonPressed), for: .touchUpInside)
         
         tableView.anchor(top:topView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
-        let courseIndex = AllCoursesService.shared.getCourseIndex()
-        let course = AllCoursesService.shared.getCourse(atIndex: courseIndex)
-        titleLabel.text = course?.title
+        
+        titleLabel.text = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
+        
+        let course = AllCoursesService.shared.getSelectedCourse()
+        SingleClassService.shared.setNumClasses(num: course?.classes.count ?? 0)
     }
     
     //MARK: - Actions
@@ -101,32 +113,39 @@ class CourseDetailsViewController: SwipeViewController {
         present(vc, animated: true, completion: nil)
     }
     
+    @objc func editButtonPressed() {
+        let vc = AddCourseViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
+    }
+    
     @objc func backButtonPressed() {
         dismiss(animated: true, completion: nil)
     }
-    
     @objc func deleteCourse() {
         let index = AllCoursesService.shared.getCourseIndex()
-         let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "", preferredStyle: .alert)
-               let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in
-                   do {
-                       try self.realm.write {
-                           if let courseToDelete = AllCoursesService.shared.getCourse(atIndex: index) {
-                               self.realm.delete(courseToDelete)
-                               AllCoursesService.shared.updateCourses()
-                           }
-                       }
-                   } catch {
-                       print("Error writing task to realm")
-                   }
-                self.dismiss(animated: true, completion: nil)
-               }
-               
-               let actionCancel = UIAlertAction(title: "Cancel", style: .default) { (alert) in }
-
-               alert.addAction(actionCancel)
-               alert.addAction(actionDeleteCourse)
-               present(alert, animated: true)
+        let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "", preferredStyle: .alert)
+        let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in
+            do {
+                try self.realm.write {
+                    if let index = index {
+                        if let courseToDelete = AllCoursesService.shared.getCourse(atIndex: index) {
+                            self.realm.delete(courseToDelete)
+                            AllCoursesService.shared.updateCourses()
+                        }
+                    }
+                }
+            } catch {
+                print("Error writing task to realm")
+            }
+            self.dismiss(animated: true, completion: nil)
+        }
+        
+        let actionCancel = UIAlertAction(title: "Cancel", style: .default) { (alert) in }
+        
+        alert.addAction(actionCancel)
+        alert.addAction(actionDeleteCourse)
+        present(alert, animated: true)
     }
     
     //MARK: - Helper Functions
@@ -137,22 +156,25 @@ class CourseDetailsViewController: SwipeViewController {
                 switch section {
                 case 0:
                     if let classToDelete = CourseService.shared.getClass(atIndex: index) {
+                        TaskService.shared.deleteTasks(forClass: classToDelete)
                         realm.delete(classToDelete)
-                        TaskService.shared.deleteTasks()
                         CourseService.shared.updateClasses()
                     }
                 case 1:
                     if let assignmentToDelete = CourseService.shared.getAssignment(atIndex: index) {
+                        TaskService.shared.deleteTasks(forAssigment: assignmentToDelete)
                         realm.delete(assignmentToDelete)
                         CourseService.shared.updateAssignments()
                     }
                 case 2:
                     if let quizToDelete = CourseService.shared.getQuiz(atIndex: index) {
+                        TaskService.shared.deleteTasks(forQuiz: quizToDelete)
                         realm.delete(quizToDelete)
                         CourseService.shared.updateQuizzes()
                     }
                 default:
                     if let examToDelete = CourseService.shared.getExam(atIndex: index) {
+                        TaskService.shared.deleteTasks(forExam: examToDelete)
                         realm.delete(examToDelete)
                         CourseService.shared.updateExams()
                     }
@@ -163,14 +185,14 @@ class CourseDetailsViewController: SwipeViewController {
         }
         tableView.reloadData()
     }
-
+    
 }
 //MARK: - Tableview Delegate and Datasource
 extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
@@ -184,7 +206,7 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
         default:
             return 0
         }
-    
+        
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -197,7 +219,7 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
         view.addSubview(sectionName)
         view.addSubview(addButton)
         view.addSubview(seperator)
-
+        
         sectionName.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, paddingLeft: 10, paddingBottom: 5)
         addButton.anchor(left: sectionName.rightAnchor,  bottom: view.bottomAnchor,  paddingLeft: 5, paddingBottom: 5)
         
@@ -252,7 +274,7 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
                 cell.delegate = self
             }
             return cell
-
+            
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "Assignment", for: indexPath) as! AssignmentCell
             if let assignment = CourseService.shared.getAssignment(atIndex: indexPath.row) {
@@ -260,7 +282,7 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
                 cell.delegate = self
             }
             return cell
-
+            
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "QuizAndExam", for: indexPath) as! QuizAndExamCell
             if let quiz = CourseService.shared.getQuiz(atIndex: indexPath.row) {
@@ -268,8 +290,8 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
                 cell.delegate = self
             }
             return cell
-
-         default:
+            
+        default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "QuizAndExam", for: indexPath) as! QuizAndExamCell
             if let exam = CourseService.shared.getExam(atIndex: indexPath.row) {
                 cell.update(exam: exam)

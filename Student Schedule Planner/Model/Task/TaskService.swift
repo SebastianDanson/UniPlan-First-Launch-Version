@@ -168,51 +168,182 @@ class TaskService {
     //MARK: - TASKS
     func makeTasks(forClass theClass: SingleClass) {
         let course = AllCoursesService.shared.getSelectedCourse()
-        var startDate = Calendar.current.startOfDay(for: course?.startDate ?? Date())
+        let startDate = Calendar.current.startOfDay(for: course?.startDate ?? Date())
         var dayIncrementor = startDate
-        var endDate = Calendar.current.startOfDay(for: course?.endDate ?? Date())
+        let endDate = Calendar.current.startOfDay(for: course?.endDate ?? Date())
+        SingleClassService.shared.setNumClasses(num: (SingleClassService.shared.getNumClasses() + 1))
         
         while dayIncrementor < endDate {
             if theClass.classDays[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
+                let course = AllCoursesService.shared.getSelectedCourse()
                 let task = Task()
-                task.title = "\(AllCoursesService.shared.getSelectedCourse()?.title) Class" ?? ""
+                task.title = "\(course?.title ?? "") Class"
                 task.dateOrTime = 0
                 task.startDate = theClass.startTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
                 task.endDate = theClass.endTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
                 task.reminder = theClass.reminder
                 task.reminderTime = theClass.reminderTime
                 task.location = theClass.location
+                task.course = course?.title ?? ""
+                task.type = theClass.type
+                task.index = SingleClassService.shared.getNumClasses()
+                task.color = course?.color ?? 0 
                 
-                realm.add(task)
+                realm.add(task, update: .modified)
             }
             dayIncrementor.addTimeInterval(86400)
         }
     }
     
     func makeTask(forQuiz quiz: Quiz) {
+        let course = AllCoursesService.shared.getSelectedCourse()
         let task = Task()
-        task.title = ("\(AllCoursesService.shared.getSelectedCourse()?.title) Quiz") ?? ""
+        task.title = ("\(course?.title ?? "") Quiz")
         task.dateOrTime = 0
         task.startDate = quiz.startDate
         task.endDate = quiz.endDate
+        task.location = quiz.location
+        task.reminder = quiz.reminder
+        task.reminderTime[0] = quiz.reminderTime[0]
+        task.reminderTime[1] = quiz.reminderTime[1]
+        task.reminderDate = quiz.reminderDate
+        task.course = course?.title ?? ""
+        task.type = "quiz"
+        task.index = QuizService.shared.getNumQuizzes()
         
         scheduleNotification(forTask: task)
-        
-        realm.add(task)
+        realm.add(task, update: .modified)
+        QuizService.shared.setNumQuizzes(num: (QuizService.shared.getNumQuizzes() + 1))
     }
     
+    func makeTask(forAssignment assignment: Assignment) {
+         let course = AllCoursesService.shared.getSelectedCourse()
+         let task = Task()
+         task.title = assignment.title
+         task.dateOrTime = 0
+         task.startDate = assignment.dueDate
+         task.reminder = assignment.reminder
+         task.reminderTime[0] = assignment.reminderTime[0]
+         task.reminderTime[1] = assignment.reminderTime[1]
+         task.reminderDate = assignment.reminderDate
+         task.course = course?.title ?? ""
+         task.type = "assignment"
+         task.index = AssignmentService.shared.getNumAssignments()
+         
+         scheduleNotification(forTask: task)
+         realm.add(task, update: .modified)
+         AssignmentService.shared.setNumAssignments(num: (AssignmentService.shared.getNumAssignments() + 1))
+     }
+    
+    func makeTask(forExam exam: Exam) {
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let task = Task()
+        task.title = ("\(course?.title ?? "") Exam")
+        task.dateOrTime = 0
+        task.startDate = exam.startDate
+        task.endDate = exam.endDate
+        task.location = exam.location
+        task.reminder = exam.reminder
+        task.reminderTime[0] = exam.reminderTime[0]
+        task.reminderTime[1] = exam.reminderTime[1]
+        task.reminderDate = exam.reminderDate
+        task.course = course?.title ?? ""
+        task.type = "exam"
+        task.index = ExamService.shared.getNumExams()
+        
+        scheduleNotification(forTask: task)
+        realm.add(task, update: .modified)
+        ExamService.shared.setNumExams(num: (ExamService.shared.getNumExams() + 1))
+    }
     
     func updateTasks(forClass theClass: SingleClass) {
-        deleteTasks()
+        deleteTasks(forClass: theClass)
         makeTasks(forClass: theClass)
     }
     
-    func deleteTasks() {
-        var course = AllCoursesService.shared.getSelectedCourse()
-        let tasksToUpdate = realm.objects(Task.self).filter("title == %@ AND location == %@", course?.title, SingleClassService.shared.getInitialLocation())
+    func updateTasks(forQuiz quiz: Quiz) {
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let taskToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "quiz", quiz.index).first
+        taskToUpdate?.dateOrTime = 0
+        taskToUpdate?.startDate = quiz.startDate
+        taskToUpdate?.endDate = quiz.endDate
+        taskToUpdate?.location = quiz.location
+        taskToUpdate?.reminder = quiz.reminder
+        taskToUpdate?.reminderTime[0] = quiz.reminderTime[0]
+        taskToUpdate?.reminderTime[1] = quiz.reminderTime[1]
+        taskToUpdate?.reminderDate = quiz.reminderDate
         
-        for task in tasksToUpdate {
+        if let taskToUpdate = taskToUpdate {
+            scheduleNotification(forTask: taskToUpdate)
+        }
+    }
+    
+    func updateTasks(forAssignment assignment: Assignment) {
+          let course = AllCoursesService.shared.getSelectedCourse()
+          let taskToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "assignment", assignment.index).first
+          taskToUpdate?.dateOrTime = 0
+          taskToUpdate?.startDate = assignment.dueDate
+          taskToUpdate?.reminder = assignment.reminder
+          taskToUpdate?.reminderTime[0] = assignment.reminderTime[0]
+          taskToUpdate?.reminderTime[1] = assignment.reminderTime[1]
+          taskToUpdate?.reminderDate = assignment.reminderDate
+          
+          if let taskToUpdate = taskToUpdate {
+              scheduleNotification(forTask: taskToUpdate)
+          }
+      }
+    
+    func updateTasks(forExam exam: Exam) {
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let taskToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "exam", exam.index).first
+        taskToUpdate?.dateOrTime = 0
+        taskToUpdate?.startDate = exam.startDate
+        taskToUpdate?.endDate = exam.endDate
+        taskToUpdate?.location = exam.location
+        taskToUpdate?.reminder = exam.reminder
+        taskToUpdate?.reminderTime[0] = exam.reminderTime[0]
+        taskToUpdate?.reminderTime[1] = exam.reminderTime[1]
+        taskToUpdate?.reminderDate = exam.reminderDate
+        
+        if let taskToUpdate = taskToUpdate {
+            scheduleNotification(forTask: taskToUpdate)
+        }
+    }
+    
+    func deleteTasks(forClass theClass: SingleClass) {
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let tasksToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, theClass.type, theClass.index)
+        
+        for task in tasksToDelete {
             realm.delete(task)
+        }
+    }
+    
+    func deleteTasks(forQuiz quiz: Quiz) {
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "quiz", quiz.index).first
+        
+        if let taskToDelete = taskToDelete {
+            realm.delete(taskToDelete)
+        }
+    }
+    
+    func deleteTasks(forAssigment assignment: Assignment) {
+        
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "assignment" , assignment.index).first
+        
+        if let taskToDelete = taskToDelete {
+            realm.delete(taskToDelete)
+        }
+    }
+    
+    func deleteTasks(forExam exam: Exam) {
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "exam", exam.index).first
+        
+        if let taskToDelete = taskToDelete {
+            realm.delete(taskToDelete)
         }
     }
     

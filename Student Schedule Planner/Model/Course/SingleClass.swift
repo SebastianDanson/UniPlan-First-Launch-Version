@@ -19,6 +19,7 @@ class SingleClass: Object {
     @objc dynamic var reminder = false
     @objc dynamic var type = "Class"
     @objc dynamic var id = UUID().uuidString
+    @objc dynamic var index = 0
 
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
 

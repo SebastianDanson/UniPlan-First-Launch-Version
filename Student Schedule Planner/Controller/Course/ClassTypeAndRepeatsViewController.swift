@@ -61,7 +61,7 @@ class ClassTypeAndRepeatsViewController: UIViewController {
     
     //MARK: - Properties
     var tableView = makeTableView(withRowHeight: 50)
-    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
     let backButton = makeBackButton()
     let titleLabel = makeTitleLabel(withText: "Select Class Type")
     

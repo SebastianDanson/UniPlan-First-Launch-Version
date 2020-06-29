@@ -13,7 +13,7 @@ class AssignmentService {
     private var title = ""
     private var dueDate = Date()
     private var assignmentIndex: Int?
-    
+    private var numAssignments = 0
     static let shared = AssignmentService()
     
     private init(){}
@@ -42,6 +42,15 @@ class AssignmentService {
     }
     func setAssignmentIndex(index: Int?) {
         assignmentIndex = index
+    }
+    
+    //MARK: - numAssignments
+    func getNumAssignments() -> Int {
+        return numAssignments
+    }
+    
+    func setNumAssignments(num: Int) {
+        numAssignments = num
     }
 }
 

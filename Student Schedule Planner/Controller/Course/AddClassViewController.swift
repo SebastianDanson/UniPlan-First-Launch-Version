@@ -19,6 +19,8 @@ class AddClassViewController: UIViewController {
         super.viewDidLoad()
         SingleClassService.shared.setReminder(false)
         SingleClassService.shared.setRepeats(every: "Week")
+        SingleClassService.shared.resetClassDays()
+        
         self.dismissKey()
         setupViews()
     }
@@ -42,7 +44,7 @@ class AddClassViewController: UIViewController {
     
     //MARK: - Properties
     //topView
-    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
     let titleLabel = makeTitleLabel(withText: "Add Class")
     let backButton = makeBackButton()
     let deleteButton = makeDeleteButton()
@@ -205,7 +207,7 @@ class AddClassViewController: UIViewController {
         endTime.text = "\(formatTime(from: Date().addingTimeInterval(3600)))"
         SingleClassService.shared.setStartTime(time: Date())
         SingleClassService.shared.setEndTime(time: Date().addingTimeInterval(3600))
-
+        
         setupTimePickerView()
         
         stackViewContainer.anchor(bottom: view.bottomAnchor)
@@ -319,14 +321,12 @@ class AddClassViewController: UIViewController {
         if reminderSwitch.isOn {
             SingleClassService.shared.setReminder(true)
             reminderButton.setTitle(SingleClassService.shared.setupReminderString(), for: .normal)
-            //            TaskService.shared.setHideReminder(bool: false)
             TaskService.shared.askToSendNotifications()
             UIView.animate(withDuration: 0.3, animations: {
                 self.hideReminderView.frame.origin.y = self.reminderButton.frame.maxY
             })
         } else {
             SingleClassService.shared.setReminder(false)
-            //            TaskService.shared.setHideReminder(bool: true)
             UIView.animate(withDuration: 0.3, animations: {
                 self.hideReminderView.frame.origin.y = self.hideReminderView.frame.origin.y-45
             })
@@ -442,6 +442,7 @@ class AddClassViewController: UIViewController {
         theClass.reminderTime[0] = SingleClassService.shared.getReminderTime()[0]
         theClass.reminderTime[1] = SingleClassService.shared.getReminderTime()[1]
         theClass.reminder = SingleClassService.shared.getReminder()
+        theClass.index = SingleClassService.shared.getNumClasses() + 1
         TaskService.shared.setReminderTime([theClass.reminderTime[0], theClass.reminderTime[1]])
         
         do {
@@ -460,7 +461,9 @@ class AddClassViewController: UIViewController {
                     classToUpdate?.reminderTime[0] = theClass.reminderTime[0]
                     classToUpdate?.reminderTime[1] = theClass.reminderTime[1]
                     classToUpdate?.reminder = theClass.reminder
-                    TaskService.shared.updateTasks(forClass: theClass)
+                    if let theClassToUpdate = classToUpdate {
+                        TaskService.shared.updateTasks(forClass: theClassToUpdate)
+                    }
                 } else {
                     realm.add(theClass, update: .modified)
                     var course = AllCoursesService.shared.getSelectedCourse()
@@ -471,11 +474,13 @@ class AddClassViewController: UIViewController {
         } catch {
             print("Error writing Class to realm \(error.localizedDescription)")
         }
-        dismiss(animated: true)
+        backButtonPressed()
     }
     
     @objc func backButtonPressed() {
-        dismiss(animated: true)
+        dismiss(animated: true, completion: {
+            [0, 0, 0, 0, 0, 0, 0]
+        })
     }
     
     //MARK: - Helper methods

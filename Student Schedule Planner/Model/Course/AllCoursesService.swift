@@ -13,7 +13,7 @@ class AllCoursesService {
     
     private var courses: Results<Course>?
     private var selectedCourse: Course?
-    private var courseIndex = 0
+    private var courseIndex: Int?
 
     static let shared = AllCoursesService()
     
@@ -34,16 +34,19 @@ class AllCoursesService {
     }
     
     //MARK: - courseIndex
-    func getCourseIndex() -> Int {
+    func getCourseIndex() -> Int? {
         return courseIndex
     }
-    func setCourseIndex(index: Int) {
+    func setCourseIndex(index: Int?) {
         courseIndex = index
     }
     
     //MARK: - Selected Course
     func getSelectedCourse() -> Course? {
-        return AllCoursesService.shared.getCourse(atIndex: AllCoursesService.shared.getCourseIndex())
+        if let index = courseIndex {
+            return getCourse(atIndex: index)
+        }
+        return nil
     }
     
     func setSelectedCourse(course: Course?){

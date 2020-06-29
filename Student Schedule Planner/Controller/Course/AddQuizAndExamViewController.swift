@@ -15,8 +15,10 @@ class AddQuizAndExamViewController: UIViewController {
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
+         print(QuizService.shared.getQuizIndex())
         SingleClassService.shared.setReminder(false)
         setupViews()
+
         self.dismissKey()
     }
     
@@ -205,7 +207,6 @@ class AddQuizAndExamViewController: UIViewController {
         if CourseService.shared.getQuizOrExam() != 0 {
             titleLabel.text = "Add Exam"
         }
-        
         if let quizIndex = QuizService.shared.getQuizIndex(){
             if let quiz = CourseService.shared.getQuiz(atIndex: quizIndex) {
                 startTime.text = formatTime(from: quiz.startDate)
@@ -260,6 +261,7 @@ class AddQuizAndExamViewController: UIViewController {
     }
     
     @objc func datePickerChanged() {
+        
         dateButton.setTitle("\(formatDate(from: datePickerView.date))", for: .normal)
     }
     
@@ -365,13 +367,22 @@ class AddQuizAndExamViewController: UIViewController {
     }
     
     @objc func saveButtonPressed() {
+        QuizService.shared.setNumQuizzes(num: QuizService.shared.getNumQuizzes() + 1)
+        let startComponents = Calendar.current.dateComponents([.hour, .minute], from: TaskService.shared.getStartTime())
+        let endComponents = Calendar.current.dateComponents([.hour, .minute], from: TaskService.shared.getEndTime())
+        let date = Calendar.current.startOfDay(for: datePickerView.date)
         do {
             try realm.write {
                 if CourseService.shared.getQuizOrExam() == 0 {
-                    var quiz = Quiz()
+                    let quiz = Quiz()
                     quiz.dateOrTime = TaskService.shared.getDateOrTime()
                     quiz.reminder = reminderSwitch.isOn
                     quiz.location = locationTextField.text ?? ""
+                    quiz.startDate = date.addingTimeInterval(TimeInterval(startComponents.hour! * 3600 + startComponents.minute! * 60))
+                    quiz.endDate = date.addingTimeInterval(TimeInterval(endComponents.hour! * 3600 + endComponents.minute! * 60))
+                    quiz.dateOrTime = TaskService.shared.getDateOrTime()
+                    quiz.index = QuizService.shared.getNumQuizzes()
+                    
                     if quiz.dateOrTime == 0 {
                         let reminderTime = TaskService.shared.getReminderTime()
                         quiz.reminderTime[0] = reminderTime[0]
@@ -385,8 +396,16 @@ class AddQuizAndExamViewController: UIViewController {
                         quizToUpdate?.startDate = quiz.startDate
                         quizToUpdate?.endDate = quiz.endDate
                         quizToUpdate?.location = quiz.location
+                        quizToUpdate?.reminderDate = quiz.reminderDate
+                        quizToUpdate?.reminderTime[0] = quiz.reminderTime[0]
+                        quizToUpdate?.reminderTime[1] = quiz.reminderTime[1]
+                        quizToUpdate?.reminder = quiz.reminder
+                        if let theQuizToUpdate = quizToUpdate {
+                            TaskService.shared.updateTasks(forQuiz: theQuizToUpdate)
+                        }
                     } else {
                         realm.add(quiz, update: .modified)
+                        TaskService.shared.makeTask(forQuiz: quiz)
                         if let course = AllCoursesService.shared.getSelectedCourse() {
                             course.quizzes.append(quiz)
                         }
@@ -396,6 +415,10 @@ class AddQuizAndExamViewController: UIViewController {
                     exam.dateOrTime = TaskService.shared.getDateOrTime()
                     exam.reminder = reminderSwitch.isOn
                     exam.location = locationTextField.text ?? ""
+                    exam.startDate = date.addingTimeInterval(TimeInterval(startComponents.hour! * 3600 + startComponents.minute! * 60))
+                    exam.endDate = date.addingTimeInterval(TimeInterval(endComponents.hour! * 3600 + endComponents.minute! * 60))
+                    exam.index = ExamService.shared.getNumExams()
+
                     if exam.dateOrTime == 0 {
                         let reminderTime = TaskService.shared.getReminderTime()
                         exam.reminderTime[0] = reminderTime[0]
@@ -408,8 +431,20 @@ class AddQuizAndExamViewController: UIViewController {
                         let examToUpdate = CourseService.shared.getExam(atIndex: examIndex)
                         examToUpdate?.startDate = exam.startDate
                         examToUpdate?.endDate = exam.endDate
+                        examToUpdate?.dateOrTime = exam.dateOrTime
+                        examToUpdate?.location = exam.location
+                        examToUpdate?.dateOrTime = exam.dateOrTime
+                        examToUpdate?.reminderDate = exam.reminderDate
+                        examToUpdate?.reminderTime[0] = exam.reminderTime[0]
+                        examToUpdate?.reminderTime[1] = exam.reminderTime[1]
+                        examToUpdate?.reminder = exam.reminder
+                        if let theExamToUpdate = examToUpdate {
+                            TaskService.shared.updateTasks(forExam: theExamToUpdate)
+                        }
+                        
                     } else {
                         realm.add(exam, update: .modified)
+                        TaskService.shared.makeTask(forExam: exam)
                         if let course = AllCoursesService.shared.getSelectedCourse() {
                             course.exams.append(exam)
                         }
