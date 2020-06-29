@@ -443,6 +443,7 @@ class AddClassViewController: UIViewController {
         theClass.reminderTime[1] = SingleClassService.shared.getReminderTime()[1]
         theClass.reminder = SingleClassService.shared.getReminder()
         theClass.index = SingleClassService.shared.getNumClasses() + 1
+        theClass.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
         TaskService.shared.setReminderTime([theClass.reminderTime[0], theClass.reminderTime[1]])
         
         do {

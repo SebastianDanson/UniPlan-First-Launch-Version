@@ -31,15 +31,17 @@ class TaskCell: SwipeTableViewCell {
     let reminderIcon = UIImage(systemName: "alarm.fill")
     let locationIcon = UIImage(named: "locationWhiteFill")
     let locationLabel = makeLabel(ofSize: 12, weight: .bold)
+    let dueLabel = makeLabel(ofSize: 14, weight: .bold)
     var locationImage = UIImageView()
     var reminderImage = UIImageView()
+    var nextImage = UIImageView()
 
     var reminderLeftAnchorConstaint = NSLayoutConstraint()
     var reminderOtherAnchorConstaint = NSLayoutConstraint()
     
     //MARK: - setupUI
     func setupViews() {
-        let nextImage = UIImageView(image: nextIcon!)
+       nextImage = UIImageView(image: nextIcon!)
         reminderImage = UIImageView(image: reminderIcon!)
        locationImage = UIImageView(image: locationIcon!)
         
@@ -94,10 +96,10 @@ class TaskCell: SwipeTableViewCell {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mma"
         durationStartLabel.text = "\(dateFormatter.string(from: task.startDate))-"
-        durationStartLabel.textColor = .backgroundColor
+        durationStartLabel.textColor = .white
         
         durationEndLabel.text = dateFormatter.string(from: task.endDate)
-        durationEndLabel.textColor = .backgroundColor
+        durationEndLabel.textColor = .white
         
         if task.reminder {
             reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: task.dateOrTime, reminderTime: [task.reminderTime[0], task.reminderTime[1]], reminderDate: task.reminderDate)
@@ -105,12 +107,12 @@ class TaskCell: SwipeTableViewCell {
             reminderLabel.isHidden = true
             reminderImage.isHidden = true
         }
-        reminderLabel.textColor = .backgroundColor
+        reminderLabel.textColor = .white
         locationLabel.textColor = .white
         locationLabel.text = task.location
         
         taskLabel.text = task.title
-        taskLabel.textColor = .backgroundColor
+        taskLabel.textColor = .white
         
         if taskLabel.text == "" {
             taskLabel.text = "Untitled"
@@ -129,6 +131,19 @@ class TaskCell: SwipeTableViewCell {
             }
         }
 
+        if task.type == "assignment" {
+            durationEndLabel.isHidden = true
+            durationStartLabel.anchor(right: nextImage.leftAnchor, paddingRight:  25)
+            durationStartLabel.centerY(in: taskView)
+            durationStartLabel.text = dateFormatter.string(from: task.startDate)
+            taskView.addSubview(dueLabel)
+            dueLabel.text = "Due At:"
+            dueLabel.textColor = .white
+            dueLabel.anchor(top: taskView.topAnchor ,left: durationStartLabel.leftAnchor, paddingTop: 10)
+        } else {
+            durationStartLabel.anchor(top: taskView.topAnchor,right: nextImage.leftAnchor, paddingTop: 16, paddingRight:  25)
+        }
+        
         if task.location == "" {
             locationImage.isHidden = true
             locationLabel.isHidden = true

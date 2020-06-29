@@ -185,7 +185,8 @@ class AddCourseViewController: PickerViewController {
                 endDate.text = formatDateNoDay(from: course.endDate)
                 CourseService.shared.setStartDate(date: course.startDate)
                 CourseService.shared.setEndDate(date: course.endDate)
-                
+                titleLabel.text = "Edit Course"
+
                 switch course.color {
                 case 0:
                     colorButtonPressed(button: red)
@@ -288,7 +289,20 @@ class AddCourseViewController: PickerViewController {
                     courseToUpdate.endDate = course.endDate
                     courseToUpdate.color = course.color
                     courseToUpdate.title = course.title
-                    //TODO: Update tasks for cours
+                    let tasksToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ OR type == %@ OR type == %@ OR type == %@", courseToUpdate.title, "Class", "quiz", "exam", "assignment")
+                    
+                    for task in tasksToUpdate {
+                        task.color = course.color
+                        
+                        if task.type != "assignment"{
+                            task.title = "\(course.title) \(task.type)"
+                        }
+                        
+                        if task.startDate > courseToUpdate.endDate {
+                            realm.delete(task)
+                        }
+                    }
+
                 } else {
                     realm.add(course, update: .modified)
                 }

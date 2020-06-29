@@ -18,6 +18,8 @@
 		3F592344249FA379008F45D6 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F592343249FA379008F45D6 /* HelperFunctions.swift */; };
 		3F59234624A13798008F45D6 /* Assignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F59234524A13798008F45D6 /* Assignment.swift */; };
 		3F59239C24A17677008F45D6 /* PentagonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F59239B24A17677008F45D6 /* PentagonView.swift */; };
+		3F5923BE24AA9FCC008F45D6 /* SummativesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */; };
+		3F5923C024AAA249008F45D6 /* SummativeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5923BF24AAA249008F45D6 /* SummativeCell.swift */; };
 		3F67BBF124872A4C00BFD6E5 /* AddTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */; };
 		3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */; };
 		3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFB24893AF100BFD6E5 /* Task.swift */; };
@@ -65,6 +67,8 @@
 		3F592343249FA379008F45D6 /* HelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 		3F59234524A13798008F45D6 /* Assignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assignment.swift; sourceTree = "<group>"; };
 		3F59239B24A17677008F45D6 /* PentagonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PentagonView.swift; sourceTree = "<group>"; };
+		3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummativesViewController.swift; sourceTree = "<group>"; };
+		3F5923BF24AAA249008F45D6 /* SummativeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummativeCell.swift; sourceTree = "<group>"; };
 		3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskViewController.swift; sourceTree = "<group>"; };
 		3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		3F67BBFB24893AF100BFD6E5 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
@@ -166,6 +170,7 @@
 				3F94E2CC2492A68B00B0F958 /* CourseCell.swift */,
 				3F94E3242496895900B0F958 /* AssignmentCell.swift */,
 				3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */,
+				3F5923BF24AAA249008F45D6 /* SummativeCell.swift */,
 				3F59239B24A17677008F45D6 /* PentagonView.swift */,
 			);
 			path = View;
@@ -178,7 +183,7 @@
 				3F67BC28248EE6AA00BFD6E5 /* PickerViewController.swift */,
 				3F94E2D42492E3B700B0F958 /* SwipeViewController.swift */,
 				3FAEC8352497D524000ADD9D /* Course */,
-				3FAEC8342497D4C8000ADD9D /* Timeline */,
+				3FAEC8342497D4C8000ADD9D /* Task */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -226,19 +231,20 @@
 			path = Day;
 			sourceTree = "<group>";
 		};
-		3FAEC8342497D4C8000ADD9D /* Timeline */ = {
+		3FAEC8342497D4C8000ADD9D /* Task */ = {
 			isa = PBXGroup;
 			children = (
 				3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */,
 				3F67BC26248EDE4100BFD6E5 /* SetTaskReminderViewController.swift */,
 				3F383E722486B2EE00D2A5D1 /* TimelineViewController.swift */,
 			);
-			path = Timeline;
+			path = Task;
 			sourceTree = "<group>";
 		};
 		3FAEC8352497D524000ADD9D /* Course */ = {
 			isa = PBXGroup;
 			children = (
+				3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */,
 				3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */,
 				3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */,
 				3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */,
@@ -408,6 +414,7 @@
 				3F94E3212495A35B00B0F958 /* SingleClassCell.swift in Sources */,
 				3F94E2D52492E3B700B0F958 /* SwipeViewController.swift in Sources */,
 				3F59234624A13798008F45D6 /* Assignment.swift in Sources */,
+				3F5923C024AAA249008F45D6 /* SummativeCell.swift in Sources */,
 				3FAEC84024992C2A000ADD9D /* AddQuizAndExamViewController.swift in Sources */,
 				3F67BC05248C7B9E00BFD6E5 /* TaskService.swift in Sources */,
 				3F59239C24A17677008F45D6 /* PentagonView.swift in Sources */,
@@ -429,6 +436,7 @@
 				3F67BBFE24893C4800BFD6E5 /* Day.swift in Sources */,
 				3FAEC848249A8AB3000ADD9D /* ExamService.swift in Sources */,
 				3F383E5C2486B25E00D2A5D1 /* AppDelegate.swift in Sources */,
+				3F5923BE24AA9FCC008F45D6 /* SummativesViewController.swift in Sources */,
 				3FAEC83E24992767000ADD9D /* AssignmentService.swift in Sources */,
 				3F94E2CD2492A68B00B0F958 /* CourseCell.swift in Sources */,
 				3F94E32D2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift in Sources */,

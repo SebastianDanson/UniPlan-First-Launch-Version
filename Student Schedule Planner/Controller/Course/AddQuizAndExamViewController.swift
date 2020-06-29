@@ -220,6 +220,7 @@ class AddQuizAndExamViewController: UIViewController {
                     SingleClassService.shared.setReminder(true)
                 }
             }
+            titleLabel.text = "Edit Quiz"
         }
         
         if let examIndex = ExamService.shared.getExamIndex(){
@@ -235,6 +236,7 @@ class AddQuizAndExamViewController: UIViewController {
                     reminderSwitch.isOn = true
                 }
             }
+            titleLabel.text = "Edit Exam"
         }
     }
     
@@ -261,7 +263,6 @@ class AddQuizAndExamViewController: UIViewController {
     }
     
     @objc func datePickerChanged() {
-        
         dateButton.setTitle("\(formatDate(from: datePickerView.date))", for: .normal)
     }
     
@@ -382,7 +383,8 @@ class AddQuizAndExamViewController: UIViewController {
                     quiz.endDate = date.addingTimeInterval(TimeInterval(endComponents.hour! * 3600 + endComponents.minute! * 60))
                     quiz.dateOrTime = TaskService.shared.getDateOrTime()
                     quiz.index = QuizService.shared.getNumQuizzes()
-                    
+                    quiz.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
+
                     if quiz.dateOrTime == 0 {
                         let reminderTime = TaskService.shared.getReminderTime()
                         quiz.reminderTime[0] = reminderTime[0]
@@ -392,7 +394,7 @@ class AddQuizAndExamViewController: UIViewController {
                     }
                     
                     if let quizIndex = QuizService.shared.getQuizIndex() {
-                        var quizToUpdate = CourseService.shared.getQuiz(atIndex: quizIndex)
+                        let quizToUpdate = CourseService.shared.getQuiz(atIndex: quizIndex)
                         quizToUpdate?.startDate = quiz.startDate
                         quizToUpdate?.endDate = quiz.endDate
                         quizToUpdate?.location = quiz.location
@@ -418,6 +420,7 @@ class AddQuizAndExamViewController: UIViewController {
                     exam.startDate = date.addingTimeInterval(TimeInterval(startComponents.hour! * 3600 + startComponents.minute! * 60))
                     exam.endDate = date.addingTimeInterval(TimeInterval(endComponents.hour! * 3600 + endComponents.minute! * 60))
                     exam.index = ExamService.shared.getNumExams()
+                    exam.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
 
                     if exam.dateOrTime == 0 {
                         let reminderTime = TaskService.shared.getReminderTime()

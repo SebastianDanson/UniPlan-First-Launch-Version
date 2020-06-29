@@ -62,9 +62,35 @@ class CoursesViewController: SwipeViewController {
             do {
                 try self.realm.write {
                     if let courseToDelete = AllCoursesService.shared.getCourse(atIndex: index) {
+                        AllCoursesService.shared.setCourseIndex(index: nil)
+                        let tasksToUpDelete = self.realm.objects(Task.self).filter("course == %@", courseToDelete.title)
+                        let assignmentsToDelete = self.realm.objects(Assignment.self).filter("course == %@", courseToDelete.title)
+                        let classesToDelete = self.realm.objects(SingleClass.self).filter("course == %@", courseToDelete.title)
+                        let examsToDelete = self.realm.objects(Exam.self).filter("course == %@", courseToDelete.title)
+                        let quizzesToDelete = self.realm.objects(Quiz.self).filter("course == %@", courseToDelete.title)
+
+                        for assignment in assignmentsToDelete {
+                            self.realm.delete(assignment)
+                        }
+                        
+                        for theClass in classesToDelete {
+                            self.realm.delete(theClass)
+                        }
+                        
+                        for quiz in quizzesToDelete {
+                            self.realm.delete(quiz)
+                        }
+                        
+                        for exam in examsToDelete {
+                            self.realm.delete(exam)
+                        }
+                        
+                        for task in tasksToUpDelete {
+                            self.realm.delete(task)
+                        }
+                        
                         self.realm.delete(courseToDelete)
                         AllCoursesService.shared.updateCourses()
-                        AllCoursesService.shared.setCourseIndex(index: nil)
                         self.tableView.reloadData()
                     }
                 }

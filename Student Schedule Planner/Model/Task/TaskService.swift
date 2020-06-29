@@ -18,12 +18,10 @@ class TaskService {
     private var reminderDate = Date()
     private var dateOrTime = 0 //0 means time was selected, non zero means date was selected
     private var hideReminder = true
-    //If the user does cares about time conflicts between tasks
-    private var checkForTimeConflict = true
+    private var checkForTimeConflict = true //If the user does cares about time conflicts between tasks
     private var startTime = Date()
     private var endTime = Date().addingTimeInterval(3600)
     private var isClassType = false
-    
     
     let realm =  try! Realm()
     init() {
@@ -48,10 +46,12 @@ class TaskService {
     func getTask(atIndex index: Int) -> Task?{
         return tasks?[index]
     }
+    
     func updateTasks() {
         tasks = realm.objects(Task.self)
     }
     
+
     //MARK: - taskIndex
     func getTaskIndex() -> Int? {
         return taskIndex
@@ -210,30 +210,33 @@ class TaskService {
         task.course = course?.title ?? ""
         task.type = "quiz"
         task.index = QuizService.shared.getNumQuizzes()
-        
+        task.color = course?.color ?? 0
+
         scheduleNotification(forTask: task)
         realm.add(task, update: .modified)
         QuizService.shared.setNumQuizzes(num: (QuizService.shared.getNumQuizzes() + 1))
     }
     
     func makeTask(forAssignment assignment: Assignment) {
-         let course = AllCoursesService.shared.getSelectedCourse()
-         let task = Task()
-         task.title = assignment.title
-         task.dateOrTime = 0
-         task.startDate = assignment.dueDate
-         task.reminder = assignment.reminder
-         task.reminderTime[0] = assignment.reminderTime[0]
-         task.reminderTime[1] = assignment.reminderTime[1]
-         task.reminderDate = assignment.reminderDate
-         task.course = course?.title ?? ""
-         task.type = "assignment"
-         task.index = AssignmentService.shared.getNumAssignments()
-         
-         scheduleNotification(forTask: task)
-         realm.add(task, update: .modified)
-         AssignmentService.shared.setNumAssignments(num: (AssignmentService.shared.getNumAssignments() + 1))
-     }
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let task = Task()
+        task.title = assignment.title
+        task.dateOrTime = 0
+        task.startDate = assignment.dueDate
+        task.endDate = assignment.dueDate
+        task.reminder = assignment.reminder
+        task.reminderTime[0] = assignment.reminderTime[0]
+        task.reminderTime[1] = assignment.reminderTime[1]
+        task.reminderDate = assignment.reminderDate
+        task.course = course?.title ?? ""
+        task.type = "assignment"
+        task.index = AssignmentService.shared.getNumAssignments()
+        task.color = course?.color ?? 0
+
+        scheduleNotification(forTask: task)
+        realm.add(task, update: .modified)
+        AssignmentService.shared.setNumAssignments(num: (AssignmentService.shared.getNumAssignments() + 1))
+    }
     
     func makeTask(forExam exam: Exam) {
         let course = AllCoursesService.shared.getSelectedCourse()
@@ -249,6 +252,7 @@ class TaskService {
         task.reminderDate = exam.reminderDate
         task.course = course?.title ?? ""
         task.type = "exam"
+        task.color = course?.color ?? 0
         task.index = ExamService.shared.getNumExams()
         
         scheduleNotification(forTask: task)
@@ -279,19 +283,19 @@ class TaskService {
     }
     
     func updateTasks(forAssignment assignment: Assignment) {
-          let course = AllCoursesService.shared.getSelectedCourse()
-          let taskToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "assignment", assignment.index).first
-          taskToUpdate?.dateOrTime = 0
-          taskToUpdate?.startDate = assignment.dueDate
-          taskToUpdate?.reminder = assignment.reminder
-          taskToUpdate?.reminderTime[0] = assignment.reminderTime[0]
-          taskToUpdate?.reminderTime[1] = assignment.reminderTime[1]
-          taskToUpdate?.reminderDate = assignment.reminderDate
-          
-          if let taskToUpdate = taskToUpdate {
-              scheduleNotification(forTask: taskToUpdate)
-          }
-      }
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let taskToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "assignment", assignment.index).first
+        taskToUpdate?.dateOrTime = 0
+        taskToUpdate?.startDate = assignment.dueDate
+        taskToUpdate?.reminder = assignment.reminder
+        taskToUpdate?.reminderTime[0] = assignment.reminderTime[0]
+        taskToUpdate?.reminderTime[1] = assignment.reminderTime[1]
+        taskToUpdate?.reminderDate = assignment.reminderDate
+        
+        if let taskToUpdate = taskToUpdate {
+            scheduleNotification(forTask: taskToUpdate)
+        }
+    }
     
     func updateTasks(forExam exam: Exam) {
         let course = AllCoursesService.shared.getSelectedCourse()

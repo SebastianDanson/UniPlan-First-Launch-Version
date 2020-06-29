@@ -18,7 +18,8 @@ class Assignment: Object {
     @objc dynamic var reminderDate: Date = Date()
     @objc dynamic var dueDate = Date()
     @objc dynamic var index = 0
-    
+    @objc dynamic var course = ""
+
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
 
     required init() {

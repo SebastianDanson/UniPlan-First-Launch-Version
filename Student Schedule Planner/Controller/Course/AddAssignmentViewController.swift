@@ -103,7 +103,8 @@ class AddAssignmentViewController: UIViewController {
                 titleTextField.text = assignment.title
                 datePicker.date = assignment.dueDate
                 reminderSwitch.isOn = assignment.reminder
-                
+                titleLabel.text = "Edit Assignment"
+
                 if assignment.reminder {
                     reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: assignment.dateOrTime, reminderTime: [assignment.reminderTime[0],assignment.reminderTime[1]], reminderDate: assignment.reminderDate), for: .normal)
                     SingleClassService.shared.setReminder(true)
@@ -124,7 +125,8 @@ class AddAssignmentViewController: UIViewController {
         assignment.dateOrTime = TaskService.shared.getDateOrTime()
         assignment.reminder = reminderSwitch.isOn
         assignment.index = AssignmentService.shared.getNumAssignments()
-        
+        assignment.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
+
         if assignment.dateOrTime == 0 {
             let reminderTime = TaskService.shared.getReminderTime()
             assignment.reminderTime[0] = reminderTime[0]

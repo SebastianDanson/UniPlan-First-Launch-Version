@@ -20,18 +20,12 @@ class TabBarController: UITabBarController {
         let coursesNav = makeNavController(vc: CoursesViewController(), title: "Courses", image: coursesImage)
         
         let assignmentImage = UIImage(named: "assignments")
-        let summativesNav = makeNavController(vc: TimelineViewController(), title: "Assignments", image: assignmentImage)
+        let summativesNav = makeNavController(vc: SummativesViewController(), title: "Summatives", image: assignmentImage)
 
         let tabBarList = [scheduleNav, coursesNav, summativesNav]
         tabBar.tintColor = .mainBlue
-        //tabBar.barTintColor = .clouds
-
-        //tabBarController.to
-
         
-        viewControllers = tabBarList
-   
-        // Do any additional setup after loading the view.
+        viewControllers = tabBarList   
     }
     
     func makeNavController(vc: UIViewController, title: String, image: UIImage?) -> UINavigationController{

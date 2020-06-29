@@ -300,7 +300,7 @@ class AddTaskViewController: PickerViewController {
                 endTime.text = formatTime(from: task.endDate)
                 TaskService.shared.setStartTime(time: task.startDate)
                 TaskService.shared.setEndTime(time: task.endDate)
-                
+                titleLabel.text = "Edit Task"
                 switch task.color {
                 case 0:
                     colorButtonPressed(button: red)
