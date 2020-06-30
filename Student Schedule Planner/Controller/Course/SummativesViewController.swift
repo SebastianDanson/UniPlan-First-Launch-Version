@@ -140,9 +140,9 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer) as! TaskCell
         switch indexPath.section {
         case 0:
-            cell.update(task: upcomingSummatives[indexPath.row])
+            cell.update(task: upcomingSummatives[indexPath.row], summative: true)
         default:
-            cell.update(task: pastDueSummatives[indexPath.row])
+            cell.update(task: pastDueSummatives[indexPath.row], summative: true)
         }
         cell.delegate = self
         return cell

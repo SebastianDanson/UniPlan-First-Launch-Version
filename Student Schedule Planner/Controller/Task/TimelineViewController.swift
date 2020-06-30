@@ -108,7 +108,7 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! TaskCell
         if let task = TaskService.shared.getTask(atIndex: indexPath.row) {
-            cell.update(task: task)
+            cell.update(task: task, summative: false)
             cell.delegate = self
         }
         return cell
