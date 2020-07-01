@@ -221,7 +221,8 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
         view.addSubview(seperator)
         
         sectionName.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, paddingLeft: 10, paddingBottom: 5)
-        addButton.anchor(left: sectionName.rightAnchor,  bottom: view.bottomAnchor,  paddingLeft: 5, paddingBottom: 5)
+        addButton.anchor(left: sectionName.rightAnchor, paddingLeft: 5)
+        addButton.centerYAnchor.constraint(equalTo: sectionName.centerYAnchor).isActive = true
         
         seperator.backgroundColor = .silver
         seperator.anchor(top: view.topAnchor, paddingTop: 5)

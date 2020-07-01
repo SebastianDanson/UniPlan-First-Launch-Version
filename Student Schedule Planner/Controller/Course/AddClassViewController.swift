@@ -83,6 +83,13 @@ class AddClassViewController: UIViewController {
     let repeatsButton = setImageButton(withPlaceholder: "Every Week", imageName: "repeat")
     let nextIcon = UIImage(named: "nextMenuButtonGray")
     let hideReminderView = makeAnimatedView()
+    let startDateView = PentagonView()
+    let endDateView = UIView()
+    let startDate = makeLabel(ofSize: 20, weight: .semibold)
+    let endDate = makeLabel(ofSize: 20, weight: .semibold)
+    let datePicker = makeDatePicker()
+    let calendarIcon = UIImage(systemName: "calendar")
+    var calendarImage = UIImageView(image: nil)
     
     //Spacers and sperators
     let spacerView1 = makeSpacerView(height: UIScreen.main.bounds.height/90)
@@ -101,7 +108,8 @@ class AddClassViewController: UIViewController {
     func setupViews() {
         let nextImage = UIImageView(image: nextIcon!)
         clockImage = UIImageView(image: clockIcon!)
-        
+        calendarImage = UIImageView(image: calendarIcon!)
+
         seperatorView1.backgroundColor = .silver
         seperatorView2.backgroundColor = .silver
         
@@ -119,17 +127,29 @@ class AddClassViewController: UIViewController {
         view.addSubview(hideReminderView)
         
         repeatsButton.addSubview(nextImage)
+        reminderView.addSubview(locationTextField)
         reminderView.addSubview(reminderSwitch)
         reminderView.addSubview(reminderHeading)
         
         startTimeView.addSubview(startTime)
         endTimeView.addSubview(endTime)
         
+        startDateView.addSubview(startDate)
+        startDateView.addSubview(calendarImage)
+        endDateView.addSubview(endDate)
+        
         topView.addSubview(titleLabel)
         topView.addSubview(backButton)
         topView.addSubview(deleteButton)
         
         stackViewContainer.addSubview(stackView)
+        stackViewContainer.addSubview(datePicker)
+        stackViewContainer.addSubview(reminderView)
+        stackViewContainer.addSubview(reminderButton)
+        stackViewContainer.addSubview(hideReminderView)
+        stackViewContainer.addSubview(endDateView)
+        stackViewContainer.addSubview(startDateView)
+        
         stackView.addArrangedSubview(spacerView1)
         stackView.addArrangedSubview(seperatorView1)
         stackView.addArrangedSubview(spacerView2)
@@ -139,11 +159,7 @@ class AddClassViewController: UIViewController {
         stackView.addArrangedSubview(spacerView4)
         stackView.addArrangedSubview(seperatorView2)
         stackView.addArrangedSubview(spacerView5)
-        stackView.addArrangedSubview(locationTextField)
-        stackView.addArrangedSubview(spacerView6)
-        stackView.addArrangedSubview(reminderView)
-        stackView.addArrangedSubview(reminderButton)
-        stackView.addSubview(hideReminderView)
+       
         
         
         classDayStackView.addArrangedSubview(sunday)
@@ -167,12 +183,11 @@ class AddClassViewController: UIViewController {
         
         deleteButton.anchor(right: topView.rightAnchor, paddingRight: 20)
         deleteButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
-        //deleteButton.addTarget(self, action: #selector(deleteTask), for: .touchUpInside)
         
         //Not topView
         classTypeButton.anchor(top: topView.bottomAnchor, paddingTop: UIScreen.main.bounds.height/50)
         classTypeButton.centerX(in: view)
-        let startTap = UITapGestureRecognizer(target: self, action: #selector(startDateViewTapped))
+        let startTap = UITapGestureRecognizer(target: self, action: #selector(startTimeViewTapped))
         startTimeView.setDimensions(width: UIScreen.main.bounds.width/2,
                                     height: UIScreen.main.bounds.height/15)
         startTimeView.addGestureRecognizer(startTap)
@@ -184,7 +199,7 @@ class AddClassViewController: UIViewController {
         clockImage.centerY(in: startTimeView)
         clockImage.tintColor = .darkGray
         
-        let endTap = UITapGestureRecognizer(target: self, action: #selector(endDateViewTapped))
+        let endTap = UITapGestureRecognizer(target: self, action: #selector(endTimeViewTapped))
         endTimeView.addGestureRecognizer(endTap)
         endTimeView.layer.borderColor = UIColor.silver.cgColor
         endTimeView.layer.borderWidth = 1
@@ -208,7 +223,42 @@ class AddClassViewController: UIViewController {
         SingleClassService.shared.setStartTime(time: Date())
         SingleClassService.shared.setEndTime(time: Date().addingTimeInterval(3600))
         
+        let startDateTap = UITapGestureRecognizer(target: self, action: #selector(startDateViewTapped))
+        startDateView.setDimensions(width: UIScreen.main.bounds.width/2,
+                                    height: UIScreen.main.bounds.height/15)
+        startDateView.addGestureRecognizer(startDateTap)
+        startDateView.anchor(top: spacerView5.bottomAnchor,
+                             left: classTypeButton.leftAnchor,
+                             paddingTop: 10)
+        calendarImage.anchor(left: startDateView.leftAnchor, paddingLeft: 25)
+               calendarImage.centerY(in: startDateView)
+               calendarImage.tintColor = .darkGray
+        
+        let endDateTap = UITapGestureRecognizer(target: self, action: #selector(endDateViewTapped))
+        endDateView.addGestureRecognizer(endDateTap)
+        endDateView.layer.borderColor = UIColor.silver.cgColor
+        endDateView.layer.borderWidth = 1
+        endDateView.backgroundColor = .backgroundColor
+        endDateView.setDimensions(width: UIScreen.main.bounds.width/2,
+                                  height: UIScreen.main.bounds.height/15)
+        
+        endDateView.anchor(top: spacerView5.bottomAnchor,
+                           right: view.rightAnchor,
+                           paddingTop: 10,
+                           paddingRight: 20)
+        
+        startDate.centerX(in: startDateView)
+        startDate.centerY(in: startDateView)
+        
+        endDate.centerX(in: endDateView)
+        endDate.centerY(in: endDateView)
+        
+        startDate.text = "\(formatDate(from: Date()))"
+        endDate.text = "\(formatDate(from: Date().addingTimeInterval(3600)))"
         setupTimePickerView()
+        
+        datePicker.anchor(top: startDateView.bottomAnchor)
+        datePicker.centerX(in: view)
         
         stackViewContainer.anchor(bottom: view.bottomAnchor)
         stackViewContainer.centerX(in: view)
@@ -218,17 +268,22 @@ class AddClassViewController: UIViewController {
         stackViewContainerTopAnchorConstaint = stackViewContainer.topAnchor.constraint(equalTo: startTimeView.bottomAnchor)
         stackViewContainerOtherAnchorConstaint = stackViewContainer.topAnchor.constraint(equalTo: timePickerView.bottomAnchor)
         stackViewContainerTopAnchorConstaint.isActive = true
+        
+        locationTextField.anchor(top: reminderView.topAnchor, left: startTimeView.leftAnchor, paddingTop: 10)
         locationTextField.setIcon(UIImage(named: "location")!)
         
         nextImage.centerY(in: repeatsButton)
         nextImage.anchor(right: repeatsButton.rightAnchor, paddingRight: 10)
         
-        reminderView.setDimensions(height: 30)
-        reminderHeading.anchor(top: reminderView.topAnchor, left: reminderView.leftAnchor)
+        reminderView.backgroundColor = .backgroundColor
+        reminderView.anchor(top: startDateView.bottomAnchor, left: startTimeView.leftAnchor)
+        reminderView.setDimensions(height: 200)
+        reminderHeading.anchor(top: locationTextField.bottomAnchor, left: reminderView.leftAnchor, paddingTop: 10)
         reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
         reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
         reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
         
+        reminderButton.anchor(top: reminderSwitch.bottomAnchor, left: reminderView.leftAnchor)
         hideReminderView.anchor(top: reminderSwitch.bottomAnchor)
         hideReminderView.centerX(in: view)
         hideReminderView.setDimensions(height: 55)
@@ -346,7 +401,7 @@ class AddClassViewController: UIViewController {
         }
     }
     
-    @objc func startDateViewTapped() {
+    @objc func startTimeViewTapped() {
         if startTimeView.color != UIColor.mainBlue {
             timePickerView.date = SingleClassService.shared.getStartTime()
             startTimeView.color = .mainBlue
@@ -370,7 +425,7 @@ class AddClassViewController: UIViewController {
         endTimeView.layer.borderColor = UIColor.silver.cgColor
     }
     
-    @objc func endDateViewTapped() {
+    @objc func endTimeViewTapped() {
         
         if endTimeView.backgroundColor != UIColor.mainBlue {
             timePickerView.date = SingleClassService.shared.getEndTime()
@@ -393,6 +448,51 @@ class AddClassViewController: UIViewController {
         startTimeView.borderColor = .silver
         clockImage.tintColor = .darkGray
     }
+    
+    @objc func startDateViewTapped() {
+           if startDateView.color != UIColor.mainBlue {
+               datePicker.date = SingleClassService.shared.getStartTime()
+               startDateView.color = .mainBlue
+               startDateView.borderColor = .clear
+               startDate.textColor = .backgroundColor
+               endDate.textColor = .darkBlue
+               UIView.animate(withDuration: 0.3, animations: {
+                   self.reminderView.frame.origin.y = self.datePicker.frame.maxY
+               })
+           } else {
+               startDateView.color = .clouds
+               startDateView.borderColor = .silver
+               startDate.textColor = .darkBlue
+               UIView.animate(withDuration: 0.3, animations: {
+                   self.reminderView.frame.origin.y = self.startDateView.frame.maxY
+               })
+           }
+            endDateView.backgroundColor = .backgroundColor
+           endDateView.layer.borderColor = UIColor.silver.cgColor
+       }
+       
+       @objc func endDateViewTapped() {
+           
+           if endDateView.backgroundColor != UIColor.mainBlue {
+               timePickerView.date = SingleClassService.shared.getEndTime()
+               endDateView.backgroundColor = .mainBlue
+               endDateView.layer.borderColor = UIColor.clear.cgColor
+               endDate.textColor = .backgroundColor
+               startDate.textColor = .darkBlue
+               UIView.animate(withDuration: 0.3, animations: {
+                   self.reminderView.frame.origin.y = self.datePicker.frame.maxY
+               })
+           } else {
+               endDateView.backgroundColor = .backgroundColor
+               endDateView.layer.borderColor = UIColor.silver.cgColor
+               endDate.textColor = .darkBlue
+               UIView.animate(withDuration: 0.3, animations: {
+                   self.reminderView.frame.origin.y = self.endDateView.frame.maxY
+               })
+           }
+           startDateView.color = .clouds
+           startDateView.borderColor = .silver
+       }
     @objc func dayButtonTapped(button: UIButton) {
         stackViewContainerTopAnchorConstaint.isActive = true
         stackViewContainerOtherAnchorConstaint.isActive = false

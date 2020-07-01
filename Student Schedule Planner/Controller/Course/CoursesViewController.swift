@@ -126,7 +126,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         if AllCoursesService.shared.getCourses()?.count == 0 {
             
-            let noCoursesLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 50))
+            let noCoursesLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 100))
             noCoursesLabel.text = "No Courses Added"
             noCoursesLabel.textColor = UIColor.darkBlue
             noCoursesLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)

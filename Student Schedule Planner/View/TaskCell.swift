@@ -146,7 +146,7 @@ class TaskCell: SwipeTableViewCell {
             startTimeTopAnchorConstaint.isActive = true
             startTimeLabel.text = dateFormatter.string(from: task.startDate)
             taskView.addSubview(dueLabel)
-            dueLabel.text = "Due At:"
+            dueLabel.text = "Due:"
             dueLabel.textColor = .white
             let paddingTop: CGFloat = summative ? 5:10
             dueLabel.anchor(top: taskView.topAnchor, left: startTimeLabel.leftAnchor, paddingTop: paddingTop)

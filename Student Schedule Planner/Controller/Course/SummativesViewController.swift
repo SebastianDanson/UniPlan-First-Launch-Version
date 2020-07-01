@@ -166,7 +166,7 @@ class SummativesViewController: SwipeViewController {
                 let noUpcomingAssignments = makeLabel(ofSize: 20, weight: .semibold)
                 view.addSubview(noUpcomingAssignments)
                 noUpcomingAssignments.text = "No Upcoming Assignments"
-                noUpcomingAssignments.anchor(top: sectionName.bottomAnchor, paddingTop: 10)
+                noUpcomingAssignments.anchor(top: sectionName.bottomAnchor, paddingTop: 20)
                 noUpcomingAssignments.centerX(in: view)
             }
         default:
@@ -175,7 +175,7 @@ class SummativesViewController: SwipeViewController {
                 let pastDueSummatives = makeLabel(ofSize: 20, weight: .semibold)
                 view.addSubview(pastDueSummatives)
                 pastDueSummatives.text = "No Past Due Summatives"
-                pastDueSummatives.anchor(top: sectionName.bottomAnchor, paddingTop: 10)
+                pastDueSummatives.anchor(top: sectionName.bottomAnchor, paddingTop: 20)
                 pastDueSummatives.centerX(in: view)
             }
         }
@@ -187,12 +187,12 @@ class SummativesViewController: SwipeViewController {
         switch section{
         case 0:
             if upcomingSummatives.count == 0 {
-                return 100
+                return 120
             }
             return 50
         default:
             if pastDueSummatives.count == 0 {
-                return 100
+                return 120
             }
             return 50
         }

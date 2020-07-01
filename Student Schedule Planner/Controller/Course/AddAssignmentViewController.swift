@@ -46,6 +46,9 @@ class AddAssignmentViewController: UIViewController {
     let reminderButton = setValueButton(withPlaceholder: "When Task Starts", height: 45)
     let hideReminderView = makeAnimatedView()
     
+    var reminderViewTopAnchorConstaint = NSLayoutConstraint()
+    var reminderViewOtherAnchorConstaint = NSLayoutConstraint()
+    
     //MARK: - UI Setup
     func setupViews() {
         view.backgroundColor = .backgroundColor
@@ -76,6 +79,7 @@ class AddAssignmentViewController: UIViewController {
         titleTextField.layer.borderWidth = 5
         titleTextField.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         titleTextField.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        titleTextField.delegate = self
         dateHeading.anchor(top: titleTextField.bottomAnchor, left: titleTextField.leftAnchor, paddingTop: 25)
         
         datePicker.anchor(top: dateHeading.bottomAnchor)
@@ -90,7 +94,10 @@ class AddAssignmentViewController: UIViewController {
         reminderButton.anchor(top: reminderHeading.bottomAnchor, paddingTop: UIScreen.main.bounds.height/80)
         reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
         
-        hideReminderView.anchor(top: reminderSwitch.bottomAnchor)
+        
+        reminderViewOtherAnchorConstaint = hideReminderView.topAnchor.constraint(equalTo: reminderButton.bottomAnchor)
+        reminderViewTopAnchorConstaint = hideReminderView.topAnchor.constraint(equalTo: reminderSwitch.bottomAnchor)
+        reminderViewTopAnchorConstaint.isActive = true
         hideReminderView.centerX(in: view)
         hideReminderView.setDimensions(height: 55)
         
@@ -199,5 +206,11 @@ extension AddAssignmentViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        reminderViewTopAnchorConstaint.isActive = false
+        reminderViewOtherAnchorConstaint.isActive = true
+        
     }
 }

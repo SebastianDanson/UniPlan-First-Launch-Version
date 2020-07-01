@@ -40,7 +40,6 @@ enum RepeatOptions: Int, CustomStringConvertible, CaseIterable{
     case Week
     case twoWeeks
     case Month
-    case Never
     
     var description: String {
         switch self {
@@ -50,8 +49,6 @@ enum RepeatOptions: Int, CustomStringConvertible, CaseIterable{
             return "Two Weeks"
         case .Month:
             return "Month"
-        case .Never:
-            return "Never"
         }
     }
 }
@@ -145,7 +142,7 @@ extension ClassTypeAndRepeatsViewController: UITableViewDataSource, UITableViewD
         if SingleClassService.shared.getIsClassType() == true {
             SingleClassService.shared.setType(classType: ClassType(rawValue: indexPath.row) ?? .Class)
         } else {
-            SingleClassService.shared.setRepeats(every: RepeatOptions(rawValue: indexPath.row)?.description ?? "Never")
+            SingleClassService.shared.setRepeats(every: RepeatOptions(rawValue: indexPath.row)?.description ?? "Week")
         }
         dismissVC()
     }

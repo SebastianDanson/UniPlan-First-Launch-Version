@@ -241,10 +241,10 @@ func makeStackView(withOrientation axis: NSLayoutConstraint.Axis, spacing: CGFlo
 func makeAddButtonWithFill() -> UIButton {
     let makeAddButtonWithFill = UIButton()
     makeAddButtonWithFill.setTitle("+", for: .normal)
-    makeAddButtonWithFill.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+    makeAddButtonWithFill.titleLabel?.font = UIFont.boldSystemFont(ofSize: 19)
     makeAddButtonWithFill.backgroundColor = .mainBlue
-    makeAddButtonWithFill.setDimensions(width: 26,height: 26)
-    makeAddButtonWithFill.layer.cornerRadius = 13
+    makeAddButtonWithFill.setDimensions(width: 28,height: 28)
+    makeAddButtonWithFill.layer.cornerRadius = 14
     
     return makeAddButtonWithFill
 }
