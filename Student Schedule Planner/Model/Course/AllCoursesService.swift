@@ -14,6 +14,7 @@ class AllCoursesService {
     private var courses: Results<Course>?
     private var selectedCourse: Course?
     private var courseIndex: Int?
+    private var addSummative = false
 
     static let shared = AllCoursesService()
     
@@ -53,4 +54,11 @@ class AllCoursesService {
         selectedCourse = course
     }
     
+    //MARK: - addSummative
+    func getAddSummative() -> Bool {
+        return addSummative
+    }
+    func setAddSummative(bool: Bool) {
+        addSummative = bool
+    }
 }

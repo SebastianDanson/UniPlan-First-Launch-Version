@@ -478,21 +478,6 @@ class AddTaskViewController: PickerViewController {
                         taskToUpdate?.color = task.color
                         taskToUpdate?.location = task.location
                     } else {
-                        //                        let dateOfTask = Calendar.current.startOfDay(for: startDatePicker.date)
-                        //                        let endOfDay: Date = {
-                        //                            let components = DateComponents(day: 1, second: -1)
-                        //                            return Calendar.current.date(byAdding: components, to: dateOfTask)!
-                        //                        }()
-                        
-                        //Check if there is already a date object for the day of the task
-                        //                        let day = realm.objects(Day.self).filter("date BETWEEN %@", [dateOfTask, endOfDay]).first
-                        //                        if let day = day {
-                        //                            day.tasks.append(task)
-                        //                        } else {
-                        //                            let newDay = Day()
-                        //                            newDay.tasks.append(task)
-                        //                            realm.add(newDay)
-                        //                        }
                         realm.add(task, update: .modified)
                     }
                 }

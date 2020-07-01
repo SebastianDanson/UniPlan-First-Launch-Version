@@ -15,10 +15,10 @@ class AddQuizAndExamViewController: UIViewController {
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
-         print(QuizService.shared.getQuizIndex())
+        print(QuizService.shared.getQuizIndex())
         SingleClassService.shared.setReminder(false)
         setupViews()
-
+        
         self.dismissKey()
     }
     
@@ -200,7 +200,7 @@ class AddQuizAndExamViewController: UIViewController {
         
         startTime.text = "\(formatTime(from: Date()))"
         endTime.text = "\(formatTime(from: Date().addingTimeInterval(3600)))"
-      
+        
         TaskService.shared.setStartTime(time: Date())
         TaskService.shared.setEndTime(time: Date().addingTimeInterval(3600))
         
@@ -384,7 +384,7 @@ class AddQuizAndExamViewController: UIViewController {
                     quiz.dateOrTime = TaskService.shared.getDateOrTime()
                     quiz.index = QuizService.shared.getNumQuizzes()
                     quiz.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
-
+                    
                     if quiz.dateOrTime == 0 {
                         let reminderTime = TaskService.shared.getReminderTime()
                         quiz.reminderTime[0] = reminderTime[0]
@@ -421,7 +421,7 @@ class AddQuizAndExamViewController: UIViewController {
                     exam.endDate = date.addingTimeInterval(TimeInterval(endComponents.hour! * 3600 + endComponents.minute! * 60))
                     exam.index = ExamService.shared.getNumExams()
                     exam.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
-
+                    
                     if exam.dateOrTime == 0 {
                         let reminderTime = TaskService.shared.getReminderTime()
                         exam.reminderTime[0] = reminderTime[0]
@@ -457,7 +457,16 @@ class AddQuizAndExamViewController: UIViewController {
         } catch {
             print("Error writing Class to realm \(error.localizedDescription)")
         }
-        dismiss(animated: true, completion: nil)
+        
+        if AllCoursesService.shared.getAddSummative() {
+            AllCoursesService.shared.setAddSummative(bool: false)
+            let vc = TabBarController()
+            vc.selectedIndex = 2
+            vc.modalPresentationStyle = .fullScreen
+            present(vc, animated: true, completion: nil)
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc func reminderButtonPressed() {

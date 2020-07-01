@@ -53,6 +53,11 @@ class CoursesViewController: SwipeViewController {
         tableView.register(CourseCell.self, forCellReuseIdentifier: courseReuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
+        
+        if AllCoursesService.shared.getAddSummative() {
+            titleLabel.text = "Select Course"
+            addButton.isHidden = true
+        }
     }
     //What happens when user tries to delete course
     override func updateModel(index: Int, section: Int) {
@@ -68,7 +73,7 @@ class CoursesViewController: SwipeViewController {
                         let classesToDelete = self.realm.objects(SingleClass.self).filter("course == %@", courseToDelete.title)
                         let examsToDelete = self.realm.objects(Exam.self).filter("course == %@", courseToDelete.title)
                         let quizzesToDelete = self.realm.objects(Quiz.self).filter("course == %@", courseToDelete.title)
-
+                        
                         for assignment in assignmentsToDelete {
                             self.realm.delete(assignment)
                         }
@@ -124,16 +129,26 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: courseReuseIdentifer) as! CourseCell
         if let course = AllCoursesService.shared.getCourse(atIndex: indexPath.row) {
             cell.update(course: course)
-            cell.delegate = self
+            if !AllCoursesService.shared.getAddSummative() {
+                cell.delegate = self
+            }
         }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AllCoursesService.shared.setCourseIndex(index: indexPath.row)
+        
+        if AllCoursesService.shared.getAddSummative() {
+            let vc = SelectSummativeTypeViewController()
+            vc.modalPresentationStyle = .fullScreen
+            present(vc, animated: true, completion: nil)
+        }
+        
         let vc = CourseDetailsViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
+        
     }
 }
 

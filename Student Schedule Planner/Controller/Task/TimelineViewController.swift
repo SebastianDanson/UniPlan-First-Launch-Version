@@ -110,7 +110,7 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         if let task = TaskService.shared.getTask(atIndex: indexPath.row) {
             cell.update(task: task, summative: false)
             cell.delegate = self
-        }
+        } 
         return cell
     }
     

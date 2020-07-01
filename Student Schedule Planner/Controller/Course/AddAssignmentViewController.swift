@@ -104,7 +104,7 @@ class AddAssignmentViewController: UIViewController {
                 datePicker.date = assignment.dueDate
                 reminderSwitch.isOn = assignment.reminder
                 titleLabel.text = "Edit Assignment"
-
+                
                 if assignment.reminder {
                     reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: assignment.dateOrTime, reminderTime: [assignment.reminderTime[0],assignment.reminderTime[1]], reminderDate: assignment.reminderDate), for: .normal)
                     SingleClassService.shared.setReminder(true)
@@ -126,7 +126,7 @@ class AddAssignmentViewController: UIViewController {
         assignment.reminder = reminderSwitch.isOn
         assignment.index = AssignmentService.shared.getNumAssignments()
         assignment.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
-
+        
         if assignment.dateOrTime == 0 {
             let reminderTime = TaskService.shared.getReminderTime()
             assignment.reminderTime[0] = reminderTime[0]
@@ -160,7 +160,16 @@ class AddAssignmentViewController: UIViewController {
         } catch {
             print("Error writing Class to realm \(error.localizedDescription)")
         }
-        dismiss(animated: true, completion: nil)
+        if AllCoursesService.shared.getAddSummative() {
+            AllCoursesService.shared.setAddSummative(bool: false)
+            let vc = TabBarController()
+            vc.selectedIndex = 2
+            vc.modalPresentationStyle = .fullScreen
+            present(vc, animated: true, completion: nil)
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+        
     }
     
     @objc func reminderButtonPressed() {

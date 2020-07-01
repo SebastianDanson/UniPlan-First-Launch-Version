@@ -20,6 +20,7 @@
 		3F59239C24A17677008F45D6 /* PentagonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F59239B24A17677008F45D6 /* PentagonView.swift */; };
 		3F5923BE24AA9FCC008F45D6 /* SummativesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */; };
 		3F5923C024AAA249008F45D6 /* SummativeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5923BF24AAA249008F45D6 /* SummativeCell.swift */; };
+		3F5923C424AC0C13008F45D6 /* SelectSummativeTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5923C324AC0C13008F45D6 /* SelectSummativeTypeViewController.swift */; };
 		3F67BBF124872A4C00BFD6E5 /* AddTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */; };
 		3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */; };
 		3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFB24893AF100BFD6E5 /* Task.swift */; };
@@ -69,6 +70,7 @@
 		3F59239B24A17677008F45D6 /* PentagonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PentagonView.swift; sourceTree = "<group>"; };
 		3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummativesViewController.swift; sourceTree = "<group>"; };
 		3F5923BF24AAA249008F45D6 /* SummativeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummativeCell.swift; sourceTree = "<group>"; };
+		3F5923C324AC0C13008F45D6 /* SelectSummativeTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSummativeTypeViewController.swift; sourceTree = "<group>"; };
 		3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskViewController.swift; sourceTree = "<group>"; };
 		3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		3F67BBFB24893AF100BFD6E5 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 				3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */,
 				3FAEC82F2497D2B7000ADD9D /* SetClassTimeViewController.swift */,
 				3FAEC84124993A56000ADD9D /* SetClassReminderViewController.swift */,
+				3F5923C324AC0C13008F45D6 /* SelectSummativeTypeViewController.swift */,
 				3F94E3282496A90500B0F958 /* AddClassViewController.swift */,
 				3FAEC83B2499242B000ADD9D /* AddAssignmentViewController.swift */,
 				3FAEC83F24992C2A000ADD9D /* AddQuizAndExamViewController.swift */,
@@ -416,6 +419,7 @@
 				3F59234624A13798008F45D6 /* Assignment.swift in Sources */,
 				3F5923C024AAA249008F45D6 /* SummativeCell.swift in Sources */,
 				3FAEC84024992C2A000ADD9D /* AddQuizAndExamViewController.swift in Sources */,
+				3F5923C424AC0C13008F45D6 /* SelectSummativeTypeViewController.swift in Sources */,
 				3F67BC05248C7B9E00BFD6E5 /* TaskService.swift in Sources */,
 				3F59239C24A17677008F45D6 /* PentagonView.swift in Sources */,
 				3F383E7A2486BD0600D2A5D1 /* Factories.swift in Sources */,

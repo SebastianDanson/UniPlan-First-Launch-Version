@@ -51,7 +51,7 @@ class TaskService {
         tasks = realm.objects(Task.self)
     }
     
-
+    
     //MARK: - taskIndex
     func getTaskIndex() -> Int? {
         return taskIndex
@@ -190,6 +190,7 @@ class TaskService {
                 task.color = course?.color ?? 0 
                 
                 realm.add(task, update: .modified)
+                scheduleNotification(forTask: task)
             }
             dayIncrementor.addTimeInterval(86400)
         }
@@ -211,7 +212,7 @@ class TaskService {
         task.type = "quiz"
         task.index = QuizService.shared.getNumQuizzes()
         task.color = course?.color ?? 0
-
+        
         scheduleNotification(forTask: task)
         realm.add(task, update: .modified)
         QuizService.shared.setNumQuizzes(num: (QuizService.shared.getNumQuizzes() + 1))
@@ -232,7 +233,7 @@ class TaskService {
         task.type = "assignment"
         task.index = AssignmentService.shared.getNumAssignments()
         task.color = course?.color ?? 0
-
+        
         scheduleNotification(forTask: task)
         realm.add(task, update: .modified)
         AssignmentService.shared.setNumAssignments(num: (AssignmentService.shared.getNumAssignments() + 1))
@@ -317,8 +318,10 @@ class TaskService {
     func deleteTasks(forClass theClass: SingleClass) {
         let course = AllCoursesService.shared.getSelectedCourse()
         let tasksToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, theClass.type, theClass.index)
+        let content = UNMutableNotificationContent()
         
         for task in tasksToDelete {
+            center.removePendingNotificationRequests(withIdentifiers: [task.id])
             realm.delete(task)
         }
     }
@@ -328,6 +331,8 @@ class TaskService {
         let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "quiz", quiz.index).first
         
         if let taskToDelete = taskToDelete {
+            let content = UNMutableNotificationContent()
+            center.removePendingNotificationRequests(withIdentifiers: [task.id])
             realm.delete(taskToDelete)
         }
     }
@@ -338,6 +343,8 @@ class TaskService {
         let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "assignment" , assignment.index).first
         
         if let taskToDelete = taskToDelete {
+            let content = UNMutableNotificationContent()
+            center.removePendingNotificationRequests(withIdentifiers: [task.id])
             realm.delete(taskToDelete)
         }
     }
@@ -347,6 +354,8 @@ class TaskService {
         let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "exam", exam.index).first
         
         if let taskToDelete = taskToDelete {
+            let center = UNUserNotificationCenter.current()
+            center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
             realm.delete(taskToDelete)
         }
     }
@@ -360,6 +369,7 @@ class TaskService {
     @objc func scheduleNotification(forTask task: Task) {
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
+        center.removePendingNotificationRequests(withIdentifiers: [task.id])
         
         var dateComponents = DateComponents()
         let units: Set<Calendar.Component> = [.nanosecond, .second,.minute, .hour, .day, .month, .year]
@@ -388,14 +398,18 @@ class TaskService {
             let date = formatDate(from: task.startDate)
             content.body = "Your task will start on \(date)"
         }
+        if task.title != "" {
+            content.title = task.title
+        } else {
+            content.title = "Untitled"
+        }
         
-        content.title = task.title
         content.categoryIdentifier = "alarm"
         content.userInfo = ["customData": "fizzbuzz"]
         content.sound = UNNotificationSound.default
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: task.id, content: content, trigger: trigger)
         center.add(request)
     }
 }

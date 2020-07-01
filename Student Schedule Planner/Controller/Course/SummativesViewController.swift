@@ -16,8 +16,8 @@ class SummativesViewController: SwipeViewController {
     //MARK: - Properties
     var tableView = makeTableView(withRowHeight: 50)
     let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
-    let backButton = makeBackButton()
-    let titleLabel = makeTitleLabel(withText: "Select Class Type")
+    let titleLabel = makeTitleLabel(withText: "Summatives")
+    let addButton = makeAddButton()
     
     //Non UI
     var pastDueSummatives = [Task]()
@@ -37,15 +37,15 @@ class SummativesViewController: SwipeViewController {
         view.addSubview(tableView)
         
         topView.addSubview(titleLabel)
-        topView.addSubview(backButton)
+        topView.addSubview(addButton)
         topView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
+        
+        addButton.anchor(right: topView.rightAnchor, paddingRight: 20)
+        addButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         titleLabel.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
         titleLabel.centerX(in: topView)
-        
-        backButton.anchor(left: topView.leftAnchor, paddingLeft: 20)
-        backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
-        // backButton.addTarget(self, action: #selector(dismissVC), for: .touchUpInside)
         
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
@@ -58,8 +58,8 @@ class SummativesViewController: SwipeViewController {
     }
     //MARK: - Actions
     @objc func addButtonTapped() {
-        let vc = AddTaskViewController()
-        vc.modalPresentationStyle = .fullScreen
+        AllCoursesService.shared.setAddSummative(bool: true)
+        let vc = CoursesViewController()
         self.present(vc, animated: true, completion: nil)
     }
     
@@ -84,8 +84,7 @@ class SummativesViewController: SwipeViewController {
             print("Error writing to Realm \(error.localizedDescription)")
         }
         tableView.reloadData()
-    }
-    
+    }    
 }
 //MARK: - Tableview Delegate and Datasource
 extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
@@ -96,9 +95,15 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return upcomingSummatives.count
+            if upcomingSummatives.count != 0 {
+                return upcomingSummatives.count
+            }
+            return 1
         default:
-            return pastDueSummatives.count
+            if pastDueSummatives.count != 0 {
+                return pastDueSummatives.count
+            }
+            return 1
         }
     }
     
@@ -107,7 +112,7 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
         let sectionName = makeHeading(withText: "")
         let seperator = makeSpacerView(height: 2)
         
-        view.backgroundColor = .backgroundColor
+        tableView.backgroundColor = .backgroundColor
         view.addSubview(sectionName)
         view.addSubview(seperator)
         
@@ -140,15 +145,30 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer) as! TaskCell
         switch indexPath.section {
         case 0:
-            cell.update(task: upcomingSummatives[indexPath.row], summative: true)
+            if upcomingSummatives.count > 0{
+                cell.update(task: upcomingSummatives[indexPath.row], summative: true)
+            } else {
+                cell.taskLabel.text = "No Upcoming Assignments"
+                cell.taskLabel.centerY(in: cell.taskView)
+                cell.taskLabel.centerX(in: cell.taskView)
+                cell.textLabel?.textColor = .darkBlue
+            }
         default:
-            cell.update(task: pastDueSummatives[indexPath.row], summative: true)
+            if pastDueSummatives.count > 0{
+                cell.update(task: pastDueSummatives[indexPath.row], summative: true)
+            } else {
+                cell.taskLabel.text = "No Past Due Assignments"
+                cell.taskLabel.centerY(in: cell.taskView)
+                cell.taskLabel.centerX(in: cell.taskView)
+                cell.textLabel?.textColor = .darkBlue
+            }
         }
         cell.delegate = self
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+
+func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         TaskService.shared.setTaskIndex(index: indexPath.row)
         addButtonTapped()
     }

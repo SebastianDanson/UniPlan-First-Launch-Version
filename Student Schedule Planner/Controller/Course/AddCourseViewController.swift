@@ -302,7 +302,6 @@ class AddCourseViewController: PickerViewController {
                             realm.delete(task)
                         }
                     }
-
                 } else {
                     realm.add(course, update: .modified)
                 }
@@ -310,7 +309,6 @@ class AddCourseViewController: PickerViewController {
         } catch {
             print("Error saving course to realm \(error.localizedDescription)")
         }
-        
         dismiss(animated: true, completion: nil)
     }
     
