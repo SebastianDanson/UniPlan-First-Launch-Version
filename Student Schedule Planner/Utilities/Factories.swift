@@ -53,6 +53,7 @@ func makeTitleLabel(withText text: String) -> UILabel{
 func makeAddButton() -> UIButton {
     let addButton = UIButton()
     addButton.setTitle("+", for: .normal)
+    addButton.setDimensions(width: 30, height: 30)
     addButton.tintColor = .backgroundColor
     addButton.titleLabel?.font = UIFont.systemFont(ofSize: 40)
     
@@ -61,6 +62,7 @@ func makeAddButton() -> UIButton {
 
 func makeBackButton() -> UIButton {
     let addButton = UIButton()
+    addButton.setDimensions(width: 30, height: 30)
     addButton.setImage(UIImage(named: "backbutton"), for: .normal)
     
     return addButton

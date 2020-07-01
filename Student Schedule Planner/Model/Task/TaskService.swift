@@ -318,8 +318,8 @@ class TaskService {
     func deleteTasks(forClass theClass: SingleClass) {
         let course = AllCoursesService.shared.getSelectedCourse()
         let tasksToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, theClass.type, theClass.index)
-        let content = UNMutableNotificationContent()
-        
+        let center = UNUserNotificationCenter.current()
+
         for task in tasksToDelete {
             center.removePendingNotificationRequests(withIdentifiers: [task.id])
             realm.delete(task)
@@ -331,8 +331,8 @@ class TaskService {
         let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "quiz", quiz.index).first
         
         if let taskToDelete = taskToDelete {
-            let content = UNMutableNotificationContent()
-            center.removePendingNotificationRequests(withIdentifiers: [task.id])
+            let center = UNUserNotificationCenter.current()
+            center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
             realm.delete(taskToDelete)
         }
     }
@@ -343,8 +343,8 @@ class TaskService {
         let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "assignment" , assignment.index).first
         
         if let taskToDelete = taskToDelete {
-            let content = UNMutableNotificationContent()
-            center.removePendingNotificationRequests(withIdentifiers: [task.id])
+            let center = UNUserNotificationCenter.current()
+            center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
             realm.delete(taskToDelete)
         }
     }

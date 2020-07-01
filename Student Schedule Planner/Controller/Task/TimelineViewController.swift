@@ -22,7 +22,7 @@ class TimelineViewController: SwipeViewController  {
     var tableView = makeTableView(withRowHeight: 80)
     let topView = makeTopView(height: UIScreen.main.bounds.height/5.5)
     //let topView = makeTopView(height: UIScreen.main.bounds.height/4)
-
+    
     let addButton = makeAddButton()
     let calendar = makeCalendar()
     
@@ -82,6 +82,25 @@ class TimelineViewController: SwipeViewController  {
         do {
             try self.realm.write {
                 if let taskToDelete = TaskService.shared.getTask(atIndex: index) {
+                    switch taskToDelete.type {
+                    case "assignment":
+                        let assignmentToDelete = realm.objects(Assignment.self).filter("index == %@ AND course == %@", taskToDelete.index, taskToDelete.course).first
+                        if let assignmentToDelete = assignmentToDelete {
+                            realm.delete(assignmentToDelete)
+                        }
+                    case "quiz":
+                        let quizToDelete = realm.objects(Quiz.self).filter("index == %@ AND course == %@", taskToDelete.index, taskToDelete.course).first
+                        if let quizToDelete = quizToDelete {
+                            realm.delete(quizToDelete)
+                        }
+                    case "exam":
+                        let examToDelete = realm.objects(Exam.self).filter("index == %@ AND course == %@", taskToDelete.index, taskToDelete.course).first
+                        if let examToDelete = examToDelete {
+                            realm.delete(examToDelete)
+                        }
+                    default:
+                        break
+                    }
                     self.realm.delete(taskToDelete)
                     self.tableView.reloadData()
                 }
@@ -101,6 +120,24 @@ class TimelineViewController: SwipeViewController  {
 
 //MARK: - Tableview Delegate and Datasource
 extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        TaskService.shared.loadTasks()
+        if TaskService.shared.getTasks()?.count == 0 {
+            
+            let noCoursesLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 50))
+            noCoursesLabel.text = "No Events Scheduled"
+            noCoursesLabel.textColor = UIColor.darkBlue
+            noCoursesLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+            noCoursesLabel.textAlignment = .center
+            tableView.tableHeaderView = noCoursesLabel
+            tableView.separatorStyle  = .none
+            return 0
+        }
+        tableView.tableHeaderView = nil
+        return 1
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return TaskService.shared.getTasks()?.count ?? 0
     }
@@ -110,7 +147,7 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         if let task = TaskService.shared.getTask(atIndex: indexPath.row) {
             cell.update(task: task, summative: false)
             cell.delegate = self
-        } 
+        }
         return cell
     }
     

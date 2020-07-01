@@ -62,6 +62,7 @@ class TaskCell: SwipeTableViewCell {
         taskView.addSubview(locationLabel)
         
         taskView.layer.borderWidth = 0
+        taskView.backgroundColor = .backgroundColor
         taskLabel.lineBreakMode = .byWordWrapping
         taskLabel.numberOfLines = 0
 
@@ -91,7 +92,7 @@ class TaskCell: SwipeTableViewCell {
         endTimeLabel.anchor(top: startTimeLabel.bottomAnchor, left: startTimeLabel.leftAnchor)
         startTimeTopAnchorConstaint = startTimeLabel.centerYAnchor.constraint(equalTo: taskView.centerYAnchor)
         startTimeOtherAnchorConstaint = startTimeLabel.topAnchor.constraint(equalTo: taskView.topAnchor, constant: 16)
-        startTimeSummativeAnchorConstraint = startTimeLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 2)
+        startTimeSummativeAnchorConstraint = startTimeLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 2)    
     }
     
     //MARK: - Actions
@@ -121,7 +122,7 @@ class TaskCell: SwipeTableViewCell {
         locationLabel.text = task.location
         
         taskLabel.text = task.title
-        taskLabel.textColor = .white
+        taskLabel.textColor = .backgroundColor
         
         if taskLabel.text == "" {
             taskLabel.text = "Untitled"

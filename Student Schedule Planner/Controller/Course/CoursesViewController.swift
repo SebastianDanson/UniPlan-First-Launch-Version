@@ -32,6 +32,7 @@ class CoursesViewController: SwipeViewController {
     //MARK: - UI setup
     func setupViews() {
         view.backgroundColor = .backgroundColor
+        tableView.backgroundColor = .backgroundColor
         view.addSubview(topView)
         view.addSubview(tableView)
         
@@ -121,12 +122,36 @@ class CoursesViewController: SwipeViewController {
 
 //MARK: - Tableview Delegate and Datasource
 extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if AllCoursesService.shared.getCourses()?.count == 0 {
+            
+            let noCoursesLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 50))
+            noCoursesLabel.text = "No Courses Added"
+            noCoursesLabel.textColor = UIColor.darkBlue
+            noCoursesLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+            noCoursesLabel.textAlignment = .center
+            tableView.tableHeaderView = noCoursesLabel
+            tableView.separatorStyle = .none
+            return 0
+        }
+        tableView.tableHeaderView = nil
+        return 1
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return AllCoursesService.shared.getCourses()?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: courseReuseIdentifer) as! CourseCell
+        if AllCoursesService.shared.getCourses()?.count == 0 {
+            cell.taskLabel.text = "No Courses Added"
+            cell.taskLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+            cell.textLabel?.textColor = .darkBlue
+            
+            return cell
+        }
         if let course = AllCoursesService.shared.getCourse(atIndex: indexPath.row) {
             cell.update(course: course)
             if !AllCoursesService.shared.getAddSummative() {

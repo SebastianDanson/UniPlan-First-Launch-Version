@@ -10,7 +10,7 @@ import UIKit
 
 //MARK: - UIColor
 extension UIColor {
-    static let backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
+    static let backgroundColor = UIColor.white
     //static let mainBlue = UIColor(red: 41/255, green: 128/255, blue: 185/255, alpha: 1)
     static let mainBlue = UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1)
 

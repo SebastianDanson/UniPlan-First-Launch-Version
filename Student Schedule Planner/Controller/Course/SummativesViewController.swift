@@ -30,6 +30,16 @@ class SummativesViewController: SwipeViewController {
         tableView.reloadData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        upcomingSummatives = [Task]()
+        pastDueSummatives = [Task]()
+
+        filterSummatives()
+        AllCoursesService.shared.setAddSummative(bool: false)
+        tableView.reloadData()
+    }
+    
     func setupViews() {
         view.backgroundColor = .backgroundColor
         
@@ -53,8 +63,6 @@ class SummativesViewController: SwipeViewController {
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
-        
-        filterSummatives()
     }
     //MARK: - Actions
     @objc func addButtonTapped() {
@@ -67,10 +75,10 @@ class SummativesViewController: SwipeViewController {
     func filterSummatives(){
         let summatives = realm.objects(Task.self).filter("course != %@ AND type != %@", "", "Class")
         for summative in summatives {
-            if summative.startDate > Date() {
-                pastDueSummatives.append(summative)
-            } else {
+            if summative.endDate > Date() {
                 upcomingSummatives.append(summative)
+            } else {
+                pastDueSummatives.append(summative)
             }
         }
     }
@@ -78,32 +86,59 @@ class SummativesViewController: SwipeViewController {
     override func updateModel(index: Int, section: Int) {
         do {
             try realm.write {
+                var summative = Task()
+
+                switch section {
+                case 0:
+                    summative = upcomingSummatives[index]
+                default:
+                    summative = pastDueSummatives[index]
+                }
                 
+                switch summative.type {
+                case "assignment":
+                    let assignmentToDelete = realm.objects(Assignment.self).filter("index == %@ AND course == %@", summative.index, summative.course).first
+                    if let assignmentToDelete = assignmentToDelete {
+                        realm.delete(assignmentToDelete)
+                    }
+                case "quiz":
+                    let quizToDelete = realm.objects(Quiz.self).filter("index == %@ AND course == %@", summative.index, summative.course).first
+                    if let quizToDelete = quizToDelete {
+                        realm.delete(quizToDelete)
+                    }
+                case "exam":
+                    let examToDelete = realm.objects(Exam.self).filter("index == %@ AND course == %@", summative.index, summative.course).first
+                    if let examToDelete = examToDelete {
+                        realm.delete(examToDelete)
+                    }
+                default:
+                    break
+                }
+                let taskToDelete = realm.objects(Task.self).filter("id == %@", summative.id)
+                realm.delete(taskToDelete)
             }
         } catch {
             print("Error writing to Realm \(error.localizedDescription)")
         }
+        upcomingSummatives = [Task]()
+        pastDueSummatives = [Task]()
+
+        filterSummatives()
         tableView.reloadData()
-    }    
+    }
 }
-//MARK: - Tableview Delegate and Datasource
-extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
+    //MARK: - Tableview Delegate and Datasource
+    extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
+        func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            if upcomingSummatives.count != 0 {
-                return upcomingSummatives.count
-            }
-            return 1
+            return upcomingSummatives.count
         default:
-            if pastDueSummatives.count != 0 {
-                return pastDueSummatives.count
-            }
-            return 1
+            return pastDueSummatives.count
         }
     }
     
@@ -116,7 +151,7 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
         view.addSubview(sectionName)
         view.addSubview(seperator)
         
-        sectionName.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, paddingLeft: 10, paddingBottom: 5)
+        sectionName.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 20,paddingLeft: 10)
         
         seperator.backgroundColor = .silver
         seperator.anchor(top: view.topAnchor, paddingTop: 5)
@@ -126,16 +161,41 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
         switch section {
         case 0:
             seperator.alpha = 0
-            sectionName.text = "Upcoming"
+            sectionName.text = "Upcoming:"
+            if upcomingSummatives.count == 0 {
+                let noUpcomingAssignments = makeLabel(ofSize: 20, weight: .semibold)
+                view.addSubview(noUpcomingAssignments)
+                noUpcomingAssignments.text = "No Upcoming Assignments"
+                noUpcomingAssignments.anchor(top: sectionName.bottomAnchor, paddingTop: 10)
+                noUpcomingAssignments.centerX(in: view)
+            }
         default:
-            sectionName.text = "Past Due"
+            sectionName.text = "Past Due:"
+            if pastDueSummatives.count == 0 {
+                let pastDueSummatives = makeLabel(ofSize: 20, weight: .semibold)
+                view.addSubview(pastDueSummatives)
+                pastDueSummatives.text = "No Past Due Summatives"
+                pastDueSummatives.anchor(top: sectionName.bottomAnchor, paddingTop: 10)
+                pastDueSummatives.centerX(in: view)
+            }
         }
         
         return view
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
+        switch section{
+        case 0:
+            if upcomingSummatives.count == 0 {
+                return 100
+            }
+            return 50
+        default:
+            if pastDueSummatives.count == 0 {
+                return 100
+            }
+            return 50
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -145,30 +205,15 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer) as! TaskCell
         switch indexPath.section {
         case 0:
-            if upcomingSummatives.count > 0{
-                cell.update(task: upcomingSummatives[indexPath.row], summative: true)
-            } else {
-                cell.taskLabel.text = "No Upcoming Assignments"
-                cell.taskLabel.centerY(in: cell.taskView)
-                cell.taskLabel.centerX(in: cell.taskView)
-                cell.textLabel?.textColor = .darkBlue
-            }
+            cell.update(task: upcomingSummatives[indexPath.row], summative: true)
         default:
-            if pastDueSummatives.count > 0{
-                cell.update(task: pastDueSummatives[indexPath.row], summative: true)
-            } else {
-                cell.taskLabel.text = "No Past Due Assignments"
-                cell.taskLabel.centerY(in: cell.taskView)
-                cell.taskLabel.centerX(in: cell.taskView)
-                cell.textLabel?.textColor = .darkBlue
-            }
+            cell.update(task: pastDueSummatives[indexPath.row], summative: true)
         }
         cell.delegate = self
         return cell
     }
-
-
-func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         TaskService.shared.setTaskIndex(index: indexPath.row)
         addButtonTapped()
     }

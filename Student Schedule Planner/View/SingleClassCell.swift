@@ -97,6 +97,14 @@ class SingleClassCell: SwipeTableViewCell {
         reminderImage.anchor(left: taskView.leftAnchor, bottom: taskView.bottomAnchor, paddingLeft: 15, paddingBottom: 5)
         reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 5, paddingBottom: 5)
         reminderImage.setDimensions(width: 14, height: 14)
+        
+        monday.isUserInteractionEnabled = false
+        tuesday.isUserInteractionEnabled = false
+        wednesday.isUserInteractionEnabled = false
+        thursday.isUserInteractionEnabled = false
+        friday.isUserInteractionEnabled = false
+        saturday.isUserInteractionEnabled = false
+        sunday.isUserInteractionEnabled = false
     }
     
     //MARK: - Actions

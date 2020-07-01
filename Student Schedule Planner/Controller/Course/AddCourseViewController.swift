@@ -186,7 +186,7 @@ class AddCourseViewController: PickerViewController {
                 CourseService.shared.setStartDate(date: course.startDate)
                 CourseService.shared.setEndDate(date: course.endDate)
                 titleLabel.text = "Edit Course"
-
+                
                 switch course.color {
                 case 0:
                     colorButtonPressed(button: red)
@@ -274,12 +274,16 @@ class AddCourseViewController: PickerViewController {
     @objc func backButtonPressed() {
         dismiss(animated: true, completion: nil)
     }
-   
+    
     @objc func saveButtonPressed() {
         do {
             try realm.write {
                 let course = Course()
-                course.title = titleTextField.text ?? "Unitled"
+                if titleTextField.text != ""{
+                    course.title = titleTextField.text ?? "Untitled"
+                } else {
+                    course.title = "Untitled"
+                }
                 course.startDate = CourseService.shared.getStartDate()
                 course.endDate = CourseService.shared.getEndDate()
                 course.color = CourseService.shared.getColor()
