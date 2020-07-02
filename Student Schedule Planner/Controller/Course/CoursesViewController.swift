@@ -114,6 +114,7 @@ class CoursesViewController: SwipeViewController {
     
     //MARK: - Actions
     @objc func addButtonPressed() {
+        AllCoursesService.shared.setCourseIndex(index: nil)
         let vc = AddCourseViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
@@ -170,6 +171,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
             present(vc, animated: true, completion: nil)
         }
         
+        CourseService.shared.setColor(int: AllCoursesService.shared.getSelectedCourse()?.color ?? 0)
         let vc = CourseDetailsViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)

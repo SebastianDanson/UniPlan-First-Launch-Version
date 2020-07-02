@@ -13,13 +13,13 @@ class AddCourseViewController: PickerViewController {
     //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        CourseService.shared.setColor(int: 0)
         self.dismissKey()
         setupViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        CourseService.shared.setColor(int: 0)
     }
     
     //MARK: - properties

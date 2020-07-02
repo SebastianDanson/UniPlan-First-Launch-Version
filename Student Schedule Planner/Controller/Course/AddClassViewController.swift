@@ -38,7 +38,7 @@ class AddClassViewController: UIViewController {
         reminderButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: reminderButton.frame.width-30, bottom: 0, right: 0)
         if SingleClassService.shared.getReminder() {
             reminderSwitch.isOn = true
-            reminderSwitchToggled()
+            //reminderSwitchToggled()
         }
     }
     
@@ -71,6 +71,7 @@ class AddClassViewController: UIViewController {
     let classTypeButton = setValueButton(withPlaceholder: "Class", height: 50)
     let reminderButton = setValueButtonNoWidth(withPlaceholder: "When Class Starts")
     let reminderSwitch = UISwitch()
+    let locationView = makeAnimatedView()
     let reminderView = makeAnimatedView()
     let startTimeView = PentagonView()
     let endTimeView = UIView()
@@ -109,7 +110,7 @@ class AddClassViewController: UIViewController {
         let nextImage = UIImageView(image: nextIcon!)
         clockImage = UIImageView(image: clockIcon!)
         calendarImage = UIImageView(image: calendarIcon!)
-
+        
         seperatorView1.backgroundColor = .silver
         seperatorView2.backgroundColor = .silver
         
@@ -127,9 +128,12 @@ class AddClassViewController: UIViewController {
         view.addSubview(hideReminderView)
         
         repeatsButton.addSubview(nextImage)
-        reminderView.addSubview(locationTextField)
-        reminderView.addSubview(reminderSwitch)
-        reminderView.addSubview(reminderHeading)
+        locationView.addSubview(locationTextField)
+        locationView.addSubview(reminderSwitch)
+        locationView.addSubview(reminderHeading)
+        locationView.addSubview(reminderButton)
+        locationView.addSubview(reminderView)
+        reminderView.addSubview(hideReminderView)
         
         startTimeView.addSubview(startTime)
         endTimeView.addSubview(endTime)
@@ -144,9 +148,7 @@ class AddClassViewController: UIViewController {
         
         stackViewContainer.addSubview(stackView)
         stackViewContainer.addSubview(datePicker)
-        stackViewContainer.addSubview(reminderView)
-        stackViewContainer.addSubview(reminderButton)
-        stackViewContainer.addSubview(hideReminderView)
+        stackViewContainer.addSubview(locationView)
         stackViewContainer.addSubview(endDateView)
         stackViewContainer.addSubview(startDateView)
         
@@ -159,8 +161,6 @@ class AddClassViewController: UIViewController {
         stackView.addArrangedSubview(spacerView4)
         stackView.addArrangedSubview(seperatorView2)
         stackView.addArrangedSubview(spacerView5)
-       
-        
         
         classDayStackView.addArrangedSubview(sunday)
         classDayStackView.addArrangedSubview(monday)
@@ -183,6 +183,7 @@ class AddClassViewController: UIViewController {
         
         deleteButton.anchor(right: topView.rightAnchor, paddingRight: 20)
         deleteButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        deleteButton.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
         
         //Not topView
         classTypeButton.anchor(top: topView.bottomAnchor, paddingTop: UIScreen.main.bounds.height/50)
@@ -195,7 +196,7 @@ class AddClassViewController: UIViewController {
                              left: classTypeButton.leftAnchor,
                              paddingTop: UIScreen.main.bounds.height/50)
         
-        clockImage.anchor(left: startTimeView.leftAnchor, paddingLeft: 25)
+        clockImage.anchor(left: startTimeView.leftAnchor, paddingLeft: 18)
         clockImage.centerY(in: startTimeView)
         clockImage.tintColor = .darkGray
         
@@ -229,10 +230,10 @@ class AddClassViewController: UIViewController {
         startDateView.addGestureRecognizer(startDateTap)
         startDateView.anchor(top: spacerView5.bottomAnchor,
                              left: classTypeButton.leftAnchor,
-                             paddingTop: 10)
-        calendarImage.anchor(left: startDateView.leftAnchor, paddingLeft: 25)
-               calendarImage.centerY(in: startDateView)
-               calendarImage.tintColor = .darkGray
+                             paddingTop: 0)
+        calendarImage.anchor(left: startDateView.leftAnchor, paddingLeft: 18)
+        calendarImage.centerY(in: startDateView)
+        calendarImage.tintColor = .darkGray
         
         let endDateTap = UITapGestureRecognizer(target: self, action: #selector(endDateViewTapped))
         endDateView.addGestureRecognizer(endDateTap)
@@ -244,7 +245,7 @@ class AddClassViewController: UIViewController {
         
         endDateView.anchor(top: spacerView5.bottomAnchor,
                            right: view.rightAnchor,
-                           paddingTop: 10,
+                           paddingTop: 0,
                            paddingRight: 20)
         
         startDate.centerX(in: startDateView)
@@ -253,12 +254,17 @@ class AddClassViewController: UIViewController {
         endDate.centerX(in: endDateView)
         endDate.centerY(in: endDateView)
         
-        startDate.text = "\(formatDate(from: Date()))"
-        endDate.text = "\(formatDate(from: Date().addingTimeInterval(3600)))"
+        let course = AllCoursesService.shared.getSelectedCourse()
+        startDate.text = "\(formatDateNoDay(from: Date()))"
+        endDate.text = "\(formatDateNoDay(from: course?.endDate ?? Date()))"
+        SingleClassService.shared.setStartDate(date: Date())
+        SingleClassService.shared.setEndDate(date: course?.endDate ?? Date())
+
         setupTimePickerView()
         
         datePicker.anchor(top: startDateView.bottomAnchor)
         datePicker.centerX(in: view)
+        datePicker.addTarget(self, action: #selector(datePickerDateChanged), for: .valueChanged)
         
         stackViewContainer.anchor(bottom: view.bottomAnchor)
         stackViewContainer.centerX(in: view)
@@ -269,22 +275,26 @@ class AddClassViewController: UIViewController {
         stackViewContainerOtherAnchorConstaint = stackViewContainer.topAnchor.constraint(equalTo: timePickerView.bottomAnchor)
         stackViewContainerTopAnchorConstaint.isActive = true
         
-        locationTextField.anchor(top: reminderView.topAnchor, left: startTimeView.leftAnchor, paddingTop: 10)
+        locationTextField.anchor(top: locationView.topAnchor, left: startTimeView.leftAnchor, paddingTop: 10)
         locationTextField.setIcon(UIImage(named: "location")!)
         
         nextImage.centerY(in: repeatsButton)
         nextImage.anchor(right: repeatsButton.rightAnchor, paddingRight: 10)
         
-        reminderView.backgroundColor = .backgroundColor
-        reminderView.anchor(top: startDateView.bottomAnchor, left: startTimeView.leftAnchor)
-        reminderView.setDimensions(height: 200)
-        reminderHeading.anchor(top: locationTextField.bottomAnchor, left: reminderView.leftAnchor, paddingTop: 10)
+        locationView.backgroundColor = .backgroundColor
+        locationView.anchor(top: startDateView.bottomAnchor, left: startTimeView.leftAnchor)
+        locationView.setDimensions(height: 200)
+        reminderHeading.anchor(top: locationTextField.bottomAnchor, left: locationView.leftAnchor, paddingTop: 10)
         reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
         reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
         reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
         
-        reminderButton.anchor(top: reminderSwitch.bottomAnchor, left: reminderView.leftAnchor)
-        hideReminderView.anchor(top: reminderSwitch.bottomAnchor)
+        reminderButton.anchor(top: reminderSwitch.bottomAnchor, left: locationView.leftAnchor, right: locationView.rightAnchor, paddingTop: 5)
+        
+        reminderView.anchor(top: reminderSwitch.bottomAnchor)
+        reminderView.centerX(in: view)
+
+        hideReminderView.anchor(top: reminderView.topAnchor, paddingTop: 5)
         hideReminderView.centerX(in: view)
         hideReminderView.setDimensions(height: 55)
         
@@ -294,7 +304,7 @@ class AddClassViewController: UIViewController {
         classTypeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         
         saveButton.centerX(in: view)
-        saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: 40)
+        saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: UIScreen.main.bounds.height/25)
         saveButton.addTarget(self, action: #selector(saveClass), for: .touchUpInside)
         
         //Setting button tags
@@ -322,7 +332,6 @@ class AddClassViewController: UIViewController {
         
         if let classIndex = SingleClassService.shared.getClassIndex() {
             if let theClass = CourseService.shared.getClass(atIndex: classIndex) {
-                SingleClassService.shared.setTypeAsString(classTypeString: theClass.type)
                 SingleClassService.shared.setReminderTime([theClass.reminderTime[0],theClass.reminderTime[1]])
                 
                 SingleClassService.shared.setStartTime(time: theClass.startTime)
@@ -331,23 +340,33 @@ class AddClassViewController: UIViewController {
                 startTime.text = formatTime(from: theClass.startTime)
                 endTime.text = formatTime(from: theClass.endTime)
                 
+                SingleClassService.shared.setTypeAsString(classTypeString: theClass.subType)
+                classTypeButton.setTitle(theClass.subType, for: .normal)
+                
                 for (index, day) in theClass.classDays.enumerated() {
                     if day == 1 {
                         switch index {
                         case 0:
                             sunday.highlight()
+                            SingleClassService.shared.setClassDay(day: 0)
                         case 1:
                             monday.highlight()
+                            SingleClassService.shared.setClassDay(day: 1)
                         case 2:
                             tuesday.highlight()
+                            SingleClassService.shared.setClassDay(day: 2)
                         case 3:
                             wednesday.highlight()
+                            SingleClassService.shared.setClassDay(day: 3)
                         case 4:
                             thursday.highlight()
+                            SingleClassService.shared.setClassDay(day: 4)
                         case 5:
                             friday.highlight()
+                            SingleClassService.shared.setClassDay(day: 5)
                         case 6:
                             saturday.highlight()
+                            SingleClassService.shared.setClassDay(day: 6)
                         default:
                             break
                         }
@@ -363,6 +382,7 @@ class AddClassViewController: UIViewController {
             }
         }
     }
+    
     func setupTimePickerView() {
         timePickerView.anchor(top: startTimeView.bottomAnchor)
         timePickerView.centerX(in: view)
@@ -378,12 +398,12 @@ class AddClassViewController: UIViewController {
             reminderButton.setTitle(SingleClassService.shared.setupReminderString(), for: .normal)
             TaskService.shared.askToSendNotifications()
             UIView.animate(withDuration: 0.3, animations: {
-                self.hideReminderView.frame.origin.y = self.reminderButton.frame.maxY
+                self.hideReminderView.frame.origin.y = self.hideReminderView.frame.origin.y + 45
             })
         } else {
             SingleClassService.shared.setReminder(false)
             UIView.animate(withDuration: 0.3, animations: {
-                self.hideReminderView.frame.origin.y = self.hideReminderView.frame.origin.y-45
+                self.hideReminderView.frame.origin.y = self.hideReminderView.frame.origin.y - 45
             })
         }
     }
@@ -401,7 +421,20 @@ class AddClassViewController: UIViewController {
         }
     }
     
+    @objc func datePickerDateChanged() {
+        
+        if startDateView.color == UIColor.mainBlue {
+            SingleClassService.shared.setStartDate(date: datePicker.date)
+            startDate.text = "\(formatDateNoDay(from: datePicker.date))"
+        } else {
+            SingleClassService.shared.setEndDate(date: datePicker.date)
+            endDate.text  = "\(formatDateNoDay(from: datePicker.date))"
+        }
+    }
+    
     @objc func startTimeViewTapped() {
+       resetDateViews()
+        
         if startTimeView.color != UIColor.mainBlue {
             timePickerView.date = SingleClassService.shared.getStartTime()
             startTimeView.color = .mainBlue
@@ -426,6 +459,7 @@ class AddClassViewController: UIViewController {
     }
     
     @objc func endTimeViewTapped() {
+        resetDateViews()
         
         if endTimeView.backgroundColor != UIColor.mainBlue {
             timePickerView.date = SingleClassService.shared.getEndTime()
@@ -450,52 +484,62 @@ class AddClassViewController: UIViewController {
     }
     
     @objc func startDateViewTapped() {
-           if startDateView.color != UIColor.mainBlue {
-               datePicker.date = SingleClassService.shared.getStartTime()
-               startDateView.color = .mainBlue
-               startDateView.borderColor = .clear
-               startDate.textColor = .backgroundColor
-               endDate.textColor = .darkBlue
-               UIView.animate(withDuration: 0.3, animations: {
-                   self.reminderView.frame.origin.y = self.datePicker.frame.maxY
-               })
-           } else {
-               startDateView.color = .clouds
-               startDateView.borderColor = .silver
-               startDate.textColor = .darkBlue
-               UIView.animate(withDuration: 0.3, animations: {
-                   self.reminderView.frame.origin.y = self.startDateView.frame.maxY
-               })
-           }
+        resetTimeViews()
+        if startDateView.color != UIColor.mainBlue {
+            datePicker.date = SingleClassService.shared.getStartDate()
+            startDateView.color = .mainBlue
+            startDateView.borderColor = .clear
+            calendarImage.tintColor = .white
+            startDate.textColor = .backgroundColor
+            endDate.textColor = .darkBlue
+            UIView.animate(withDuration: 0.3, animations: {
+                self.locationView.frame.origin.y = self.datePicker.frame.maxY
+            })
+        } else {
+            startDateView.color = .clouds
+            startDateView.borderColor = .silver
+            calendarImage.tintColor = .darkBlue
+            
+            startDate.textColor = .darkBlue
+            UIView.animate(withDuration: 0.3, animations: {
+                self.locationView.frame.origin.y = self.startDateView.frame.maxY
+            })
+        }
+        endDateView.backgroundColor = .backgroundColor
+        endDateView.layer.borderColor = UIColor.silver.cgColor
+    }
+    
+    @objc func endDateViewTapped() {
+        resetTimeViews()
+        if endDateView.backgroundColor != UIColor.mainBlue {
+            datePicker.date = SingleClassService.shared.getEndDate()
+            endDateView.backgroundColor = .mainBlue
+            endDateView.layer.borderColor = UIColor.clear.cgColor
+            endDate.textColor = .backgroundColor
+            startDate.textColor = .darkBlue
+            UIView.animate(withDuration: 0.3, animations: {
+                self.locationView.frame.origin.y = self.datePicker.frame.maxY
+            })
+        } else {
             endDateView.backgroundColor = .backgroundColor
-           endDateView.layer.borderColor = UIColor.silver.cgColor
-       }
-       
-       @objc func endDateViewTapped() {
-           
-           if endDateView.backgroundColor != UIColor.mainBlue {
-               timePickerView.date = SingleClassService.shared.getEndTime()
-               endDateView.backgroundColor = .mainBlue
-               endDateView.layer.borderColor = UIColor.clear.cgColor
-               endDate.textColor = .backgroundColor
-               startDate.textColor = .darkBlue
-               UIView.animate(withDuration: 0.3, animations: {
-                   self.reminderView.frame.origin.y = self.datePicker.frame.maxY
-               })
-           } else {
-               endDateView.backgroundColor = .backgroundColor
-               endDateView.layer.borderColor = UIColor.silver.cgColor
-               endDate.textColor = .darkBlue
-               UIView.animate(withDuration: 0.3, animations: {
-                   self.reminderView.frame.origin.y = self.endDateView.frame.maxY
-               })
-           }
-           startDateView.color = .clouds
-           startDateView.borderColor = .silver
-       }
+            endDateView.layer.borderColor = UIColor.silver.cgColor
+            endDate.textColor = .darkBlue
+            UIView.animate(withDuration: 0.3, animations: {
+                self.locationView.frame.origin.y = self.endDateView.frame.maxY
+            })
+        }
+        calendarImage.tintColor = .darkGray
+        startDateView.color = .clouds
+        startDateView.borderColor = .silver
+    }
     @objc func dayButtonTapped(button: UIButton) {
-        stackViewContainerTopAnchorConstaint.isActive = true
-        stackViewContainerOtherAnchorConstaint.isActive = false
+        if startTimeView.color == UIColor.mainBlue || endTimeView.backgroundColor == UIColor.mainBlue {
+            stackViewContainerTopAnchorConstaint.isActive = false
+            stackViewContainerOtherAnchorConstaint.isActive = true
+        } else {
+            stackViewContainerTopAnchorConstaint.isActive = true
+            stackViewContainerOtherAnchorConstaint.isActive = false
+        }
         
         if SingleClassService.shared.getClassDays()[button.tag] == 0 {
             button.highlight()
@@ -538,12 +582,15 @@ class AddClassViewController: UIViewController {
         theClass.endTime = SingleClassService.shared.getEndTime()
         theClass.repeats = SingleClassService.shared.getRepeats()
         theClass.location = locationTextField.text ?? "Not Set"
-        theClass.type = SingleClassService.shared.getType().description
+        theClass.type = "Class"
+        theClass.subType = SingleClassService.shared.getType().description
         theClass.reminderTime[0] = SingleClassService.shared.getReminderTime()[0]
         theClass.reminderTime[1] = SingleClassService.shared.getReminderTime()[1]
         theClass.reminder = SingleClassService.shared.getReminder()
         theClass.index = SingleClassService.shared.getNumClasses() + 1
         theClass.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
+        theClass.startDate = SingleClassService.shared.getStartDate()
+        theClass.endDate = SingleClassService.shared.getEndDate()
         TaskService.shared.setReminderTime([theClass.reminderTime[0], theClass.reminderTime[1]])
         
         do {
@@ -556,12 +603,16 @@ class AddClassViewController: UIViewController {
                     }
                     classToUpdate?.startTime = theClass.startTime
                     classToUpdate?.endTime = theClass.endTime
+                    classToUpdate?.startDate = theClass.startDate
+                    classToUpdate?.endDate = theClass.endDate
                     classToUpdate?.repeats = theClass.repeats
                     classToUpdate?.location = theClass.location
                     classToUpdate?.type = theClass.type
                     classToUpdate?.reminderTime[0] = theClass.reminderTime[0]
                     classToUpdate?.reminderTime[1] = theClass.reminderTime[1]
                     classToUpdate?.reminder = theClass.reminder
+                    classToUpdate?.subType = theClass.subType
+
                     if let theClassToUpdate = classToUpdate {
                         TaskService.shared.updateTasks(forClass: theClassToUpdate)
                     }
@@ -584,11 +635,59 @@ class AddClassViewController: UIViewController {
         })
     }
     
+    @objc func deleteButtonPressed() {
+        if let index = SingleClassService.shared.getClassIndex(){
+            do{
+                try realm.write{
+                    if let classToDelete = CourseService.shared.getClass(atIndex: index) {
+                        TaskService.shared.deleteTasks(forClass: classToDelete)
+                        realm.delete(classToDelete)
+                        CourseService.shared.updateClasses()
+                    }
+                }
+            } catch{
+                print("error deleting class and class tasks \(error.localizedDescription)")
+            }
+        }
+        backButtonPressed()
+    }
     //MARK: - Helper methods
     func configureClassDays() -> List<Int> {
         let days = List<Int>()
         days.append(objectsIn: SingleClassService.shared.getClassDays())
         return days
+    }
+    
+    func resetDateViews() {
+        if locationView.frame.origin.y == datePicker.frame.maxY {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.locationView.frame.origin.y = self.startDateView.frame.maxY
+            })
+            
+            startDateView.color = .clouds
+            endDateView.backgroundColor = .backgroundColor
+            startDate.textColor = .darkBlue
+            endDate.textColor = .darkBlue
+            calendarImage.tintColor = .darkGray
+            endDateView.layer.borderColor = UIColor.silver.cgColor
+            startDateView.borderColor = .silver
+        }
+    }
+    
+    func resetTimeViews() {
+        if stackViewContainer.frame.origin.y == timePickerView.frame.maxY {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.stackViewContainer.frame.origin.y = self.startTimeView.frame.maxY
+            })
+            
+            startTimeView.color = .clouds
+            endTimeView.backgroundColor = .backgroundColor
+            startTime.textColor = .darkBlue
+            endTime.textColor = .darkBlue
+            clockImage.tintColor = .darkGray
+            endTimeView.layer.borderColor = UIColor.silver.cgColor
+            startTimeView.borderColor = .silver
+        }
     }
 }
 

@@ -28,6 +28,7 @@ class CourseDetailsViewController: SwipeViewController {
         QuizService.shared.setQuizIndex(index: nil)
         ExamService.shared.setExamIndex(index: nil)
         tableView.reloadData()
+        topView.backgroundColor = getColor(colorAsInt: CourseService.shared.getColor())
     }
     
     //MARK: - Properties
@@ -42,7 +43,7 @@ class CourseDetailsViewController: SwipeViewController {
         editButton.setTitle("Edit", for: .normal)
         editButton.titleLabel?.font = UIFont.systemFont(ofSize: 22, weight: .regular)
         editButton.setDimensions(width: 50, height: 30)
-        editButton.backgroundColor = .mainBlue
+        editButton.backgroundColor = .clear
         editButton.setTitleColor(UIColor.backgroundColor, for: .normal)
         return editButton
     }()
@@ -223,7 +224,8 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
         sectionName.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, paddingLeft: 10, paddingBottom: 5)
         addButton.anchor(left: sectionName.rightAnchor, paddingLeft: 5)
         addButton.centerYAnchor.constraint(equalTo: sectionName.centerYAnchor).isActive = true
-        
+        addButton.backgroundColor = getColor(colorAsInt: CourseService.shared.getColor())
+
         seperator.backgroundColor = .silver
         seperator.anchor(top: view.topAnchor, paddingTop: 5)
         seperator.setDimensions(width: UIScreen.main.bounds.width - 20)

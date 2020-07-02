@@ -34,12 +34,13 @@ class AssignmentCell: SwipeTableViewCell {
     
     //MARK: - setupUI
     func setupViews() {
+        let color = getColor(colorAsInt: AllCoursesService.shared.getSelectedCourse()?.color ?? 0)
         let nextImage = UIImageView(image: nextIcon!)
         let reminderImage = UIImageView(image: reminderIcon!)
-        
+        taskView.layer.borderColor = color.cgColor
+        reminderImage.tintColor = color
         backgroundColor = .backgroundColor
         addSubview(taskView)
-        
         taskView.addSubview(titleLabel)
         taskView.addSubview(dueLabel)
         taskView.addSubview(dateLabel)

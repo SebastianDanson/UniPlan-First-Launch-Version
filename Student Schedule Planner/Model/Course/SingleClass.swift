@@ -16,8 +16,11 @@ class SingleClass: Object {
     @objc dynamic var location = ""
     @objc dynamic var startTime = Date()
     @objc dynamic var endTime = Date()
+    @objc dynamic var startDate = Date()
+    @objc dynamic var endDate = Date()
     @objc dynamic var reminder = false
     @objc dynamic var type = "Class"
+    @objc dynamic var subType = "Class"
     @objc dynamic var id = UUID().uuidString
     @objc dynamic var index = 0
     @objc dynamic var course = ""

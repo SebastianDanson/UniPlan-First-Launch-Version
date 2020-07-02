@@ -29,17 +29,44 @@ class QuizAndExamCell: SwipeTableViewCell {
     let nextIcon = UIImage(named: "nextMenuButtonGray")
     let reminderLabel = makeLabel(ofSize: 14, weight: .semibold)
     let reminderIcon = UIImage(systemName: "alarm.fill")
-    let locationIcon = UIImage(named: "location")
+    var locationIcon = UIImage(named: "location")
     let locationLabel = makeLabel(ofSize: 14, weight: .semibold)
     var locationImage = UIImageView()
     var reminderImage = UIImageView()
     
     //MARK: - setupUI
     func setupViews() {
+        let color = getColor(colorAsInt: AllCoursesService.shared.getSelectedCourse()?.color ?? 0)
         let nextImage = UIImageView(image: nextIcon!)
         reminderImage = UIImageView(image: reminderIcon!)
-        locationImage = UIImageView(image: locationIcon!)
+        taskView.layer.borderColor = color.cgColor
+        reminderImage.tintColor = color
         
+        let course = AllCoursesService.shared.getSelectedCourse()
+        if let color = course?.color {
+            switch color {
+            case 0:
+                locationIcon = UIImage(named: "locationRed")
+            case 1:
+                locationIcon = UIImage(named: "locationOrange")
+            case 2:
+                locationIcon = UIImage(named: "locationYellow")
+            case 3:
+                locationIcon = UIImage(named: "locationGreen")
+            case 4:
+                locationIcon = UIImage(named: "locationTurquoise")
+            case 5:
+                locationIcon = UIImage(named: "locationBlue")
+            case 6:
+                locationIcon = UIImage(named: "locationDarkBlue")
+            case 7:
+                locationIcon = UIImage(named: "locationPurple")
+            default:
+                break
+            }
+        }
+        locationImage = UIImageView(image: locationIcon!)
+
         backgroundColor = .backgroundColor
         addSubview(taskView)
         
@@ -62,7 +89,6 @@ class QuizAndExamCell: SwipeTableViewCell {
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
         
         reminderImage.anchor(left: locationLabel.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 10, paddingBottom: 4)
-        reminderImage.tintColor = .mainBlue
         reminderImage.setDimensions(width: 15, height: 15)
         reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 2, paddingBottom: 5)
         

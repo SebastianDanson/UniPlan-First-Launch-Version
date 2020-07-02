@@ -167,17 +167,17 @@ class TaskService {
     
     //MARK: - TASKS
     func makeTasks(forClass theClass: SingleClass) {
-        let course = AllCoursesService.shared.getSelectedCourse()
-        let startDate = Calendar.current.startOfDay(for: course?.startDate ?? Date())
+        let startDate = Calendar.current.startOfDay(for: theClass.startDate)
         var dayIncrementor = startDate
-        let endDate = Calendar.current.startOfDay(for: course?.endDate ?? Date())
+        let endDate = Calendar.current.startOfDay(for: theClass.endDate)
+        var skipDates = 0
         SingleClassService.shared.setNumClasses(num: (SingleClassService.shared.getNumClasses() + 1))
         
         while dayIncrementor < endDate {
             if theClass.classDays[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
                 let course = AllCoursesService.shared.getSelectedCourse()
                 let task = Task()
-                task.title = "\(course?.title ?? "") Class"
+                task.title = "\(course?.title ?? "") \(theClass.subType)"
                 task.dateOrTime = 0
                 task.startDate = theClass.startTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
                 task.endDate = theClass.endTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
@@ -189,8 +189,29 @@ class TaskService {
                 task.index = SingleClassService.shared.getNumClasses()
                 task.color = course?.color ?? 0 
                 
-                realm.add(task, update: .modified)
-                scheduleNotification(forTask: task)
+                switch theClass.repeats {
+                case "2 Weeks":
+                    if skipDates == 0 {
+                        realm.add(task, update: .modified)
+                        scheduleNotification(forTask: task)
+                        skipDates = 1
+                    } else {
+                        skipDates = 0
+                    }
+                case "4 Weeks":
+                    if skipDates == 0 {
+                        realm.add(task, update: .modified)
+                        scheduleNotification(forTask: task)
+                        skipDates = 1
+                    } else if skipDates < 3{
+                        skipDates += 1
+                    } else {
+                        skipDates = 0
+                    }
+                default:
+                    realm.add(task, update: .modified)
+                    scheduleNotification(forTask: task)
+                }
             }
             dayIncrementor.addTimeInterval(86400)
         }

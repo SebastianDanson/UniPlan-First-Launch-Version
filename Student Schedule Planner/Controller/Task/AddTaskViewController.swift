@@ -17,6 +17,7 @@ class AddTaskViewController: PickerViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        CourseService.shared.setColor(int: 0)
         TaskService.shared.setCheckForTimeConflict(bool: true)
         self.dismissKey()
         setupViews()
@@ -25,7 +26,6 @@ class AddTaskViewController: PickerViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupReminderTime() //setups initial reminder time
-        CourseService.shared.setColor(int: 0)
     }
     
     override func viewDidAppear(_ animated: Bool) {

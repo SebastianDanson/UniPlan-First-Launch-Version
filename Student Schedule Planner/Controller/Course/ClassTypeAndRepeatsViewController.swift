@@ -39,16 +39,16 @@ enum ClassType: Int, CustomStringConvertible, CaseIterable{
 enum RepeatOptions: Int, CustomStringConvertible, CaseIterable{
     case Week
     case twoWeeks
-    case Month
+    case fourWeeks
     
     var description: String {
         switch self {
         case .Week:
             return "Week"
         case .twoWeeks:
-            return "Two Weeks"
-        case .Month:
-            return "Month"
+            return "2 Weeks"
+        case .fourWeeks:
+            return "4 Weeks"
         }
     }
 }

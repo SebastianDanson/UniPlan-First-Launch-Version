@@ -26,7 +26,7 @@ class SingleClassCell: SwipeTableViewCell {
     let classTypeLabel = makeLabel(ofSize: 14, weight: .regular)
     let classDayStackView = makeStackView(withOrientation: .horizontal, spacing: UIScreen.main.bounds.height/179)
     let nextIcon = UIImage(named: "nextMenuButtonGray")
-    let locationIcon = UIImage(named: "location")
+    var locationIcon = UIImage(named: "location")
     let locationLabel = makeLabel(ofSize: 14, weight: .semibold)
     let startTimeLabel = makeLabel(ofSize: 18, weight: .regular)
     let endTimeLabel = makeLabel(ofSize: 18, weight: .regular)
@@ -35,7 +35,9 @@ class SingleClassCell: SwipeTableViewCell {
     let reminderIcon = UIImage(systemName: "alarm.fill")
     let taskView = makeTaskView()
     let scrollView = UIScrollView()
-    
+    var reminderImage = UIImageView()
+    var locationImage = UIImageView()
+        
     //Day Circles
     let sunday = makeDayCircleButton(withLetter: "S")
     let monday = makeDayCircleButton(withLetter: "M")
@@ -47,11 +49,10 @@ class SingleClassCell: SwipeTableViewCell {
     
     //MARK: - setupUI
     func setupViews() {
-        
+        locationImage = UIImageView(image: locationIcon!)
         let nextImage = UIImageView(image: nextIcon!)
-        let locationImage = UIImageView(image: locationIcon!)
-        let reminderImage = UIImageView(image: reminderIcon!)
-        
+        reminderImage = UIImageView(image: reminderIcon!)
+        reminderImage.tintColor = .mainBlue
         backgroundColor = .backgroundColor
         addSubview(taskView)
         taskView.addSubview(classDayStackView)
@@ -105,38 +106,66 @@ class SingleClassCell: SwipeTableViewCell {
         friday.isUserInteractionEnabled = false
         saturday.isUserInteractionEnabled = false
         sunday.isUserInteractionEnabled = false
+        
     }
     
     //MARK: - Actions
     func update(theClass: SingleClass) {
-        classTypeLabel.text = theClass.type.description
-
-        monday.unhighlight()
-        tuesday.unhighlight()
-        wednesday.unhighlight()
-        thursday.unhighlight()
-        friday.unhighlight()
-        saturday.unhighlight()
-        sunday.unhighlight()
+        classTypeLabel.text = theClass.subType.description
+        let course = AllCoursesService.shared.getSelectedCourse()
+        taskView.layer.borderColor = getColor(colorAsInt: course?.color ?? 0).cgColor
+        
+        if let color = course?.color {
+            switch color {
+            case 0:
+                locationIcon = UIImage(named: "locationRed")
+            case 1:
+                locationIcon = UIImage(named: "locationOrange")
+            case 2:
+                locationIcon = UIImage(named: "locationYellow")
+            case 3:
+                locationIcon = UIImage(named: "locationGreen")
+            case 4:
+                locationIcon = UIImage(named: "locationTurquoise")
+            case 5:
+                locationIcon = UIImage(named: "locationBlue")
+            case 6:
+                locationIcon = UIImage(named: "locationDarkBlue")
+            case 7:
+                locationIcon = UIImage(named: "locationPurple")
+            default:
+                break
+            }
+        }
+        locationImage.image = locationIcon
+        
+        reminderImage.tintColor = getColor(colorAsInt: course?.color ?? 0)
+        monday.unhighlight(courseColor: 0)
+        tuesday.unhighlight(courseColor: 0)
+        wednesday.unhighlight(courseColor: 0)
+        thursday.unhighlight(courseColor: 0)
+        friday.unhighlight(courseColor: 0)
+        saturday.unhighlight(courseColor: 0)
+        sunday.unhighlight(courseColor: 0)
         
         for(index, day) in theClass.classDays.enumerated() {
             
             if day == 1 {
                 switch index {
                 case 0:
-                    sunday.highlight()
+                    sunday.highlight(courseColor: 0)
                 case 1:
-                    monday.highlight()
+                    monday.highlight(courseColor: 0)
                 case 2:
-                    tuesday.highlight()
+                    tuesday.highlight(courseColor: 0)
                 case 3:
-                    wednesday.highlight()
+                    wednesday.highlight(courseColor: 0)
                 case 4:
-                    thursday.highlight()
+                    thursday.highlight(courseColor: 0)
                 case 5:
-                    friday.highlight()
+                    friday.highlight(courseColor: 0)
                 case 6:
-                    saturday.highlight()
+                    saturday.highlight(courseColor: 0)
                 default:
                     break
                 }
@@ -151,7 +180,7 @@ class SingleClassCell: SwipeTableViewCell {
         
         let repeats = theClass.repeats
         classFrequencyLabel.text = repeats == "Never Repeats" ? repeats : "Every \(repeats)"
-    
+        
         reminderLabel.text = SingleClassService.shared.setupReminderString(theClass: theClass)
     }
 }
