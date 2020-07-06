@@ -340,6 +340,12 @@ class AddClassViewController: UIViewController {
                 startTime.text = formatTime(from: theClass.startTime)
                 endTime.text = formatTime(from: theClass.endTime)
                 
+                SingleClassService.shared.setStartDate(date: theClass.startDate)
+                SingleClassService.shared.setEndDate(date: theClass.endDate)
+                
+                startDate.text = formatDateNoDay(from: theClass.startDate)
+                endDate.text = formatDateNoDay(from: theClass.endDate)
+                
                 SingleClassService.shared.setTypeAsString(classTypeString: theClass.subType)
                 classTypeButton.setTitle(theClass.subType, for: .normal)
                 

@@ -31,4 +31,3 @@ func getColor(colorAsInt color: Int) -> UIColor {
         return .clear
     }
 }
-

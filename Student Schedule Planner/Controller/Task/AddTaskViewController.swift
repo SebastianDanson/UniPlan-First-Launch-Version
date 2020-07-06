@@ -95,7 +95,7 @@ class AddTaskViewController: PickerViewController {
     
     //MARK: - setup UI
     func setupViews() {
-    
+        
         clockImage = UIImageView(image: clockIcon!)
         
         view.backgroundColor = .backgroundColor
@@ -156,7 +156,7 @@ class AddTaskViewController: PickerViewController {
         titleTextField.centerX(in: view)
         titleTextField.anchor(top: topView.bottomAnchor, paddingTop: UIScreen.main.bounds.height/50)
         titleTextField.delegate = self
-        titleTextField.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        titleTextField.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         titleTextField.layer.borderWidth = 5
         
         let startTap = UITapGestureRecognizer(target: self, action: #selector(startDateViewTapped))
@@ -354,6 +354,8 @@ class AddTaskViewController: PickerViewController {
     }
     
     @objc func datePickerChanged() {
+        reminderTopAnchorConstaint.isActive = true
+        reminderOtherAnchorConstaint.isActive = false
         dateButton.setTitle("\(formatDate(from: datePickerView.date))", for: .normal)
     }
     
@@ -364,14 +366,14 @@ class AddTaskViewController: PickerViewController {
             self.endDateViewTapped()
         }
         
-        if reminderView.frame.origin.y == dateButton.frame.maxY {
-            DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001){
+            
+            if self.reminderView.frame.origin.y == self.dateButton.frame.maxY {
                 UIView.animate(withDuration: 0.3, animations: {
                     self.reminderView.frame.origin.y = self.datePickerView.frame.maxY
+                    
                 })
-            }
-        } else {
-            DispatchQueue.main.async {
+            } else {
                 UIView.animate(withDuration: 0.3, animations: {
                     self.reminderView.frame.origin.y = self.dateButton.frame.maxY
                 })

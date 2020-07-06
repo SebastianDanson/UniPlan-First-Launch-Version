@@ -72,7 +72,6 @@ class AssignmentCell: SwipeTableViewCell {
         reminderImage.anchor(left: titleLabel.leftAnchor, bottom: taskView.bottomAnchor, paddingBottom: 5)
         reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 2, paddingBottom: 5)
         reminderImage.setDimensions(width: 15, height: 15)
-        reminderImage.tintColor = .mainBlue
     }
     
     //MARK: - Actions

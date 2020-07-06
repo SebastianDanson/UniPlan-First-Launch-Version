@@ -308,7 +308,9 @@ class TaskService {
         let course = AllCoursesService.shared.getSelectedCourse()
         let taskToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "assignment", assignment.index).first
         taskToUpdate?.dateOrTime = 0
+        taskToUpdate?.title = assignment.title
         taskToUpdate?.startDate = assignment.dueDate
+        taskToUpdate?.endDate = assignment.dueDate
         taskToUpdate?.reminder = assignment.reminder
         taskToUpdate?.reminderTime[0] = assignment.reminderTime[0]
         taskToUpdate?.reminderTime[1] = assignment.reminderTime[1]

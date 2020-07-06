@@ -48,7 +48,9 @@ class TimelineViewController: SwipeViewController  {
     
     //MARK: - setup UI
     func setupViews() {
-        
+        tableView.isScrollEnabled = true
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+
         view.backgroundColor = .backgroundColor
         
         view.addSubview(topView)
@@ -70,7 +72,8 @@ class TimelineViewController: SwipeViewController  {
         
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
-        tableView.rowHeight = 80
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 80
         
         tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height)
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)

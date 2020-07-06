@@ -36,4 +36,9 @@ class TabBarController: UITabBarController {
         navController.isNavigationBarHidden = true
         return navController
     }
+    
+    override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        AllCoursesService.shared.setAddSummative(bool: false)
+    }
 }
+

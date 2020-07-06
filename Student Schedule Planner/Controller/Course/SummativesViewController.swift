@@ -14,7 +14,7 @@ class SummativesViewController: SwipeViewController {
     let realm = try! Realm()
     
     //MARK: - Properties
-    var tableView = makeTableView(withRowHeight: 50)
+    var tableView = makeTableView(withRowHeight: 80)
     let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
     let titleLabel = makeTitleLabel(withText: "Summatives")
     let addButton = makeAddButton()
@@ -34,13 +34,16 @@ class SummativesViewController: SwipeViewController {
         super.viewWillAppear(animated)
         upcomingSummatives = [Task]()
         pastDueSummatives = [Task]()
-
         filterSummatives()
-        AllCoursesService.shared.setAddSummative(bool: false)
         tableView.reloadData()
     }
     
     func setupViews() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 80
+        tableView.isScrollEnabled = true
+        
         view.backgroundColor = .backgroundColor
         
         view.addSubview(topView)
@@ -71,6 +74,28 @@ class SummativesViewController: SwipeViewController {
         self.present(vc, animated: true, completion: nil)
     }
     
+    func AddAssignmentButtonPressed(assignment: Assignment) {
+        let vc = AddAssignmentViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: {
+            titleLabel.text = assignment.title
+        })
+    }
+    
+    @objc func AddExamButtonPressed() {
+        CourseService.shared.setQuizOrExam(int: 1)
+        let vc = AddQuizAndExamViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func AddQuizButtonPressed() {
+        CourseService.shared.setQuizOrExam(int: 0)
+        let vc = AddQuizAndExamViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
+    }
+    
     //MARK: - Helper Functions
     func filterSummatives(){
         let summatives = realm.objects(Task.self).filter("course != %@ AND type != %@", "", "Class")
@@ -87,7 +112,7 @@ class SummativesViewController: SwipeViewController {
         do {
             try realm.write {
                 var summative = Task()
-
+                
                 switch section {
                 case 0:
                     summative = upcomingSummatives[index]
@@ -122,14 +147,14 @@ class SummativesViewController: SwipeViewController {
         }
         upcomingSummatives = [Task]()
         pastDueSummatives = [Task]()
-
+        
         filterSummatives()
         tableView.reloadData()
     }
 }
-    //MARK: - Tableview Delegate and Datasource
-    extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
-        func numberOfSections(in tableView: UITableView) -> Int {
+//MARK: - Tableview Delegate and Datasource
+extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
@@ -198,9 +223,9 @@ class SummativesViewController: SwipeViewController {
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
-    }
+    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    //        return 75
+    //    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer) as! TaskCell
         switch indexPath.section {
@@ -214,8 +239,44 @@ class SummativesViewController: SwipeViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        TaskService.shared.setTaskIndex(index: indexPath.row)
-        addButtonTapped()
+        var task = Task()
+        
+        switch indexPath.section {
+        case 0:
+            task = upcomingSummatives[indexPath.row]
+        default:
+            task = pastDueSummatives[indexPath.row]
+        }
+        
+        let course = realm.objects(Course.self).filter("title == %@", task.title).first
+        AllCoursesService.shared.setSelectedCourse(course: course)
+        switch task.type {
+        case "assignment":
+            AssignmentService.shared.setAssignmentIndex(index: indexPath.row)
+            AddAssignmentButtonPressed(assignment: )
+        default:
+            break
+        }
+        
+        //       switch indexPath.section {
+        //       case 0:
+        //           SingleClassService.shared.setClassIndex(index: indexPath.row)
+        //           AddClassButtonPressed()
+        //       case 1:
+        //           AssignmentService.shared.setAssignmentIndex(index: indexPath.row)
+        //           AddAssignmentButtonPressed()
+        //       case 2:
+        //           QuizService.shared.setQuizIndex(index: indexPath.row)
+        //           AddQuizButtonPressed()
+        //       case 3:
+        //           ExamService.shared.setExamIndex(index: indexPath.row)
+        //           AddExamButtonPressed()
+        //       default:
+        //           break
+        //       }
+        
+        
+        
     }
 }
 

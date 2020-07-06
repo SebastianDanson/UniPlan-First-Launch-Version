@@ -23,6 +23,7 @@ class TaskCell: SwipeTableViewCell {
     
     //MARK: - Properties
     let taskLabel = makeLabel(ofSize: 20, weight: .bold)
+
     let nextIcon = UIImage(named: "nextMenuButton")
     let startTimeLabel = makeLabel(ofSize: 16, weight: .bold)
     let endTimeLabel = makeLabel(ofSize: 16, weight: .bold)
@@ -47,11 +48,12 @@ class TaskCell: SwipeTableViewCell {
     //MARK: - setupUI
     func setupViews() {
        nextImage = UIImageView(image: nextIcon!)
-        reminderImage = UIImageView(image: reminderIcon!)
+    reminderImage = UIImageView(image: reminderIcon!)
        locationImage = UIImageView(image: locationIcon!)
-        
+        let marginGuide = contentView.layoutMarginsGuide
+
         backgroundColor = .backgroundColor
-        addSubview(taskView)
+        contentView.addSubview(taskView)
         taskView.addSubview(taskLabel)
         taskView.addSubview(startTimeLabel)
         taskView.addSubview(endTimeLabel)
@@ -65,43 +67,58 @@ class TaskCell: SwipeTableViewCell {
         taskView.backgroundColor = .backgroundColor
         taskLabel.lineBreakMode = .byWordWrapping
         taskLabel.numberOfLines = 0
+        taskLabel.setDimensions(width: UIScreen.main.bounds.width * 0.60)
 
-        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor,
-                        paddingTop: 5, paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
+        taskView.anchor(top: topAnchor, bottom: bottomAnchor,
+                        paddingTop: 5, paddingBottom: 5)
+        taskView.setDimensions(width: UIScreen.main.bounds.width - 20)
+        taskView.centerX(in: self)
         
         nextImage.centerY(in: taskView)
-        nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
-        
+        nextImage.anchor(right: taskView.rightAnchor, paddingRight:  10)
+
         reminderImage.anchor(bottom: taskView.bottomAnchor, paddingBottom: 4)
         reminderImage.tintColor = .white
         reminderImage.setDimensions(width: 15, height: 15)
-        reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 2, paddingBottom: 5)
+        reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 2, paddingBottom: 4)
         
-        locationImage.anchor(left: taskLabel.leftAnchor, bottom: taskView.bottomAnchor, paddingBottom: 5 )
+        locationImage.anchor(left: taskLabel.leftAnchor, bottom: taskView.bottomAnchor, paddingBottom: 4)
+        
         locationImage.setDimensions(width: 15, height: 15)
+        locationLabel.anchor(left: locationImage.rightAnchor, bottom: taskView.bottomAnchor,
+                                    paddingLeft: 2,
+                                    paddingBottom: 4)
         locationLabel.anchor(left: locationImage.rightAnchor,
-                             bottom: taskView.bottomAnchor,
-                             paddingLeft: 2,
-                             paddingBottom: 5 )
+        bottom: taskView.bottomAnchor,
+        paddingLeft: 2,
+        paddingBottom: 4)
         
         reminderLeftAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: locationLabel.rightAnchor, constant: 10)
-        reminderOtherAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: taskLabel.leftAnchor)
+        reminderOtherAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: locationImage.leftAnchor)
         reminderLeftAnchorConstaint.isActive = true
+
+        startTimeLabel.anchor(right: nextImage.leftAnchor, paddingRight:  10)
         
-        startTimeLabel.anchor(right: nextImage.leftAnchor, paddingRight:  25)
-        endTimeLabel.anchor(top: startTimeLabel.bottomAnchor, left: startTimeLabel.leftAnchor)
-        startTimeTopAnchorConstaint = startTimeLabel.centerYAnchor.constraint(equalTo: taskView.centerYAnchor)
+        endTimeLabel.anchor(top: startTimeLabel.bottomAnchor, left: startTimeLabel.leftAnchor, paddingBottom: 20)
+        startTimeTopAnchorConstaint = startTimeLabel.centerYAnchor.constraint(equalTo: taskView.centerYAnchor, constant: -10)
+        startTimeTopAnchorConstaint.isActive = true
         startTimeOtherAnchorConstaint = startTimeLabel.topAnchor.constraint(equalTo: taskView.topAnchor, constant: 16)
-        startTimeSummativeAnchorConstraint = startTimeLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 2)    
+        startTimeSummativeAnchorConstraint = startTimeLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 2)
+        
+
+        taskLabel.anchor(top: marginGuide.topAnchor, left: marginGuide.leftAnchor, bottom: marginGuide.bottomAnchor, paddingTop: 15, paddingLeft: 10, paddingBottom: 15)
+
     }
     
     //MARK: - Actions
     func update(task: Task, summative: Bool) {
         reminderImage.isHidden = false
-        reminderLabel.isHidden = false
+       reminderLabel.isHidden = false
         locationImage.isHidden = false
         locationLabel.isHidden = false
         dateLabel.isHidden = true
+        reminderOtherAnchorConstaint.isActive = false
+        reminderLeftAnchorConstaint.isActive = true
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mma"
@@ -110,9 +127,13 @@ class TaskCell: SwipeTableViewCell {
         
         endTimeLabel.text = dateFormatter.string(from: task.endDate)
         endTimeLabel.textColor = .white
-        
+
         if task.reminder {
             reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: task.dateOrTime, reminderTime: [task.reminderTime[0], task.reminderTime[1]], reminderDate: task.reminderDate)
+            if task.location == "" {
+                reminderOtherAnchorConstaint.isActive = true
+                reminderLeftAnchorConstaint.isActive = false
+            }
         } else {
             reminderLabel.isHidden = true
             reminderImage.isHidden = true
@@ -127,23 +148,9 @@ class TaskCell: SwipeTableViewCell {
         if taskLabel.text == "" {
             taskLabel.text = "Untitled"
         }
-        
-        if let text = taskLabel.text {
-            let nsString = text as NSString
-            if nsString.length >= 21 {
-                taskLabel.text = nsString.substring(with: NSRange(location: 0, length: 21))
-                taskLabel.text?.append("\n\(nsString.substring(with: NSRange(location: 21, length: nsString.length - 21 > 21 ? 21 : nsString.length - 21)))")
-                
-                taskLabel.anchor(top: taskView.topAnchor, left: taskView.leftAnchor, right: startTimeLabel.leftAnchor, paddingTop: 5, paddingLeft: 20)
-            } else {
-                taskLabel.anchor(left: taskView.leftAnchor, paddingLeft: 20)
-                taskLabel.centerY(in: taskView)
-            }
-        }
 
         if task.type == "assignment" {
             endTimeLabel.isHidden = true
-            startTimeTopAnchorConstaint.isActive = true
             startTimeLabel.text = dateFormatter.string(from: task.startDate)
             taskView.addSubview(dueLabel)
             dueLabel.text = "Due:"
@@ -151,14 +158,14 @@ class TaskCell: SwipeTableViewCell {
             let paddingTop: CGFloat = summative ? 5:10
             dueLabel.anchor(top: taskView.topAnchor, left: startTimeLabel.leftAnchor, paddingTop: paddingTop)
         } else {
-            startTimeOtherAnchorConstaint.isActive = true
+            startTimeOtherAnchorConstaint.isActive = false
+            startTimeTopAnchorConstaint.isActive = true
+            startTimeSummativeAnchorConstraint.isActive = false
         }
         
         if task.location == "" {
             locationImage.isHidden = true
             locationLabel.isHidden = true
-            reminderOtherAnchorConstaint.isActive = true
-            reminderLeftAnchorConstaint.isActive = false
         }
         taskView.backgroundColor = getColor(colorAsInt: task.color)
         
@@ -173,7 +180,7 @@ class TaskCell: SwipeTableViewCell {
             startTimeOtherAnchorConstaint.isActive = false
             startTimeTopAnchorConstaint.isActive = false
             startTimeSummativeAnchorConstraint.isActive = true
-            
+
             if task.type == "assignment" {
                 dateLabel.anchor(top: dueLabel.bottomAnchor, left: startTimeLabel.leftAnchor)
             } else {

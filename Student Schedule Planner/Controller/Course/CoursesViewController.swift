@@ -27,10 +27,14 @@ class CoursesViewController: SwipeViewController {
     let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
     let titleLabel = makeTitleLabel(withText: "Courses")
     let addButton = makeAddButton()
-    let tableView = makeTableView(withRowHeight: 80)
+    let tableView = UITableView()
     
     //MARK: - UI setup
     func setupViews() {
+        tableView.isScrollEnabled = true
+        tableView.separatorColor = .clear
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 80
         view.backgroundColor = .backgroundColor
         tableView.backgroundColor = .backgroundColor
         view.addSubview(topView)
@@ -164,7 +168,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AllCoursesService.shared.setCourseIndex(index: indexPath.row)
-        
+
         if AllCoursesService.shared.getAddSummative() {
             let vc = SelectSummativeTypeViewController()
             vc.modalPresentationStyle = .fullScreen

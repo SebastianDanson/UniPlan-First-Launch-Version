@@ -26,21 +26,23 @@ class CourseCell: SwipeTableViewCell {
     let taskLabel = makeLabel(ofSize: 28, weight: .bold)
     let nextIcon = UIImage(named: "nextMenuButton")
     let taskView = makeTaskView()
-    
-    var centerConstraint = NSLayoutConstraint()
-    
+        
     //MARK: - setupUI
     func setupViews() {
+        let marginGuide = contentView.layoutMarginsGuide
+
         backgroundColor = .backgroundColor
-        addSubview(taskView)
+        contentView.addSubview(taskView)
         taskView.addSubview(taskLabel)
         
         taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 5, paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
         taskView.layer.borderColor = UIColor.clear.cgColor
         
-        centerConstraint = taskLabel.centerXAnchor.constraint(equalTo: taskView.centerXAnchor)
-        centerConstraint.isActive = true
-        taskLabel.centerY(in: taskView)
+        taskLabel.numberOfLines = 0
+        taskLabel.lineBreakMode = .byWordWrapping
+        taskLabel.anchor(top: marginGuide.topAnchor, left: marginGuide.leftAnchor, bottom: marginGuide.bottomAnchor, paddingTop: 10, paddingLeft: 10, paddingBottom: 10)
+        taskLabel.setDimensions(width: UIScreen.main.bounds.width * 0.75)
+
 
     }
     
@@ -51,9 +53,7 @@ class CourseCell: SwipeTableViewCell {
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  20)
 
-        centerConstraint.isActive = false
-        taskLabel.anchor(left: taskView.leftAnchor, paddingLeft: UIScreen.main.bounds.height/30)
-        
+
         taskLabel.text = course.title
         taskLabel.textColor = .white
         
