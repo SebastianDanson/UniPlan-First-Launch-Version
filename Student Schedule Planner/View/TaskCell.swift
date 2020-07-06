@@ -23,7 +23,6 @@ class TaskCell: SwipeTableViewCell {
     
     //MARK: - Properties
     let taskLabel = makeLabel(ofSize: 20, weight: .bold)
-
     let nextIcon = UIImage(named: "nextMenuButton")
     let startTimeLabel = makeLabel(ofSize: 16, weight: .bold)
     let endTimeLabel = makeLabel(ofSize: 16, weight: .bold)
@@ -42,8 +41,14 @@ class TaskCell: SwipeTableViewCell {
     var reminderOtherAnchorConstaint = NSLayoutConstraint()
     
     var startTimeTopAnchorConstaint = NSLayoutConstraint()
-    var startTimeOtherAnchorConstaint = NSLayoutConstraint()
     var startTimeSummativeAnchorConstraint = NSLayoutConstraint()
+    var startTimeAssignmentAnchorConstraint = NSLayoutConstraint()
+    
+    var dueLabelTopAnchorConstaint = NSLayoutConstraint()
+    var dueLabelOtherAnchorConstaint = NSLayoutConstraint()
+    
+    var dateLabelTopAnchorConstaint = NSLayoutConstraint()
+    var dateLabelOtherAnchorConstaint = NSLayoutConstraint()
     
     //MARK: - setupUI
     func setupViews() {
@@ -62,7 +67,9 @@ class TaskCell: SwipeTableViewCell {
         taskView.addSubview(reminderImage)
         taskView.addSubview(locationImage)
         taskView.addSubview(locationLabel)
-        
+        taskView.addSubview(dueLabel)
+        taskView.addSubview(dateLabel)
+
         taskView.layer.borderWidth = 0
         taskView.backgroundColor = .backgroundColor
         taskLabel.lineBreakMode = .byWordWrapping
@@ -99,12 +106,17 @@ class TaskCell: SwipeTableViewCell {
 
         startTimeLabel.anchor(right: nextImage.leftAnchor, paddingRight:  10)
         
-        endTimeLabel.anchor(top: startTimeLabel.bottomAnchor, left: startTimeLabel.leftAnchor, paddingBottom: 20)
+        endTimeLabel.anchor(top: startTimeLabel.bottomAnchor, left: startTimeLabel.leftAnchor)
         startTimeTopAnchorConstaint = startTimeLabel.centerYAnchor.constraint(equalTo: taskView.centerYAnchor, constant: -10)
-        startTimeTopAnchorConstaint.isActive = true
-        startTimeOtherAnchorConstaint = startTimeLabel.topAnchor.constraint(equalTo: taskView.topAnchor, constant: 16)
         startTimeSummativeAnchorConstraint = startTimeLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 2)
+        startTimeAssignmentAnchorConstraint = startTimeLabel.centerYAnchor.constraint(equalTo: taskView.centerYAnchor)
+        startTimeTopAnchorConstaint.isActive = true
         
+        dueLabelTopAnchorConstaint = dueLabel.bottomAnchor.constraint(equalTo: startTimeLabel.topAnchor)
+        dueLabelOtherAnchorConstaint = dueLabel.bottomAnchor.constraint(equalTo: dateLabel.topAnchor)
+        
+        dateLabelTopAnchorConstaint = dateLabel.centerYAnchor.constraint(equalTo: taskView.centerYAnchor)
+        dateLabelOtherAnchorConstaint = dateLabel.bottomAnchor.constraint(equalTo: startTimeLabel.topAnchor)
 
         taskLabel.anchor(top: marginGuide.topAnchor, left: marginGuide.leftAnchor, bottom: marginGuide.bottomAnchor, paddingTop: 15, paddingLeft: 10, paddingBottom: 15)
 
@@ -116,7 +128,9 @@ class TaskCell: SwipeTableViewCell {
        reminderLabel.isHidden = false
         locationImage.isHidden = false
         locationLabel.isHidden = false
+        endTimeLabel.isHidden = false
         dateLabel.isHidden = true
+        dueLabel.isHidden = true
         reminderOtherAnchorConstaint.isActive = false
         reminderLeftAnchorConstaint.isActive = true
 
@@ -150,15 +164,19 @@ class TaskCell: SwipeTableViewCell {
         }
 
         if task.type == "assignment" {
+            dueLabel.isHidden = false
             endTimeLabel.isHidden = true
             startTimeLabel.text = dateFormatter.string(from: task.startDate)
-            taskView.addSubview(dueLabel)
             dueLabel.text = "Due:"
             dueLabel.textColor = .white
-            let paddingTop: CGFloat = summative ? 5:10
-            dueLabel.anchor(top: taskView.topAnchor, left: startTimeLabel.leftAnchor, paddingTop: paddingTop)
+            dueLabel.anchor(left: startTimeLabel.leftAnchor)
+            startTimeTopAnchorConstaint.isActive = false
+            startTimeSummativeAnchorConstraint.isActive = false
+            startTimeAssignmentAnchorConstraint.isActive = true
+            dueLabelTopAnchorConstaint.isActive = true
+            dueLabelOtherAnchorConstaint.isActive = false
+
         } else {
-            startTimeOtherAnchorConstaint.isActive = false
             startTimeTopAnchorConstaint.isActive = true
             startTimeSummativeAnchorConstraint.isActive = false
         }
@@ -172,19 +190,29 @@ class TaskCell: SwipeTableViewCell {
         //Changes the layout for the summativeVC cells
         if summative {
             dateLabel.isHidden = false
-            taskView.addSubview(dateLabel)
             dateLabel.text = formatDateNoYear(from: task.startDate)
             dateLabel.textColor = .white
             startTimeLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
             endTimeLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-            startTimeOtherAnchorConstaint.isActive = false
+            
             startTimeTopAnchorConstaint.isActive = false
-            startTimeSummativeAnchorConstraint.isActive = true
+            startTimeAssignmentAnchorConstraint.isActive = true
+            startTimeSummativeAnchorConstraint.isActive = false
 
+            dueLabelTopAnchorConstaint.isActive = false
+            dueLabelOtherAnchorConstaint.isActive = true
+            
+            dateLabel.anchor(left: startTimeLabel.leftAnchor)
+            dateLabelTopAnchorConstaint.isActive = false
+            dateLabelOtherAnchorConstaint.isActive = true
+            
             if task.type == "assignment" {
-                dateLabel.anchor(top: dueLabel.bottomAnchor, left: startTimeLabel.leftAnchor)
-            } else {
-                dateLabel.anchor(top: taskView.topAnchor, left: startTimeLabel.leftAnchor, paddingTop: 7)
+                dateLabelTopAnchorConstaint.isActive = true
+                dateLabelOtherAnchorConstaint.isActive = false
+                
+                startTimeTopAnchorConstaint.isActive = false
+                startTimeAssignmentAnchorConstraint.isActive = false
+                startTimeSummativeAnchorConstraint.isActive = true
             }
         }
     }

@@ -21,7 +21,12 @@ class CourseService {
     private var color = 0
     private var startDate = Date()
     private var endDate = Date()
-    
+    private var selectedQuiz: Quiz?
+    private var selectedExam: Exam?
+    private var selectedAssignment: Assignment?
+    private var quizIndex: Int?
+    private var examIndex: Int?
+    private var assignmentIndex: Int?
     
     static let shared = CourseService()
     private init() {}
@@ -62,6 +67,23 @@ class CourseService {
         }
     }
     
+    func getSelectedAssignment() -> Assignment? {
+        return selectedAssignment
+    }
+    
+    func setSelectedAssignment(assignment: Assignment?) {
+        selectedAssignment = assignment
+    }
+    
+    func getAssignmentIndex() -> Int? {
+        return assignmentIndex
+    }
+    func setAssignmentIndex(index: Int?) {
+        assignmentIndex = index
+        if let index = index {
+            selectedAssignment = assignments?[index]
+        }
+    }
     //MARK: - Quizzes
     func getQuiz(atIndex index: Int) -> Quiz? {
         updateQuizzes()
@@ -80,6 +102,25 @@ class CourseService {
         }
     }
     
+    func getQuizIndex() -> Int? {
+        return quizIndex
+    }
+    
+    func setQuizIndex(index: Int?) {
+        quizIndex = index
+        if let index = index {
+            selectedQuiz = quizzes?[index]
+        }
+    }
+    
+    func getSelectedQuiz() -> Quiz? {
+        return selectedQuiz
+    }
+    
+    func setSelectedQuiz(quiz: Quiz?) {
+        selectedQuiz = quiz
+    }
+    
     //MARK: - Exams
     func getExam(atIndex index: Int) -> Exam? {
         updateExams()
@@ -96,6 +137,25 @@ class CourseService {
         if let course = realm.objects(Course.self).filter("id == %@", id).first {
             exams = course.exams
         }
+    }
+    
+    func getExamIndex() -> Int? {
+        return examIndex
+    }
+    
+    func setExamIndex(index: Int?) {
+        examIndex = index
+        if let index = index {
+            selectedExam = exams?[index]
+        }
+    }
+    
+    func getSelectedExam() -> Exam? {
+        return selectedExam
+    }
+    
+    func setSelectedExam(exam: Exam?) {
+        selectedExam = exam
     }
     
     //MARK: - quizOrExam

@@ -34,6 +34,10 @@ class SummativesViewController: SwipeViewController {
         super.viewWillAppear(animated)
         upcomingSummatives = [Task]()
         pastDueSummatives = [Task]()
+        CourseService.shared.setSelectedExam(exam: nil)
+        CourseService.shared.setSelectedQuiz(quiz: nil)
+        CourseService.shared.setSelectedAssignment(assignment: nil)
+
         filterSummatives()
         tableView.reloadData()
     }
@@ -74,22 +78,20 @@ class SummativesViewController: SwipeViewController {
         self.present(vc, animated: true, completion: nil)
     }
     
-    func AddAssignmentButtonPressed(assignment: Assignment) {
+    func presentAssignmentVC() {
         let vc = AddAssignmentViewController()
         vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: {
-            titleLabel.text = assignment.title
-        })
+        present(vc, animated: true, completion: nil)
     }
     
-    @objc func AddExamButtonPressed() {
+    func presentExamVC() {
         CourseService.shared.setQuizOrExam(int: 1)
         let vc = AddQuizAndExamViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
     }
     
-    @objc func AddQuizButtonPressed() {
+    func presentQuizVC() {
         CourseService.shared.setQuizOrExam(int: 0)
         let vc = AddQuizAndExamViewController()
         vc.modalPresentationStyle = .fullScreen
@@ -122,17 +124,17 @@ class SummativesViewController: SwipeViewController {
                 
                 switch summative.type {
                 case "assignment":
-                    let assignmentToDelete = realm.objects(Assignment.self).filter("index == %@ AND course == %@", summative.index, summative.course).first
+                    let assignmentToDelete = realm.objects(Assignment.self).filter("id == %@ ", summative.summativeId).first
                     if let assignmentToDelete = assignmentToDelete {
                         realm.delete(assignmentToDelete)
                     }
                 case "quiz":
-                    let quizToDelete = realm.objects(Quiz.self).filter("index == %@ AND course == %@", summative.index, summative.course).first
+                    let quizToDelete = realm.objects(Quiz.self).filter("id == %@ ", summative.summativeId).first
                     if let quizToDelete = quizToDelete {
                         realm.delete(quizToDelete)
                     }
                 case "exam":
-                    let examToDelete = realm.objects(Exam.self).filter("index == %@ AND course == %@", summative.index, summative.course).first
+                    let examToDelete = realm.objects(Exam.self).filter("id == %@ ", summative.summativeId).first
                     if let examToDelete = examToDelete {
                         realm.delete(examToDelete)
                     }
@@ -204,7 +206,6 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
                 pastDueSummatives.centerX(in: view)
             }
         }
-        
         return view
     }
     
@@ -222,10 +223,7 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
             return 50
         }
     }
-    
-    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    //        return 75
-    //    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer) as! TaskCell
         switch indexPath.section {
@@ -248,12 +246,22 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
             task = pastDueSummatives[indexPath.row]
         }
         
-        let course = realm.objects(Course.self).filter("title == %@", task.title).first
+        let course = realm.objects(Course.self).filter("title == %@", task.course).first
         AllCoursesService.shared.setSelectedCourse(course: course)
+
         switch task.type {
         case "assignment":
-            AssignmentService.shared.setAssignmentIndex(index: indexPath.row)
-            AddAssignmentButtonPressed(assignment: )
+            let assignment = realm.objects(Assignment.self).filter("id == %@", task.summativeId).first
+            CourseService.shared.setSelectedAssignment(assignment: assignment)
+            presentAssignmentVC()
+        case "quiz":
+            let quiz = realm.objects(Quiz.self).filter("id == %@", task.summativeId).first
+            CourseService.shared.setSelectedQuiz(quiz: quiz)
+            presentQuizVC()
+        case "exam":
+            let exam = realm.objects(Exam.self).filter("id == %@", task.summativeId).first
+            CourseService.shared.setSelectedExam(exam: exam)
+            presentQuizVC()
         default:
             break
         }

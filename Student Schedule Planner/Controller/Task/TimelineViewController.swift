@@ -87,17 +87,17 @@ class TimelineViewController: SwipeViewController  {
                 if let taskToDelete = TaskService.shared.getTask(atIndex: index) {
                     switch taskToDelete.type {
                     case "assignment":
-                        let assignmentToDelete = realm.objects(Assignment.self).filter("index == %@ AND course == %@", taskToDelete.index, taskToDelete.course).first
+                        let assignmentToDelete = realm.objects(Assignment.self).filter("id == %@", taskToDelete.summativeId).first
                         if let assignmentToDelete = assignmentToDelete {
                             realm.delete(assignmentToDelete)
                         }
                     case "quiz":
-                        let quizToDelete = realm.objects(Quiz.self).filter("index == %@ AND course == %@", taskToDelete.index, taskToDelete.course).first
+                        let quizToDelete = realm.objects(Quiz.self).filter("id == %@", taskToDelete.summativeId).first
                         if let quizToDelete = quizToDelete {
                             realm.delete(quizToDelete)
                         }
                     case "exam":
-                        let examToDelete = realm.objects(Exam.self).filter("index == %@ AND course == %@", taskToDelete.index, taskToDelete.course).first
+                        let examToDelete = realm.objects(Exam.self).filter("id == %@", taskToDelete.summativeId).first
                         if let examToDelete = examToDelete {
                             realm.delete(examToDelete)
                         }

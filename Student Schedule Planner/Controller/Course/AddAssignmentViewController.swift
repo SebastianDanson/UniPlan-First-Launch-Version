@@ -105,17 +105,15 @@ class AddAssignmentViewController: UIViewController {
         saveButton.centerX(in: view)
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         
-        if let assignmentIndex = AssignmentService.shared.getAssignmentIndex(){
-            if let assignment = CourseService.shared.getAssignment(atIndex: assignmentIndex) {
-                titleTextField.text = assignment.title
-                datePicker.date = assignment.dueDate
-                reminderSwitch.isOn = assignment.reminder
-                titleLabel.text = "Edit Assignment"
-                
-                if assignment.reminder {
-                    reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: assignment.dateOrTime, reminderTime: [assignment.reminderTime[0],assignment.reminderTime[1]], reminderDate: assignment.reminderDate), for: .normal)
-                    SingleClassService.shared.setReminder(true)
-                }                
+        if let assignment = CourseService.shared.getSelectedAssignment() {
+            titleTextField.text = assignment.title
+            datePicker.date = assignment.dueDate
+            reminderSwitch.isOn = assignment.reminder
+            titleLabel.text = "Edit Assignment"
+            
+            if assignment.reminder {
+                reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: assignment.dateOrTime, reminderTime: [assignment.reminderTime[0],assignment.reminderTime[1]], reminderDate: assignment.reminderDate), for: .normal)
+                SingleClassService.shared.setReminder(true)
             }
         }
     }
@@ -126,13 +124,13 @@ class AddAssignmentViewController: UIViewController {
     }
     
     @objc func saveButtonPressed() {
+        let course = AllCoursesService.shared.getSelectedCourse()
         let assignment = Assignment()
         assignment.title = titleTextField.text ?? "Untitled"
         assignment.dueDate = datePicker.date
         assignment.dateOrTime = TaskService.shared.getDateOrTime()
         assignment.reminder = reminderSwitch.isOn
-        assignment.index = AssignmentService.shared.getNumAssignments()
-        assignment.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
+        assignment.course = course?.title ?? ""
         
         if assignment.dateOrTime == 0 {
             let reminderTime = TaskService.shared.getReminderTime()
@@ -144,18 +142,16 @@ class AddAssignmentViewController: UIViewController {
         
         do {
             try realm.write {
-                if let assignmentIndex = AssignmentService.shared.getAssignmentIndex() {
-                    var assignmentToUpdate = CourseService.shared.getAssignment(atIndex: assignmentIndex)
-                    assignmentToUpdate?.title = assignment.title
-                    assignmentToUpdate?.dueDate = assignment.dueDate
-                    assignmentToUpdate?.reminderTime[0] = assignment.reminderTime[0]
-                    assignmentToUpdate?.reminderTime[1] = assignment.reminderTime[1]
-                    assignmentToUpdate?.reminderDate = assignment.reminderDate
-                    assignmentToUpdate?.reminder = assignment.reminder
-                    assignmentToUpdate?.dateOrTime = assignment.dateOrTime
-                    if let assignmentToUpdate = assignmentToUpdate {
-                        TaskService.shared.updateTasks(forAssignment: assignmentToUpdate)
-                    }
+                if let assignmentToUpdate = CourseService.shared.getSelectedAssignment() {
+                    assignmentToUpdate.title = assignment.title
+                    assignmentToUpdate.dueDate = assignment.dueDate
+                    assignmentToUpdate.reminderTime[0] = assignment.reminderTime[0]
+                    assignmentToUpdate.reminderTime[1] = assignment.reminderTime[1]
+                    assignmentToUpdate.reminderDate = assignment.reminderDate
+                    assignmentToUpdate.reminder = assignment.reminder
+                    assignmentToUpdate.dateOrTime = assignment.dateOrTime
+                    TaskService.shared.updateTasks(forAssignment: assignmentToUpdate)
+                    
                 } else {
                     realm.add(assignment, update: .modified)
                     TaskService.shared.makeTask(forAssignment: assignment)
@@ -209,8 +205,13 @@ extension AddAssignmentViewController: UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        reminderViewTopAnchorConstaint.isActive = false
-        reminderViewOtherAnchorConstaint.isActive = true
+        if !reminderSwitch.isOn {
+            reminderViewTopAnchorConstaint.isActive = true
+            reminderViewOtherAnchorConstaint.isActive = false
+        } else {
+            reminderViewTopAnchorConstaint.isActive = false
+            reminderViewOtherAnchorConstaint.isActive = true
+        }
         
     }
 }

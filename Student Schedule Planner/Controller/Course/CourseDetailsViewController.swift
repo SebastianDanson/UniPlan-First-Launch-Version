@@ -24,9 +24,10 @@ class CourseDetailsViewController: SwipeViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         SingleClassService.shared.setClassIndex(index: nil)
-        AssignmentService.shared.setAssignmentIndex(index: nil)
-        QuizService.shared.setQuizIndex(index: nil)
-        ExamService.shared.setExamIndex(index: nil)
+        CourseService.shared.setSelectedAssignment(assignment: nil)
+        CourseService.shared.setSelectedQuiz(quiz: nil)
+        CourseService.shared.setSelectedExam(exam: nil)
+     
         tableView.reloadData()
         topView.backgroundColor = getColor(colorAsInt: CourseService.shared.getColor())
     }
@@ -94,7 +95,10 @@ class CourseDetailsViewController: SwipeViewController {
         present(vc, animated: true, completion: nil)
     }
     
-    @objc func AddAssignmentButtonPressed() {
+    @objc func AddAssignmentButtonPressed(button: UIButton? = nil) {
+        if button != nil {
+            CourseService.shared.setSelectedAssignment(assignment: nil)
+        }
         let vc = AddAssignmentViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
@@ -310,13 +314,13 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
             SingleClassService.shared.setClassIndex(index: indexPath.row)
             AddClassButtonPressed()
         case 1:
-            AssignmentService.shared.setAssignmentIndex(index: indexPath.row)
+            CourseService.shared.setAssignmentIndex(index: indexPath.row)
             AddAssignmentButtonPressed()
         case 2:
-            QuizService.shared.setQuizIndex(index: indexPath.row)
+            CourseService.shared.setQuizIndex(index: indexPath.row)
             AddQuizButtonPressed()
         case 3:
-            ExamService.shared.setExamIndex(index: indexPath.row)
+            CourseService.shared.setExamIndex(index: indexPath.row)
             AddExamButtonPressed()
         default:
             break

@@ -15,7 +15,7 @@ class AllCoursesService {
     private var selectedCourse: Course?
     private var courseIndex: Int?
     private var addSummative = false
-
+    
     static let shared = AllCoursesService()
     
     private init(){}
@@ -40,14 +40,15 @@ class AllCoursesService {
     }
     func setCourseIndex(index: Int?) {
         courseIndex = index
+        
+        if let index = index {
+            selectedCourse = courses?[index]
+        }
     }
     
     //MARK: - Selected Course
     func getSelectedCourse() -> Course? {
-        if let index = courseIndex {
-            return getCourse(atIndex: index)
-        }
-        return nil
+        return selectedCourse
     }
     
     func setSelectedCourse(course: Course?){

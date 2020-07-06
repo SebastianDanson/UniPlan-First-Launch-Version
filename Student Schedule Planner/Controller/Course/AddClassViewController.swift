@@ -593,7 +593,6 @@ class AddClassViewController: UIViewController {
         theClass.reminderTime[0] = SingleClassService.shared.getReminderTime()[0]
         theClass.reminderTime[1] = SingleClassService.shared.getReminderTime()[1]
         theClass.reminder = SingleClassService.shared.getReminder()
-        theClass.index = SingleClassService.shared.getNumClasses() + 1
         theClass.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
         theClass.startDate = SingleClassService.shared.getStartDate()
         theClass.endDate = SingleClassService.shared.getEndDate()

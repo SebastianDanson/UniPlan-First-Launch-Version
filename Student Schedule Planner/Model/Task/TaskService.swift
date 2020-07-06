@@ -171,7 +171,6 @@ class TaskService {
         var dayIncrementor = startDate
         let endDate = Calendar.current.startOfDay(for: theClass.endDate)
         var skipDates = 0
-        SingleClassService.shared.setNumClasses(num: (SingleClassService.shared.getNumClasses() + 1))
         
         while dayIncrementor < endDate {
             if theClass.classDays[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
@@ -186,8 +185,8 @@ class TaskService {
                 task.location = theClass.location
                 task.course = course?.title ?? ""
                 task.type = theClass.type
-                task.index = SingleClassService.shared.getNumClasses()
-                task.color = course?.color ?? 0 
+                task.summativeId = theClass.id
+                task.color = course?.color ?? 0
                 
                 switch theClass.repeats {
                 case "2 Weeks":
@@ -231,12 +230,12 @@ class TaskService {
         task.reminderDate = quiz.reminderDate
         task.course = course?.title ?? ""
         task.type = "quiz"
-        task.index = QuizService.shared.getNumQuizzes()
+        task.summativeId = quiz.summativeId
         task.color = course?.color ?? 0
+        task.summativeId = quiz.id
         
         scheduleNotification(forTask: task)
         realm.add(task, update: .modified)
-        QuizService.shared.setNumQuizzes(num: (QuizService.shared.getNumQuizzes() + 1))
     }
     
     func makeTask(forAssignment assignment: Assignment) {
@@ -252,12 +251,11 @@ class TaskService {
         task.reminderDate = assignment.reminderDate
         task.course = course?.title ?? ""
         task.type = "assignment"
-        task.index = AssignmentService.shared.getNumAssignments()
+        task.summativeId = assignment.id
         task.color = course?.color ?? 0
         
         scheduleNotification(forTask: task)
         realm.add(task, update: .modified)
-        AssignmentService.shared.setNumAssignments(num: (AssignmentService.shared.getNumAssignments() + 1))
     }
     
     func makeTask(forExam exam: Exam) {
@@ -275,11 +273,10 @@ class TaskService {
         task.course = course?.title ?? ""
         task.type = "exam"
         task.color = course?.color ?? 0
-        task.index = ExamService.shared.getNumExams()
+        task.summativeId = exam.id
         
         scheduleNotification(forTask: task)
         realm.add(task, update: .modified)
-        ExamService.shared.setNumExams(num: (ExamService.shared.getNumExams() + 1))
     }
     
     func updateTasks(forClass theClass: SingleClass) {
@@ -288,8 +285,8 @@ class TaskService {
     }
     
     func updateTasks(forQuiz quiz: Quiz) {
-        let course = AllCoursesService.shared.getSelectedCourse()
-        let taskToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "quiz", quiz.index).first
+        
+        let taskToUpdate = realm.objects(Task.self).filter("summativeId == %@", quiz.id).first
         taskToUpdate?.dateOrTime = 0
         taskToUpdate?.startDate = quiz.startDate
         taskToUpdate?.endDate = quiz.endDate
@@ -305,8 +302,7 @@ class TaskService {
     }
     
     func updateTasks(forAssignment assignment: Assignment) {
-        let course = AllCoursesService.shared.getSelectedCourse()
-        let taskToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "assignment", assignment.index).first
+        let taskToUpdate = realm.objects(Task.self).filter("summativeId == %@", assignment.id).first
         taskToUpdate?.dateOrTime = 0
         taskToUpdate?.title = assignment.title
         taskToUpdate?.startDate = assignment.dueDate
@@ -322,8 +318,7 @@ class TaskService {
     }
     
     func updateTasks(forExam exam: Exam) {
-        let course = AllCoursesService.shared.getSelectedCourse()
-        let taskToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "exam", exam.index).first
+        let taskToUpdate = realm.objects(Task.self).filter("summativeId == %@", exam.id).first
         taskToUpdate?.dateOrTime = 0
         taskToUpdate?.startDate = exam.startDate
         taskToUpdate?.endDate = exam.endDate
@@ -339,8 +334,7 @@ class TaskService {
     }
     
     func deleteTasks(forClass theClass: SingleClass) {
-        let course = AllCoursesService.shared.getSelectedCourse()
-        let tasksToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, theClass.type, theClass.index)
+        let tasksToDelete = realm.objects(Task.self).filter("summativeId == %@", theClass.id)
         let center = UNUserNotificationCenter.current()
 
         for task in tasksToDelete {
@@ -351,8 +345,8 @@ class TaskService {
     
     func deleteTasks(forQuiz quiz: Quiz) {
         let course = AllCoursesService.shared.getSelectedCourse()
-        let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "quiz", quiz.index).first
-        
+        let taskToDelete = realm.objects(Task.self).filter("summativeId == %@", quiz.id).first
+
         if let taskToDelete = taskToDelete {
             let center = UNUserNotificationCenter.current()
             center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
@@ -363,8 +357,8 @@ class TaskService {
     func deleteTasks(forAssigment assignment: Assignment) {
         
         let course = AllCoursesService.shared.getSelectedCourse()
-        let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "assignment" , assignment.index).first
-        
+        let taskToDelete = realm.objects(Task.self).filter("summativeId == %@", assignment.id).first
+
         if let taskToDelete = taskToDelete {
             let center = UNUserNotificationCenter.current()
             center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
@@ -374,8 +368,8 @@ class TaskService {
     
     func deleteTasks(forExam exam: Exam) {
         let course = AllCoursesService.shared.getSelectedCourse()
-        let taskToDelete = realm.objects(Task.self).filter("course == %@ AND type == %@ AND index == %@", course?.title, "exam", exam.index).first
-        
+        let taskToDelete = realm.objects(Task.self).filter("summativeId == %@", exam.id).first
+
         if let taskToDelete = taskToDelete {
             let center = UNUserNotificationCenter.current()
             center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])

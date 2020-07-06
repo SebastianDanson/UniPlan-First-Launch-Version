@@ -118,7 +118,7 @@ class CoursesViewController: SwipeViewController {
     
     //MARK: - Actions
     @objc func addButtonPressed() {
-        AllCoursesService.shared.setCourseIndex(index: nil)
+        AllCoursesService.shared.setSelectedCourse(course: nil)
         let vc = AddCourseViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
