@@ -25,19 +25,24 @@ class SingleClassCell: SwipeTableViewCell {
     //MARK: - Properties
     let classTypeLabel = makeLabel(ofSize: 14, weight: .regular)
     let classDayStackView = makeStackView(withOrientation: .horizontal, spacing: UIScreen.main.bounds.height/179)
-    let nextIcon = UIImage(named: "nextMenuButtonGray")
+    
     var locationIcon = UIImage(named: "location")
     let locationLabel = makeLabel(ofSize: 14, weight: .semibold)
+    let nextIcon = UIImage(named: "nextMenuButtonGray")
+    
     let startTimeLabel = makeLabel(ofSize: 18, weight: .regular)
     let endTimeLabel = makeLabel(ofSize: 18, weight: .regular)
+    
     let classFrequencyLabel = makeLabel(ofSize: 16, weight: .semibold)
+    
     let reminderLabel = makeLabel(ofSize: 14, weight: .semibold)
     let reminderIcon = UIImage(systemName: "alarm.fill")
+    
     let taskView = makeTaskView()
-    let scrollView = UIScrollView()
+    
     var reminderImage = UIImageView()
     var locationImage = UIImageView()
-        
+    
     //Day Circles
     let sunday = makeDayCircleButton(withLetter: "S")
     let monday = makeDayCircleButton(withLetter: "M")
@@ -49,11 +54,13 @@ class SingleClassCell: SwipeTableViewCell {
     
     //MARK: - setupUI
     func setupViews() {
-        locationImage = UIImageView(image: locationIcon!)
         let nextImage = UIImageView(image: nextIcon!)
+        locationImage = UIImageView(image: locationIcon!)
         reminderImage = UIImageView(image: reminderIcon!)
         reminderImage.tintColor = .mainBlue
+        
         backgroundColor = .backgroundColor
+        
         addSubview(taskView)
         taskView.addSubview(classDayStackView)
         taskView.addSubview(nextImage)
@@ -74,31 +81,63 @@ class SingleClassCell: SwipeTableViewCell {
         classDayStackView.addArrangedSubview(friday)
         classDayStackView.addArrangedSubview(saturday)
         
-        taskView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, paddingTop: 5,
-                        paddingLeft: 10, paddingRight: 10, paddingBottom: 5)
+        taskView.anchor(top: topAnchor,
+                        left: leftAnchor,
+                        right: rightAnchor,
+                        bottom: bottomAnchor,
+                        paddingTop: 5,
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        paddingBottom: 5)
         
-        classDayStackView.anchor(top: classTypeLabel.bottomAnchor, left: taskView.leftAnchor, paddingTop: 5, paddingLeft: 12)
+        classDayStackView.anchor(top: classTypeLabel.bottomAnchor,
+                                 left: taskView.leftAnchor,
+                                 paddingTop: 5,
+                                 paddingLeft: 12)
         
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  UIScreen.main.bounds.height/45)
         
-        classTypeLabel.anchor(top: taskView.topAnchor, left: taskView.leftAnchor, paddingTop: 5, paddingLeft: 20)
+        classTypeLabel.anchor(top: taskView.topAnchor,
+                              left: taskView.leftAnchor,
+                              paddingTop: 5,
+                              paddingLeft: 20)
         
-        locationImage.anchor(top: classDayStackView.bottomAnchor, left: taskView.leftAnchor, paddingTop: 7, paddingLeft: 15)
-        locationLabel.anchor(top: classDayStackView.bottomAnchor, left: locationImage.rightAnchor,
-                             paddingTop: 7, paddingLeft: 4)
         locationImage.setDimensions(width: 15, height: 15)
+        locationImage.anchor(top: classDayStackView.bottomAnchor,
+                             left: taskView.leftAnchor,
+                             paddingTop: 7,
+                             paddingLeft: 15)
         
-        startTimeLabel.anchor(top: taskView.topAnchor, right: nextImage.leftAnchor, paddingTop: 16, paddingRight: UIScreen.main.bounds.height/36)
-        endTimeLabel.anchor(top: startTimeLabel.bottomAnchor,
-                            left: startTimeLabel.leftAnchor)
+        locationLabel.anchor(top: classDayStackView.bottomAnchor,
+                             left: locationImage.rightAnchor,
+                             paddingTop: 7,
+                             paddingLeft: 4)
         
-        classFrequencyLabel.anchor(top: endTimeLabel.bottomAnchor, left: endTimeLabel.leftAnchor, paddingTop: 5)
         
-        reminderImage.anchor(left: taskView.leftAnchor, bottom: taskView.bottomAnchor, paddingLeft: 15, paddingBottom: 5)
-        reminderLabel.anchor(left: reminderImage.rightAnchor, bottom: taskView.bottomAnchor, paddingLeft: 5, paddingBottom: 5)
+        startTimeLabel.anchor(top: taskView.topAnchor,
+                              right: nextImage.leftAnchor,
+                              paddingTop: 16,
+                              paddingRight: UIScreen.main.bounds.height/36)
+        
+        endTimeLabel.anchor(top: startTimeLabel.bottomAnchor, left: startTimeLabel.leftAnchor)
+        
+        classFrequencyLabel.anchor(top: endTimeLabel.bottomAnchor,
+                                   left: endTimeLabel.leftAnchor,
+                                   paddingTop: 5)
+        
         reminderImage.setDimensions(width: 14, height: 14)
+        reminderImage.anchor(left: taskView.leftAnchor,
+                             bottom: taskView.bottomAnchor,
+                             paddingLeft: 15,
+                             paddingBottom: 5)
         
+        reminderLabel.anchor(left: reminderImage.rightAnchor,
+                             bottom: taskView.bottomAnchor,
+                             paddingLeft: 5,
+                             paddingBottom: 5)
+        
+        //User cannot click on any of the day buttons
         monday.isUserInteractionEnabled = false
         tuesday.isUserInteractionEnabled = false
         wednesday.isUserInteractionEnabled = false
@@ -106,13 +145,14 @@ class SingleClassCell: SwipeTableViewCell {
         friday.isUserInteractionEnabled = false
         saturday.isUserInteractionEnabled = false
         sunday.isUserInteractionEnabled = false
-        
     }
     
     //MARK: - Actions
     func update(theClass: SingleClass) {
-        classTypeLabel.text = theClass.subType.description
         let course = AllCoursesService.shared.getSelectedCourse()
+        
+        classTypeLabel.text = theClass.subType.description
+        
         taskView.layer.borderColor = TaskService.shared.getColor(colorAsInt: course?.color ?? 0).cgColor
         
         if let color = course?.color {
@@ -138,8 +178,9 @@ class SingleClassCell: SwipeTableViewCell {
             }
         }
         locationImage.image = locationIcon
-        
         reminderImage.tintColor = TaskService.shared.getColor(colorAsInt: course?.color ?? 0)
+        
+        //Unhighlights all buttons
         monday.unhighlight(courseColor: 0)
         tuesday.unhighlight(courseColor: 0)
         wednesday.unhighlight(courseColor: 0)
@@ -148,8 +189,8 @@ class SingleClassCell: SwipeTableViewCell {
         saturday.unhighlight(courseColor: 0)
         sunday.unhighlight(courseColor: 0)
         
+        //Highlights the specified class days
         for(index, day) in theClass.classDays.enumerated() {
-            
             if day == 1 {
                 switch index {
                 case 0:
@@ -175,13 +216,12 @@ class SingleClassCell: SwipeTableViewCell {
         locationLabel.text = theClass.location == "" ? "Not set": theClass.location
         
         startTimeLabel.text = "\(formatTime(from: theClass.startTime))-"
-        
         endTimeLabel.text = formatTime(from: theClass.endTime)
         
         let repeats = theClass.repeats
         classFrequencyLabel.text = repeats == "Never Repeats" ? repeats : "Every \(repeats)"
         
-        reminderLabel.text = SingleClassService.shared.setupReminderString(theClass: theClass)
+        reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [theClass.reminderTime[0], theClass.reminderTime[1]], reminderDate: Date())
     }
 }
 

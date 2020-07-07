@@ -8,6 +8,9 @@
 
 import UIKit
 
+/*
+ * This VC allows the user to add, edit, or delete a Course
+ */
 class AddCourseViewController: PickerViewController {
     
     //MARK: - lifecycle
@@ -97,7 +100,7 @@ class AddCourseViewController: PickerViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
         titleTextField.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
-        titleTextField.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        titleTextField.font = UIFont.systemFont(ofSize: 22, weight: .bold)
         titleTextField.layer.borderWidth = 5
         titleTextField.delegate = self
         
@@ -177,35 +180,35 @@ class AddCourseViewController: PickerViewController {
         darkBlue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         purple.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         
-
+        
         if let course = AllCoursesService.shared.getSelectedCourse() {
-                titleTextField.text = course.title
-                
-                startDate.text = formatDateNoDay(from: course.startDate)
-                endDate.text = formatDateNoDay(from: course.endDate)
-                CourseService.shared.setStartDate(date: course.startDate)
-                CourseService.shared.setEndDate(date: course.endDate)
-                titleLabel.text = "Edit Course"
-                
-                switch course.color {
-                case 0:
-                    colorButtonPressed(button: red)
-                case 1:
-                    colorButtonPressed(button: orange)
-                case 2:
-                    colorButtonPressed(button: yellow)
-                case 3:
-                    colorButtonPressed(button: green)
-                case 4:
-                    colorButtonPressed(button: turquoise)
-                case 5:
-                    colorButtonPressed(button: blue)
-                case 6:
-                    colorButtonPressed(button: darkBlue)
-                case 7:
-                    colorButtonPressed(button: purple)
-                default:
-                    break
+            titleTextField.text = course.title
+            
+            startDate.text = formatDateNoDay(from: course.startDate)
+            endDate.text = formatDateNoDay(from: course.endDate)
+            CourseService.shared.setStartDate(date: course.startDate)
+            CourseService.shared.setEndDate(date: course.endDate)
+            titleLabel.text = "Edit Course"
+            
+            switch course.color {
+            case 0:
+                colorButtonPressed(button: red)
+            case 1:
+                colorButtonPressed(button: orange)
+            case 2:
+                colorButtonPressed(button: yellow)
+            case 3:
+                colorButtonPressed(button: green)
+            case 4:
+                colorButtonPressed(button: turquoise)
+            case 5:
+                colorButtonPressed(button: blue)
+            case 6:
+                colorButtonPressed(button: darkBlue)
+            case 7:
+                colorButtonPressed(button: purple)
+            default:
+                break
             }
         }
     }

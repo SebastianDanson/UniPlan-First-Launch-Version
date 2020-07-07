@@ -11,16 +11,16 @@ import Foundation
 class SingleClassService {
     
     private var classDays: Array<Int> = [0, 0, 0, 0, 0, 0, 0]
-    private var startTime = Date()
-    private var endTime = Date()
-    private var startDate = Date()
-    private var endDate = Date()
-    private var type = ClassType.Class
-    private var repeats = "Never"
-    private var reminderTime = [0, 0] //First index is hours, second is minutes
+    
+    private var startTime = Date() //Date of first cass
+    private var endTime = Date() //Date of last cass
+    private var startDate = Date() //Start time of each class
+    private var endDate = Date() //End time of each class
+    
+    private var type = ClassType.Class //Type of class - lab, tutorial, lecture, etc
+    private var repeats = "Never" //If the class repeats
     private var reminder = false
-    private var classIndex: Int?
-    private var isClassType = false
+    private var classIndex: Int? //index of selected Class
     
     static let shared = SingleClassService()
     
@@ -94,6 +94,7 @@ class SingleClassService {
         type = classType
     }
     
+    //sets a string version of the class type
     func setTypeAsString(classTypeString: String) {
         switch classTypeString {
         case "Class":
@@ -113,24 +114,6 @@ class SingleClassService {
         }
     }
     
-    //MARK: - isClassType
-    func getIsClassType() -> Bool {
-        return isClassType
-    }
-    
-    func setIsClassType(bool: Bool) {
-        isClassType = bool
-    }
-    
-    //MARK: - reminderTime
-    func getReminderTime() -> [Int] {
-        return reminderTime
-    }
-    
-    func setReminderTime(_ time: [Int]) {
-        reminderTime = time
-    }
-    
     //MARK: - Reminder
     func getReminder() -> Bool {
         return reminder
@@ -140,37 +123,11 @@ class SingleClassService {
         reminder = bool
     }
     
-    //MARK: - ReminderString
-    func setupReminderString() -> String {
-        if reminder {
-            return formatReminderString(reminderTime: reminderTime)
-        } else {
-            return "None"
-        }
-    }
-    
-    func setupReminderString(theClass: SingleClass) -> String {
-        if theClass.reminder {
-            let reminderTime: [Int] = [theClass.reminderTime[0], theClass.reminderTime[1]]
-            let reminderString = TaskService.shared.formatReminderString(reminderTime: reminderTime).replacingOccurrences(of: "Reminder: ", with: "")
-            return reminderString
-        } else {
-            return "None"
-        }
-    }
-    
-    func formatReminderString(reminderTime: [Int]) -> String{
-        if reminderTime == [0,0] {
-            return "When Class Starts"
-        } else {
-            return "\(reminderTime[0])h, \(reminderTime[1])m before"
-        }
-    }
-    
     //MARK: - classIndex
     func getClassIndex() -> Int? {
         return classIndex
     }
+    
     func setClassIndex(index: Int?) {
         classIndex = index
     }

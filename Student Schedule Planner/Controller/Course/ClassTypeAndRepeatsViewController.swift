@@ -52,6 +52,11 @@ enum RepeatOptions: Int, CustomStringConvertible, CaseIterable{
         }
     }
 }
+
+/*
+ * This VC is responsible for Displaying the classType options as well as the class frequency options
+ * depending on which button was clicked
+ */
 class ClassTypeAndRepeatsViewController: UIViewController {
     
     let realm = try! Realm()
@@ -95,7 +100,7 @@ class ClassTypeAndRepeatsViewController: UIViewController {
         titleLabel.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
         titleLabel.centerX(in: topView)
         
-        if SingleClassService.shared.getIsClassType() == false {
+        if TaskService.shared.getIsClass() == false {
             titleLabel.text = "Set Frequency"
         }
         
@@ -112,6 +117,7 @@ class ClassTypeAndRepeatsViewController: UIViewController {
     }
     
     @objc func dismissVC() {
+        TaskService.shared.setIsClass(bool: false)
         dismiss(animated: true)
     }
 }
@@ -119,7 +125,7 @@ class ClassTypeAndRepeatsViewController: UIViewController {
 extension ClassTypeAndRepeatsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if SingleClassService.shared.getIsClassType() == true {
+        if TaskService.shared.getIsClass() == true {
             return ClassType.allCases.count
         }
         return RepeatOptions.allCases.count
@@ -128,7 +134,7 @@ extension ClassTypeAndRepeatsViewController: UITableViewDataSource, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath)
         cell.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        if SingleClassService.shared.getIsClassType() == true {
+        if TaskService.shared.getIsClass() == true {
             guard let classType = ClassType(rawValue: indexPath.row) else {return cell}
             cell.textLabel?.text = classType.description
         } else {
@@ -139,7 +145,7 @@ extension ClassTypeAndRepeatsViewController: UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if SingleClassService.shared.getIsClassType() == true {
+        if TaskService.shared.getIsClass() == true {
             SingleClassService.shared.setType(classType: ClassType(rawValue: indexPath.row) ?? .Class)
         } else {
             SingleClassService.shared.setRepeats(every: RepeatOptions(rawValue: indexPath.row)?.description ?? "Week")

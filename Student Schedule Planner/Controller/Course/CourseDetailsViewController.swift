@@ -11,6 +11,10 @@ import RealmSwift
 import UserNotifications
 import SwipeCellKit
 
+/*
+ * This VC displays all of the classes, assignments, quizzes and exam for that class and
+ * allows the user to add more or delete any of them, as well as edit the course details
+ */
 class CourseDetailsViewController: SwipeViewController {
     
     let realm = try! Realm()
@@ -27,8 +31,9 @@ class CourseDetailsViewController: SwipeViewController {
         CourseService.shared.setSelectedAssignment(assignment: nil)
         CourseService.shared.setSelectedQuiz(quiz: nil)
         CourseService.shared.setSelectedExam(exam: nil)
+        
         titleLabel.text = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
-     
+        
         tableView.reloadData()
         topView.backgroundColor = TaskService.shared.getColor(colorAsInt: CourseService.shared.getColor())
     }
@@ -53,12 +58,13 @@ class CourseDetailsViewController: SwipeViewController {
     //MARK: - UISetup
     func setupViews() {
         view.backgroundColor = .backgroundColor
-        tableView.backgroundColor = .backgroundColor
         
         view.addSubview(topView)
         view.addSubview(backButton)
         view.addSubview(editButton)
         view.addSubview(tableView)
+        
+        tableView.backgroundColor = .backgroundColor
         tableView.delegate = self
         tableView.dataSource = self
         tableView.setDimensions(width: UIScreen.main.bounds.width)
@@ -75,6 +81,7 @@ class CourseDetailsViewController: SwipeViewController {
         titleLabel.setDimensions(width: UIScreen.main.bounds.width * 0.65)
         titleLabel.textAlignment = .center
         titleLabel.centerX(in: topView)
+        
         backButton.anchor(left: topView.leftAnchor, paddingLeft: 20)
         backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
@@ -83,7 +90,10 @@ class CourseDetailsViewController: SwipeViewController {
         editButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         editButton.addTarget(self, action: #selector(editButtonPressed), for: .touchUpInside)
         
-        tableView.anchor(top:topView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+        tableView.anchor(top:topView.bottomAnchor,
+                         left: view.leftAnchor,
+                         right: view.rightAnchor,
+                         bottom: view.bottomAnchor)
     }
     
     //MARK: - Actions
@@ -97,6 +107,7 @@ class CourseDetailsViewController: SwipeViewController {
         if button != nil {
             CourseService.shared.setSelectedAssignment(assignment: nil)
         }
+        
         let vc = AddAssignmentViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
@@ -125,6 +136,7 @@ class CourseDetailsViewController: SwipeViewController {
     @objc func backButtonPressed() {
         dismiss(animated: true, completion: nil)
     }
+    
     @objc func deleteCourse() {
         let index = AllCoursesService.shared.getCourseIndex()
         let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "", preferredStyle: .alert)
@@ -139,7 +151,7 @@ class CourseDetailsViewController: SwipeViewController {
                     }
                 }
             } catch {
-                print("Error writing task to realm")
+                print("Error writing task to realm \(error.localizedDescription)")
             }
             self.dismiss(animated: true, completion: nil)
         }
@@ -156,6 +168,7 @@ class CourseDetailsViewController: SwipeViewController {
     override func updateModel(index: Int, section: Int) {
         do {
             try realm.write {
+                //Deletes the specified object as well as the task(s) associated with them
                 switch section {
                 case 0:
                     if let classToDelete = CourseService.shared.getClass(atIndex: index) {
@@ -227,7 +240,7 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
         addButton.anchor(left: sectionName.rightAnchor, paddingLeft: 5)
         addButton.centerYAnchor.constraint(equalTo: sectionName.centerYAnchor).isActive = true
         addButton.backgroundColor = TaskService.shared.getColor(colorAsInt: CourseService.shared.getColor())
-
+        
         seperator.backgroundColor = .silver
         seperator.anchor(top: view.topAnchor, paddingTop: 5)
         seperator.setDimensions(width: UIScreen.main.bounds.width - 20)

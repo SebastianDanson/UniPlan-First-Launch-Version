@@ -11,15 +11,16 @@ import RealmSwift
 
 class AllCoursesService {
     
-    private var courses: Results<Course>?
+    private var courses: Results<Course>? //All of the Users courses
     private var selectedCourse: Course?
     private var courseIndex: Int?
-    private var addSummative = false
+    private var addSummative = false //Changes how the CoursesVC looks if you are adding a summative from the SummativesVC
     
     static let shared = AllCoursesService()
     
     private init(){}
     
+    //Updates courses when a user edits or add one
     func updateCourses() {
         courses = realm.objects(Course.self)
     }
@@ -38,6 +39,7 @@ class AllCoursesService {
     func getCourseIndex() -> Int? {
         return courseIndex
     }
+    
     func setCourseIndex(index: Int?) {
         courseIndex = index
         

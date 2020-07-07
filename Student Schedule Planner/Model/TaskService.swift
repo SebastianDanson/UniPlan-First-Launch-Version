@@ -16,12 +16,12 @@ class TaskService {
     private var taskIndex: Int?
     private var reminderTime = [0, 0] //First index is hours, second is minutes
     private var reminderDate = Date()
-    private var dateOrTime = 0 //0 means time was selected, non zero means date was selected
+    private var dateOrTime = 0 //0 means time was selected, non zero means date was selected for the reminder
     private var hideReminder = true
     private var checkForTimeConflict = true //If the user does cares about time conflicts between tasks
     private var startTime = Date()
     private var endTime = Date().addingTimeInterval(3600)
-    private var isClassType = false
+    private var isClass = false //If the task is associated with a class
     
     let realm =  try! Realm()
     init() {
@@ -29,6 +29,7 @@ class TaskService {
     }
     static let shared = TaskService()
     
+    //Loads task for the day selected
     func loadTasks(){
         dateSelected = Calendar.current.startOfDay(for: dateSelected)
         let endOfDay: Date = {
@@ -160,12 +161,10 @@ class TaskService {
             return "\(reminderTime[0]) \(hourString), \(reminderTime[1]) min before"
         }
     }
-
     
     func formatDate(from date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E MMM d, h:mm a"
-        print("Format Date \(date)")
         let date = dateFormatter.string(from: date)
         return date
     }
@@ -454,6 +453,15 @@ class TaskService {
         default:
             return .clear
         }
+    }
+    
+    //MARK: - isCLass
+    func getIsClass() -> Bool {
+        return isClass
+    }
+    
+    func setIsClass(bool: Bool) {
+        isClass = bool
     }
 }
 

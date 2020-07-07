@@ -17,10 +17,10 @@ class Course: Object {
     @objc dynamic var startDate = Date()
     @objc dynamic var endDate = Date()
     @objc dynamic var title = ""
+    
     var classes = List<SingleClass>()
     var assignments = List<Assignment>()
     var quizzes = List<Quiz>()
-  
     var exams = List<Exam>()
     
     @objc dynamic var id = UUID().uuidString

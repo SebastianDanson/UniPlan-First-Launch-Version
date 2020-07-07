@@ -9,6 +9,9 @@
 import UIKit
 import RealmSwift
 
+/*
+ * This VC allows the user to add, edit, or delete an Assignment
+ */
 class AddAssignmentViewController: UIViewController {
     
     let realm = try! Realm()
@@ -34,19 +37,25 @@ class AddAssignmentViewController: UIViewController {
     }
     
     //MARK: - Properties
+    //topView
     let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
     let titleLabel = makeTitleLabel(withText: "Add Assignment")
     let backButton = makeBackButton()
+    let deleteButton = makeDeleteButton()
+    
+    //not topView
     let saveButton = makeSaveButton()
     let titleTextField = makeTextField(withPlaceholder: "Title", height: 50)
+    
     let dateHeading = makeHeading(withText: "Due Date:")
     let datePicker = makeDateAndTimePicker(height: UIScreen.main.bounds.height/4.5)
+    
     let reminderHeading = makeHeading(withText: "Reminder")
     let reminderSwitch = UISwitch()
     let reminderButton = setValueButton(withPlaceholder: "When Task Starts", height: 45)
     let hideReminderView = makeAnimatedView()
-    let deleteButton = makeDeleteButton()
     
+    //Top Anchors for reminderView
     var reminderViewTopAnchorConstaint = NSLayoutConstraint()
     var reminderViewOtherAnchorConstaint = NSLayoutConstraint()
     
@@ -91,7 +100,10 @@ class AddAssignmentViewController: UIViewController {
         datePicker.anchor(top: dateHeading.bottomAnchor)
         datePicker.centerX(in: view)
         
-        reminderHeading.anchor(top: datePicker.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/25, paddingLeft: 20)
+        reminderHeading.anchor(top: datePicker.bottomAnchor,
+                               left: view.leftAnchor,
+                               paddingTop: UIScreen.main.bounds.height/25,
+                               paddingLeft: 20)
         reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
         reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
         reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
@@ -111,6 +123,7 @@ class AddAssignmentViewController: UIViewController {
         saveButton.centerX(in: view)
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         
+        //If an assignment was selected
         if let assignment = CourseService.shared.getSelectedAssignment() {
             titleTextField.text = assignment.title
             datePicker.date = assignment.dueDate
@@ -130,6 +143,7 @@ class AddAssignmentViewController: UIViewController {
     }
     
     @objc func deleteButtonPressed() {
+        //deletes the assignment and the task associated with it
         if let assignment = CourseService.shared.getSelectedAssignment() {
             do {
                 try realm.write{
@@ -162,6 +176,7 @@ class AddAssignmentViewController: UIViewController {
         
         do {
             try realm.write {
+                //If an assignment was selected
                 if let assignmentToUpdate = CourseService.shared.getSelectedAssignment() {
                     assignmentToUpdate.title = assignment.title
                     assignmentToUpdate.dueDate = assignment.dueDate
@@ -196,7 +211,7 @@ class AddAssignmentViewController: UIViewController {
     }
     
     @objc func reminderButtonPressed() {
-        let vc = SetTaskReminderViewController()
+        let vc = SetReminderViewController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
     }

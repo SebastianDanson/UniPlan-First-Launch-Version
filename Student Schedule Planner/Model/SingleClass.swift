@@ -12,26 +12,29 @@ import RealmSwift
 class SingleClass: Object {
     
     var classDays = List<Int>()
-    @objc dynamic var repeats = "Never"
+    
+    @objc dynamic var startDate = Date() //Date of first class
+    @objc dynamic var endDate = Date() //Date of last cass
+    @objc dynamic var startTime = Date() //Start time of each class
+    @objc dynamic var endTime = Date() //End time of each class
+    
+    @objc dynamic var repeats = "Never" //If the clas repeats or not
     @objc dynamic var location = ""
-    @objc dynamic var startTime = Date()
-    @objc dynamic var endTime = Date()
-    @objc dynamic var startDate = Date()
-    @objc dynamic var endDate = Date()
+    
     @objc dynamic var reminder = false
     @objc dynamic var type = "Class"
-    @objc dynamic var subType = "Class"
-    @objc dynamic var id = UUID().uuidString
-    @objc dynamic var courseId = ""
-
+    @objc dynamic var subType = "Class" //Type of class - Lab, tutorial, lecture, etc
+    @objc dynamic var id = UUID().uuidString //Unique id
+    @objc dynamic var courseId = "" //Id of the course that the class belongs to
+    
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
-
+    
     required init() {
         classDays.append(objectsIn: [0,0,0,0,0,0,0])
         reminderTime.append(objectsIn: [0, 0])
     }
     
     override class func primaryKey() -> String? {
-           return "id"
+        return "id"
     }
 }

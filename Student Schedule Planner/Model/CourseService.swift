@@ -17,16 +17,20 @@ class CourseService {
     private var assignments: List<Assignment>?
     private var quizzes: List<Quiz>?
     private var exams: List<Exam>?
-    private var quizOrExam = 0 //0 -> quiz, non zero ->Exam
-    private var color = 0
-    private var startDate = Date()
-    private var endDate = Date()
+    
     private var selectedQuiz: Quiz?
     private var selectedExam: Exam?
     private var selectedAssignment: Assignment?
+    
     private var quizIndex: Int?
     private var examIndex: Int?
     private var assignmentIndex: Int?
+    
+    private var startDate = Date()
+    private var endDate = Date()
+    
+    private var quizOrExam = 0 //0 -> quiz, non zero ->Exam
+    private var color = 0
     
     static let shared = CourseService()
     private init() {}

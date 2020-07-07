@@ -11,6 +11,9 @@
 import UIKit
 import SwipeCellKit
 
+/*
+ * Allows cells to be swipeable
+ */
 class SwipeViewController: UIViewController, SwipeTableViewCellDelegate {
     
     override func viewDidLoad() {
@@ -35,7 +38,9 @@ class SwipeViewController: UIViewController, SwipeTableViewCellDelegate {
         options.expansionStyle = .destructive(automaticallyDelete: false)
         return options
     }
-
+    
+    //What happens when a cell is swiped on
+    //All VCs that inherit this one override this method
     func updateModel(index: Int, section: Int) {}
 }
 

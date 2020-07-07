@@ -9,6 +9,10 @@
 import UIKit
 import RealmSwift
 
+/*
+ * This VC displays and allows the user to edit all of the Exams, Quizzes, and Assignments from all courses.
+ * It then categorizes these summatives into pastDue and upcoming based on their specified dates.
+ */
 class SummativesViewController: SwipeViewController {
     
     let realm = try! Realm()
@@ -19,7 +23,6 @@ class SummativesViewController: SwipeViewController {
     let titleLabel = makeTitleLabel(withText: "Summatives")
     let addButton = makeAddButton()
     
-    //Non UI
     var pastDueSummatives = [Task]()
     var upcomingSummatives = [Task]()
     
@@ -27,24 +30,25 @@ class SummativesViewController: SwipeViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        tableView.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         upcomingSummatives = [Task]()
         pastDueSummatives = [Task]()
+        
         CourseService.shared.setSelectedExam(exam: nil)
         CourseService.shared.setSelectedQuiz(quiz: nil)
         CourseService.shared.setSelectedAssignment(assignment: nil)
-
+        
         filterSummatives()
         tableView.reloadData()
     }
     
     func setupViews() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.rowHeight = UITableView.automaticDimension
+        tableView.rowHeight = UITableView.automaticDimension //Allows cells to have a dynamic height
         tableView.estimatedRowHeight = 80
         tableView.isScrollEnabled = true
         
@@ -66,11 +70,13 @@ class SummativesViewController: SwipeViewController {
         
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
-        tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height - (2 * self.topbarHeight))
+        tableView.setDimensions(width: view.frame.width,
+                                height: view.frame.height - topView.frame.height - (2 * self.tabBarHeight))
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
     }
+    
     //MARK: - Actions
     @objc func addButtonTapped() {
         AllCoursesService.shared.setAddSummative(bool: true)
@@ -100,6 +106,7 @@ class SummativesViewController: SwipeViewController {
     
     //MARK: - Helper Functions
     func filterSummatives(){
+        //Quizzes, Exams, and Assignments from all courses
         let summatives = realm.objects(Task.self).filter("courseId != %@ AND type != %@", "", "Class").sorted(byKeyPath: "startDate", ascending: true)
         
         for summative in summatives {
@@ -123,6 +130,7 @@ class SummativesViewController: SwipeViewController {
                     summative = pastDueSummatives[index]
                 }
                 
+                //Deletes the summative and the task associated with that summative
                 switch summative.type {
                 case "assignment":
                     let assignmentToDelete = realm.objects(Assignment.self).filter("id == %@ ", summative.summativeId).first
@@ -224,7 +232,7 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
             return 50
         }
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer) as! TaskCell
         switch indexPath.section {
@@ -249,7 +257,8 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
         
         let course = realm.objects(Course.self).filter("id == %@", task.courseId).first
         AllCoursesService.shared.setSelectedCourse(course: course)
-
+        
+        //Allows the user to edit the selected summative
         switch task.type {
         case "assignment":
             let assignment = realm.objects(Assignment.self).filter("id == %@", task.summativeId).first

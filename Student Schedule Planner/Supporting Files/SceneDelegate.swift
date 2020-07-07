@@ -31,6 +31,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //window?.rootViewController = AddCourseViewController()
        // window?.rootViewController = AddQuizAndExamViewController()
         //window?.rootViewController = SummativesViewController()
+        
+       // window?.rootViewController = SetTaskReminderViewController()
+        //window?.rootViewController = SetClassReminderViewController()
+
+
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

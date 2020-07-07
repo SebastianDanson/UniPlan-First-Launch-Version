@@ -8,12 +8,18 @@
 
 import UIKit
 
-class SetTaskReminderViewController: PickerViewController {
+/*
+ * This VC allows the user to set reminders for all events
+ * The user can choose to set the reminder for a specific date
+ * Or a certain amount of time before the events starts
+ */
+class SetReminderViewController: PickerViewController {
     
     //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        TaskService.shared.setIsClass(bool: false)
     }
     
     //MARK: - properties
@@ -53,6 +59,7 @@ class SetTaskReminderViewController: PickerViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
         //Not topView
+        pickerTypeSegmentedControl.isHidden = false
         pickerTypeSegmentedControl.backgroundColor = .mainBlue
         pickerTypeSegmentedControl.selectedSegmentIndex = TaskService.shared.getDateOrTime()
         pickerTypeSegmentedControl.anchor(top: topView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 80, paddingRight: 80)
@@ -60,7 +67,6 @@ class SetTaskReminderViewController: PickerViewController {
         pickerTypeSegmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.darkBlue, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .semibold)], for: .selected)
         pickerTypeSegmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.backgroundColor, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .semibold)], for: .normal)
         
-        pickerTypeLabel.anchor(top: pickerTypeSegmentedControl.bottomAnchor, left: view.leftAnchor, paddingTop: 40, paddingLeft: 20)
         setupTimeBeforePickerView()
         
         datePickerView.anchor(top: pickerTypeLabel.bottomAnchor, paddingTop: 10 )
@@ -74,6 +80,16 @@ class SetTaskReminderViewController: PickerViewController {
         
         setupInitialSelectedRows()
         pickerTypeSCToggled() //Sets initial pickerview
+        
+        //If the user is setting reminders for a class the SC is hidden, so the user can only choose the time before option
+        if TaskService.shared.getIsClass() {
+            pickerTypeSegmentedControl.selectedSegmentIndex = 0
+            pickerTypeSegmentedControl.isHidden = true
+            pickerTypeLabel.text = "Time Before Class"
+            pickerTypeLabel.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        } else {
+            pickerTypeLabel.anchor(top: pickerTypeSegmentedControl.bottomAnchor, left: view.leftAnchor, paddingTop: 40, paddingLeft: 20)
+        }
     }
     
     func setupTimeBeforePickerView() {
@@ -100,14 +116,14 @@ class SetTaskReminderViewController: PickerViewController {
     
     //MARK: - Actions
     @objc func backButtonPressed() {
-        dismiss(animated: true) 
+        TaskService.shared.setIsClass(bool: false)
+        dismiss(animated: true)
     }
     
     @objc func saveButtonPressed() {
         let time = [self.hour, self.minutes]
         let date = datePickerView.date
         TaskService.shared.setReminderTime(time)
-        print("Save \(date)")
         TaskService.shared.setReminderDate(date: date)
         TaskService.shared.setDateOrTime(scIndex: pickerTypeSegmentedControl.selectedSegmentIndex)
         TaskService.shared.setHideReminder(bool: false)

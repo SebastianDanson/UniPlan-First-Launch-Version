@@ -138,7 +138,8 @@ extension UITextField {
 }
 
 extension UIViewController {
-    var topbarHeight: CGFloat {
+    //Height of tabBar 
+    var tabBarHeight: CGFloat {
         return UIApplication.shared.statusBarFrame.size.height +
             (self.navigationController?.navigationBar.frame.height ?? 0.0)
     }

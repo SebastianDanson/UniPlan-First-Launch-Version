@@ -8,6 +8,10 @@
 
 import UIKit
 
+/*
+ * Creates a cutom picker view with hours and minutes
+ */
+
 class PickerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     var hour:Int = 0

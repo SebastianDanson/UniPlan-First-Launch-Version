@@ -9,6 +9,9 @@
 import UIKit
 import RealmSwift
 
+/*
+ * This VC allows the user to add, edit, or delete a Quiz or Exam
+ */
 class AddQuizAndExamViewController: UIViewController {
     
     let realm = try! Realm()
@@ -45,12 +48,14 @@ class AddQuizAndExamViewController: UIViewController {
     let locationTextField = makeTextField(withPlaceholder: "Location", height: 45)
     let locationView = makeAnimatedView()
     
-    let dateButton = setImageButton(withPlaceholder: "Today", imageName: "calendar")
+    let dateButton = makeButtonWithImage(withPlaceholder: "Today", imageName: "calendar")
     
     let startTimeView = PentagonView()
     let endTimeView = UIView()
+    
     let timePickerView = makeTimePicker(withHeight: UIScreen.main.bounds.height/4.5)
     let datePickerView = makeDatePicker(withHeight: UIScreen.main.bounds.height/4.5)
+    
     let startTime = makeLabel(ofSize: 20, weight: .semibold)
     let endTime = makeLabel(ofSize: 20, weight: .semibold)
     
@@ -146,10 +151,10 @@ class AddQuizAndExamViewController: UIViewController {
         endTime.centerX(in: endTimeView)
         endTime.centerY(in: endTimeView)
         
+        dateButton.addTarget(self, action: #selector(dateButtonTapped), for: .touchUpInside)
         dateButton.anchor(top: locationView.topAnchor,
                           left: startTimeView.leftAnchor,
                           paddingTop: UIScreen.main.bounds.height/50)
-        dateButton.addTarget(self, action: #selector(dateButtonTapped), for: .touchUpInside)
         
         datePickerView.anchor(top: dateButton.bottomAnchor)
         datePickerView.centerX(in: view)
@@ -158,7 +163,10 @@ class AddQuizAndExamViewController: UIViewController {
         reminderView.topAnchor.constraint(equalTo: dateButton.bottomAnchor).isActive = true
         reminderView.anchor(left: view.leftAnchor, paddingLeft: 20)
         reminderView.setDimensions(height: 275)
-        reminderHeading.anchor(top: locationTextField.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/50, paddingLeft: 20)
+        reminderHeading.anchor(top: locationTextField.bottomAnchor,
+                               left: view.leftAnchor,
+                               paddingTop: UIScreen.main.bounds.height/50,
+                               paddingLeft: 20)
         
         reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
         reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
@@ -193,9 +201,6 @@ class AddQuizAndExamViewController: UIViewController {
         
         setupTimePickerView()
         
-        datePickerView.setDimensions(height: UIScreen.main.bounds.height / 4 )
-        timePickerView.setDimensions(height: UIScreen.main.bounds.height / 4 )
-
         startTime.text = "\(formatTime(from: Date()))"
         endTime.text = "\(formatTime(from: Date().addingTimeInterval(3600)))"
         
@@ -206,6 +211,7 @@ class AddQuizAndExamViewController: UIViewController {
             titleLabel.text = "Add Exam"
         }
         
+        //If a quiz was selected
         if let quiz = CourseService.shared.getSelectedQuiz(){
             startTime.text = formatTime(from: quiz.startDate)
             endTime.text = formatTime(from: quiz.endDate)
@@ -221,6 +227,7 @@ class AddQuizAndExamViewController: UIViewController {
             titleLabel.text = "Edit Quiz"
         }
         
+        //If an exam was selected
         if let exam = CourseService.shared.getSelectedExam() {
             startTime.text = formatTime(from: exam.startDate)
             endTime.text = formatTime(from: exam.endDate)
@@ -229,7 +236,7 @@ class AddQuizAndExamViewController: UIViewController {
             datePickerView.date = exam.startDate
             
             locationTextField.text = exam.location
-         
+            
             if exam.reminder {
                 reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: exam.dateOrTime, reminderTime: [exam.reminderTime[0], exam.reminderTime[1]], reminderDate: exam.reminderDate), for: .normal)
                 reminderSwitch.isOn = true
@@ -422,7 +429,7 @@ class AddQuizAndExamViewController: UIViewController {
                     } else {
                         quiz.reminderDate = TaskService.shared.getReminderDate()
                     }
-                    
+                    //If a previous quiz was selected
                     if let quizToUpdate = CourseService.shared.getSelectedQuiz() {
                         quizToUpdate.startDate = quiz.startDate
                         quizToUpdate.endDate = quiz.endDate
@@ -458,7 +465,8 @@ class AddQuizAndExamViewController: UIViewController {
                         exam.reminderDate = TaskService.shared.getReminderDate()
                     }
                     
-                    if  let examToUpdate = CourseService.shared.getSelectedExam() {
+                    //If a previous exam was selected
+                    if let examToUpdate = CourseService.shared.getSelectedExam() {
                         examToUpdate.startDate = exam.startDate
                         examToUpdate.endDate = exam.endDate
                         examToUpdate.dateOrTime = exam.dateOrTime
@@ -501,7 +509,7 @@ class AddQuizAndExamViewController: UIViewController {
         } else {
             TaskService.shared.setReminderDate(date: CourseService.shared.getSelectedExam()?.reminderDate ?? Date())
         }
-        let vc = SetTaskReminderViewController()
+        let vc = SetReminderViewController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
     }

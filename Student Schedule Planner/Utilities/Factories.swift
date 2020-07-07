@@ -13,6 +13,8 @@ import RealmSwift
 let realm = try! Realm()
 
 //MARK: - Timeline View Controller
+
+//The blue section at the top of each VC
 func makeTopView(height: CGFloat) -> UIView {
     let topView = UIView()
     topView.backgroundColor = .mainBlue
@@ -22,6 +24,7 @@ func makeTopView(height: CGFloat) -> UIView {
     return topView
 }
 
+//The Calendar on TimelineVC
 func makeCalendar() -> FSCalendar{
     let calendar = FSCalendar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height/35, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height/3))
     calendar.scope = .week
@@ -125,6 +128,7 @@ func makeSaveButton() -> UIButton{
     return saveButton
 }
 
+//Trash Button
 func makeDeleteButton() -> UIButton {
     let deleteButton = UIButton()
     deleteButton.setImage(UIImage(systemName: "trash"), for: .normal)
@@ -134,6 +138,7 @@ func makeDeleteButton() -> UIButton {
     return deleteButton
 }
 
+//Buttons that take you to AnotherVC where you set some value such as a reminder
 func setValueButton(withPlaceholder text: String, height: CGFloat) -> UIButton {
     let button = UIButton()
     button.setTitle(text, for: .normal)
@@ -152,7 +157,8 @@ func setValueButton(withPlaceholder text: String, height: CGFloat) -> UIButton {
     return button
 }
 
-func setImageButton(withPlaceholder text: String, imageName: String) -> UIButton {
+//Buttons with an Image on its left side
+func makeButtonWithImage(withPlaceholder text: String, imageName: String) -> UIButton {
     let button = UIButton()
     button.setTitle(text, for: .normal)
     button.setTitleColor(.darkBlue, for: .normal)
@@ -175,6 +181,7 @@ func setImageButton(withPlaceholder text: String, imageName: String) -> UIButton
     return button
 }
 
+//Views that move up and down when buttons are clicked
 func makeAnimatedView() -> UIView {
     let view = UIView()
     view.backgroundColor = .backgroundColor
@@ -191,6 +198,7 @@ func makeLabel(ofSize size: CGFloat, weight: UIFont.Weight) -> UILabel {
     return taskLabel
 }
 
+//View where all cell Views are added
 func makeTaskView() -> UIView {
     let taskView = UIView()
     taskView.layer.borderColor = UIColor.mainBlue.cgColor
@@ -201,6 +209,7 @@ func makeTaskView() -> UIView {
 }
 
 //MARK: - Course Details View
+//Circular button representing a day of the week
 func makeDayCircleButton(withLetter day: String) -> UIButton {
     let button = UIButton()
     button.setDimensions(width: 26, height: 26)
@@ -234,6 +243,7 @@ func makeAddButtonWithFill() -> UIButton {
 }
 
 //MARK: - Add Class
+//Days when the class occurs
 func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
     let button = UIButton()
     button.setTitle(day, for: .normal)
@@ -300,6 +310,7 @@ func formatDateNoYear(from date: Date) -> String {
 }
 
 //MARK: - AddCourse
+//Button that changes color of Cells
 func makeColorButton(ofColor color: UIColor) -> UIButton {
     let button = UIButton()
     button.setDimensions(width: 40, height: 40)

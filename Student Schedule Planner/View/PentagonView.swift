@@ -8,6 +8,10 @@
 
 import UIKit
 
+/*
+ * This View is creates a pentagon shape that is used to set the startTime
+ */
+
 class PentagonView : UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,10 +30,10 @@ class PentagonView : UIView {
     }
     
     var borderColor = UIColor.silver {
-           didSet {
-               setNeedsDisplay()
-           }
-       }
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
     override func draw(_ rect: CGRect) {
         let size = self.bounds.size
@@ -52,10 +56,10 @@ class PentagonView : UIView {
         
         // fill the path
         color.setFill()
-        path.lineWidth = 2
         borderColor.setStroke()
+        
+        path.lineWidth = 2
         path.fill()
         path.stroke()
-        
     }
 }

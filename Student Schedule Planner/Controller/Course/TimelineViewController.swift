@@ -14,6 +14,10 @@ import FSCalendar
 let reuseIdentifer = "TaskCell"
 let courseReuseIdentifer = "CourseCell"
 
+/*
+ * This VC displays a Calendar and displays the users schedule for the selected day
+ * The user can also add, edit, and delete each of the events
+ */
 
 class TimelineViewController: SwipeViewController  {
     let realm = try! Realm()
@@ -21,8 +25,6 @@ class TimelineViewController: SwipeViewController  {
     //MARK: - Properties
     var tableView = makeTableView(withRowHeight: 80)
     let topView = makeTopView(height: UIScreen.main.bounds.height/5.5)
-    //let topView = makeTopView(height: UIScreen.main.bounds.height/4)
-    
     let addButton = makeAddButton()
     let calendar = makeCalendar()
     
@@ -30,7 +32,6 @@ class TimelineViewController: SwipeViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        self.tabBarController?.navigationController?.navigationBar.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,10 +73,9 @@ class TimelineViewController: SwipeViewController  {
         
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
-        tableView.rowHeight = UITableView.automaticDimension
+        tableView.rowHeight = UITableView.automaticDimension //Allows tableView cells to have a dynamic size
         tableView.estimatedRowHeight = 80
-        
-        tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height - (2 * self.topbarHeight))
+        tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height - (2 * self.tabBarHeight))
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
@@ -84,6 +84,7 @@ class TimelineViewController: SwipeViewController  {
     override func updateModel(index: Int, section: Int) {
         do {
             try self.realm.write {
+                //Deletes task and the summative associated with that task if there is one
                 if let taskToDelete = TaskService.shared.getTask(atIndex: index) {
                     switch taskToDelete.type {
                     case "assignment":
@@ -128,6 +129,7 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         TaskService.shared.loadTasks()
         if TaskService.shared.getTasks()?.count == 0 {
             
+            //If the user has no events for that Day it says so
             let noCoursesLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 100))
             noCoursesLabel.text = "No Events Scheduled"
             noCoursesLabel.textColor = UIColor.darkBlue
@@ -160,12 +162,13 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         let task = TaskService.shared.getTask(atIndex: indexPath.row)
         if let task = task {
             var vc = UIViewController()
+            
+            //If the user selects a task associated with a summative
             switch task.type {
             case "assignment":
                 let assignment = realm.objects(Assignment.self).filter("id == %@", task.summativeId).first
                 
                 CourseService.shared.setSelectedAssignment(assignment: assignment)
-               
                 vc = AddAssignmentViewController()
                 vc.modalPresentationStyle = .fullScreen
                 present(vc, animated: true, completion: nil)
@@ -180,10 +183,10 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
                 present(vc, animated: true, completion: nil)
             case "exam":
                 let exam = realm.objects(Exam.self).filter("id == %@", task.summativeId).first
-               
+                
                 CourseService.shared.setSelectedExam(exam: exam)
                 CourseService.shared.setQuizOrExam(int: 1)
-           
+                
                 vc = AddQuizAndExamViewController()
                 vc.modalPresentationStyle = .fullScreen
                 present(vc, animated: true, completion: nil)

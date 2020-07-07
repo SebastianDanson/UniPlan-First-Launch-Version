@@ -10,6 +10,10 @@ import UIKit
 import RealmSwift
 import SwipeCellKit
 
+/*
+ * This VC displays all of the users courses
+ */
+
 class CoursesViewController: SwipeViewController {
     
     let realm = try! Realm()
@@ -35,8 +39,9 @@ class CoursesViewController: SwipeViewController {
         tableView.separatorColor = .clear
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
-        view.backgroundColor = .backgroundColor
         tableView.backgroundColor = .backgroundColor
+        
+        view.backgroundColor = .backgroundColor
         view.addSubview(topView)
         view.addSubview(tableView)
         
@@ -54,7 +59,8 @@ class CoursesViewController: SwipeViewController {
         
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
-        tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height - (2 * self.topbarHeight))
+        tableView.setDimensions(width: view.frame.width,
+                                height: view.frame.height - topView.frame.height - (2 * self.tabBarHeight))
         tableView.register(CourseCell.self, forCellReuseIdentifier: courseReuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
@@ -67,12 +73,15 @@ class CoursesViewController: SwipeViewController {
     //What happens when user tries to delete course
     override func updateModel(index: Int, section: Int) {
         
+        //Presents an alert confirming if the user wants to delete the course
         let alert = UIAlertController(title: "Are You Sure You Want To Delete This Course?", message: "All classes, exams, quizzes, and assignments associated with this class will also be deleted", preferredStyle: .alert)
         let actionDeleteCourse = UIAlertAction(title: "Delete", style: .default) { (alert) in
             do {
                 try self.realm.write {
                     if let courseToDelete = AllCoursesService.shared.getCourse(atIndex: index) {
                         AllCoursesService.shared.setCourseIndex(index: nil)
+                        
+                        //Deletes all tasks, assignments, classes, quizzes and exams assoicated with that class
                         let tasksToUpDelete = self.realm.objects(Task.self).filter("courseId == %@", courseToDelete.id)
                         let assignmentsToDelete = self.realm.objects(Assignment.self).filter("courseId == %@", courseToDelete.id)
                         let classesToDelete = self.realm.objects(SingleClass.self).filter("courseId == %@", courseToDelete.id)
@@ -105,7 +114,7 @@ class CoursesViewController: SwipeViewController {
                     }
                 }
             } catch {
-                print("Error writing task to realm")
+                print("Error writing task to realm \(error.localizedDescription)")
             }
         }
         
@@ -131,6 +140,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         if AllCoursesService.shared.getCourses()?.count == 0 {
             
+            //If the user has not added any courses it tells that user so
             let noCoursesLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 100))
             noCoursesLabel.text = "No Courses Added"
             noCoursesLabel.textColor = UIColor.darkBlue
@@ -168,7 +178,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AllCoursesService.shared.setCourseIndex(index: indexPath.row)
-
+        
         if AllCoursesService.shared.getAddSummative() {
             let vc = SelectSummativeTypeViewController()
             vc.modalPresentationStyle = .fullScreen

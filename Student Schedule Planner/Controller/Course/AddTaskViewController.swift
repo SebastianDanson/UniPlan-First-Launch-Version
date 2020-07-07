@@ -10,6 +10,9 @@ import UIKit
 import RealmSwift
 import UserNotifications
 
+/*
+ * This VC allows the user to add, edit, or delete a Task
+ */
 class AddTaskViewController: PickerViewController {
     
     let realm = try! Realm()
@@ -25,7 +28,7 @@ class AddTaskViewController: PickerViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupReminderTime() //setups initial reminder time
+        setupReminderTime() //sets up initial reminder time
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -51,12 +54,14 @@ class AddTaskViewController: PickerViewController {
     let locationTextField = makeTextField(withPlaceholder: "Location", height: 45)
     let locationView = makeAnimatedView()
     
-    let dateButton = setImageButton(withPlaceholder: "Today", imageName: "calendar")
+    let dateButton = makeButtonWithImage(withPlaceholder: "Today", imageName: "calendar")
     
     let startTimeView = PentagonView()
     let endTimeView = UIView()
+    
     let timePickerView = makeTimePicker(withHeight: UIScreen.main.bounds.height/6)
     let datePickerView = makeDatePicker(withHeight: UIScreen.main.bounds.height / 6)
+    
     let startTime = makeLabel(ofSize: 20, weight: .semibold)
     let endTime = makeLabel(ofSize: 20, weight: .semibold)
     
@@ -73,12 +78,15 @@ class AddTaskViewController: PickerViewController {
     let clockIcon = UIImage(systemName: "clock.fill")
     var clockImage = UIImageView(image: nil)
     
+    //Top anchors for reminderView
     var reminderTopAnchorConstaint = NSLayoutConstraint()
     var reminderOtherAnchorConstaint = NSLayoutConstraint()
     
+    //Top anchors for colorView
     var colorTopAnchorConstaint = NSLayoutConstraint()
     var colorOtherAnchorConstaint = NSLayoutConstraint()
     
+    //Top anchors for locationView
     var locationTopAnchorConstaint = NSLayoutConstraint()
     var locationOtherAnchorConstaint = NSLayoutConstraint()
     
@@ -95,7 +103,6 @@ class AddTaskViewController: PickerViewController {
     
     //MARK: - setup UI
     func setupViews() {
-        
         clockImage = UIImageView(image: clockIcon!)
         
         view.backgroundColor = .backgroundColor
@@ -110,7 +117,6 @@ class AddTaskViewController: PickerViewController {
         locationView.addSubview(dateButton)
         locationView.addSubview(datePickerView)
         locationView.addSubview(reminderView)
-        
         
         reminderView.addSubview(locationTextField)
         reminderView.addSubview(reminderHeading)
@@ -156,7 +162,7 @@ class AddTaskViewController: PickerViewController {
         titleTextField.centerX(in: view)
         titleTextField.anchor(top: topView.bottomAnchor, paddingTop: UIScreen.main.bounds.height/50)
         titleTextField.delegate = self
-        titleTextField.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        titleTextField.font = UIFont.systemFont(ofSize: 22, weight: .bold)
         titleTextField.layer.borderWidth = 5
         
         let startTap = UITapGestureRecognizer(target: self, action: #selector(startDateViewTapped))
@@ -282,10 +288,11 @@ class AddTaskViewController: PickerViewController {
         darkBlue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         purple.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         
+        //If a previous task was selected
         if let taskIndex = TaskService.shared.getTaskIndex() {
             if let task = TaskService.shared.getTask(atIndex: taskIndex) {
                 titleTextField.text = task.title
-                                
+                
                 TaskService.shared.setHideReminder(bool: !task.reminder)
                 TaskService.shared.setReminderDate(date: task.reminderDate)
                 TaskService.shared.setDateOrTime(scIndex: task.dateOrTime)
@@ -298,6 +305,7 @@ class AddTaskViewController: PickerViewController {
                 TaskService.shared.setStartTime(time: task.startDate)
                 TaskService.shared.setEndTime(time: task.endDate)
                 titleLabel.text = "Edit Task"
+                
                 switch task.color {
                 case 0:
                     colorButtonPressed(button: red)
@@ -363,6 +371,7 @@ class AddTaskViewController: PickerViewController {
             self.endDateViewTapped()
         }
         
+        //This asyncAgter fixed a bug where the animation would glitch
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.001){
             
             if self.reminderView.frame.origin.y == self.dateButton.frame.maxY {
@@ -514,7 +523,7 @@ class AddTaskViewController: PickerViewController {
     }
     
     @objc func reminderButtonPressed() {
-        let vc = SetTaskReminderViewController()
+        let vc = SetReminderViewController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
     }
