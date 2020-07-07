@@ -57,7 +57,7 @@ class CourseCell: SwipeTableViewCell {
         taskLabel.text = course.title
         taskLabel.textColor = .white
         
-        taskView.backgroundColor = getColor(colorAsInt: course.color)
+        taskView.backgroundColor = TaskService.shared.getColor(colorAsInt: course.color)
     }
 }
 

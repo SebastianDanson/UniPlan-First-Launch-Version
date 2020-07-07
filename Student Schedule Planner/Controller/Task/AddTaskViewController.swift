@@ -55,8 +55,8 @@ class AddTaskViewController: PickerViewController {
     
     let startTimeView = PentagonView()
     let endTimeView = UIView()
-    let timePickerView = makeTimePicker()
-    let datePickerView = makeDatePicker()
+    let timePickerView = makeTimePicker(withHeight: UIScreen.main.bounds.height/6)
+    let datePickerView = makeDatePicker(withHeight: UIScreen.main.bounds.height / 6)
     let startTime = makeLabel(ofSize: 20, weight: .semibold)
     let endTime = makeLabel(ofSize: 20, weight: .semibold)
     
@@ -238,14 +238,14 @@ class AddTaskViewController: PickerViewController {
         locationTextField.delegate = self
         colorHeading.anchor(top: colorView.topAnchor,
                             left: reminderHeading.leftAnchor,
-                            paddingTop: UIScreen.main.bounds.height/50)
+                            paddingTop: 5)
         
         colorStackView.anchor(top: colorHeading.bottomAnchor,
                               left: colorHeading.leftAnchor,
                               paddingTop: 5)
         
         saveButton.centerX(in: view)
-        saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: UIScreen.main.bounds.height/15)
+        saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: UIScreen.main.bounds.height/25)
         saveButton.addTarget(self, action: #selector(saveTask), for: .touchUpInside)
         
         setupTimePickerView()
@@ -285,10 +285,7 @@ class AddTaskViewController: PickerViewController {
         if let taskIndex = TaskService.shared.getTaskIndex() {
             if let task = TaskService.shared.getTask(atIndex: taskIndex) {
                 titleTextField.text = task.title
-                
-                let calendar = Calendar.current
-                let timeComponents = calendar.dateComponents([.hour, .minute], from: task.endDate)
-                
+                                
                 TaskService.shared.setHideReminder(bool: !task.reminder)
                 TaskService.shared.setReminderDate(date: task.reminderDate)
                 TaskService.shared.setDateOrTime(scIndex: task.dateOrTime)

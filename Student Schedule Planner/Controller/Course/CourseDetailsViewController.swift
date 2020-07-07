@@ -30,7 +30,7 @@ class CourseDetailsViewController: SwipeViewController {
         titleLabel.text = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
      
         tableView.reloadData()
-        topView.backgroundColor = getColor(colorAsInt: CourseService.shared.getColor())
+        topView.backgroundColor = TaskService.shared.getColor(colorAsInt: CourseService.shared.getColor())
     }
     
     //MARK: - Properties
@@ -72,8 +72,9 @@ class CourseDetailsViewController: SwipeViewController {
         topView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
         
         titleLabel.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
-        titleLabel.centerX(in: topView)
         titleLabel.setDimensions(width: UIScreen.main.bounds.width * 0.65)
+        titleLabel.textAlignment = .center
+        titleLabel.centerX(in: topView)
         backButton.anchor(left: topView.leftAnchor, paddingLeft: 20)
         backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
@@ -83,9 +84,6 @@ class CourseDetailsViewController: SwipeViewController {
         editButton.addTarget(self, action: #selector(editButtonPressed), for: .touchUpInside)
         
         tableView.anchor(top:topView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
-                
-        let course = AllCoursesService.shared.getSelectedCourse()
-        SingleClassService.shared.setNumClasses(num: course?.classes.count ?? 0)
     }
     
     //MARK: - Actions
@@ -228,7 +226,7 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
         sectionName.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, paddingLeft: 10, paddingBottom: 5)
         addButton.anchor(left: sectionName.rightAnchor, paddingLeft: 5)
         addButton.centerYAnchor.constraint(equalTo: sectionName.centerYAnchor).isActive = true
-        addButton.backgroundColor = getColor(colorAsInt: CourseService.shared.getColor())
+        addButton.backgroundColor = TaskService.shared.getColor(colorAsInt: CourseService.shared.getColor())
 
         seperator.backgroundColor = .silver
         seperator.anchor(top: view.topAnchor, paddingTop: 5)

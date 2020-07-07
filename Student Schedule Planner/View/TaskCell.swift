@@ -185,7 +185,7 @@ class TaskCell: SwipeTableViewCell {
             locationImage.isHidden = true
             locationLabel.isHidden = true
         }
-        taskView.backgroundColor = getColor(colorAsInt: task.color)
+        taskView.backgroundColor = TaskService.shared.getColor(colorAsInt: task.color)
         
         //Changes the layout for the summativeVC cells
         if summative {

@@ -40,7 +40,7 @@ class AddAssignmentViewController: UIViewController {
     let saveButton = makeSaveButton()
     let titleTextField = makeTextField(withPlaceholder: "Title", height: 50)
     let dateHeading = makeHeading(withText: "Due Date:")
-    let datePicker = makeDateAndTimePicker(height: UIScreen.main.bounds.height/5)
+    let datePicker = makeDateAndTimePicker(height: UIScreen.main.bounds.height/4.5)
     let reminderHeading = makeHeading(withText: "Reminder")
     let reminderSwitch = UISwitch()
     let reminderButton = setValueButton(withPlaceholder: "When Task Starts", height: 45)
@@ -54,7 +54,6 @@ class AddAssignmentViewController: UIViewController {
     func setupViews() {
         view.backgroundColor = .backgroundColor
         view.addSubview(topView)
-        view.addSubview(saveButton)
         view.addSubview(titleTextField)
         view.addSubview(dateHeading)
         view.addSubview(datePicker)
@@ -62,6 +61,7 @@ class AddAssignmentViewController: UIViewController {
         view.addSubview(reminderSwitch)
         view.addSubview(reminderHeading)
         view.addSubview(hideReminderView)
+        view.addSubview(saveButton)
         
         //topView
         topView.addSubview(titleLabel)

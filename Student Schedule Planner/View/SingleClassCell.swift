@@ -113,7 +113,7 @@ class SingleClassCell: SwipeTableViewCell {
     func update(theClass: SingleClass) {
         classTypeLabel.text = theClass.subType.description
         let course = AllCoursesService.shared.getSelectedCourse()
-        taskView.layer.borderColor = getColor(colorAsInt: course?.color ?? 0).cgColor
+        taskView.layer.borderColor = TaskService.shared.getColor(colorAsInt: course?.color ?? 0).cgColor
         
         if let color = course?.color {
             switch color {
@@ -139,7 +139,7 @@ class SingleClassCell: SwipeTableViewCell {
         }
         locationImage.image = locationIcon
         
-        reminderImage.tintColor = getColor(colorAsInt: course?.color ?? 0)
+        reminderImage.tintColor = TaskService.shared.getColor(colorAsInt: course?.color ?? 0)
         monday.unhighlight(courseColor: 0)
         tuesday.unhighlight(courseColor: 0)
         wednesday.unhighlight(courseColor: 0)

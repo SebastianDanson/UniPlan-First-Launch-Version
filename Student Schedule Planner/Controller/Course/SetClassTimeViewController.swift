@@ -25,8 +25,8 @@ class SetClassTimeViewController: PickerViewController {
     //Not topView
     let startTimeLabel = makeHeading(withText: "Start Time")
     let endTimeLabel = makeHeading(withText: "End Time")
-    let startTimePickerView = makeTimePicker()
-    let endTimePickerView = makeTimePicker()
+    let startTimePickerView = makeTimePicker(withHeight: UIScreen.main.bounds.height/6)
+    let endTimePickerView = makeTimePicker(withHeight: UIScreen.main.bounds.height/6)
     let saveButton = makeSaveButton()
 
     //MARK: - setup UI

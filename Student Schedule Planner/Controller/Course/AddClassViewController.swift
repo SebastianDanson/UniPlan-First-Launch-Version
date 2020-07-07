@@ -30,7 +30,6 @@ class AddClassViewController: UIViewController {
         classTypeButton.setTitle(SingleClassService.shared.getType().description, for: .normal)
         reminderButton.setTitle(SingleClassService.shared.setupReminderString(), for: .normal)
         repeatsButton.setTitle("Every \(SingleClassService.shared.getRepeats())", for: .normal)
-        SingleClassService.shared.setInitialLocation(location: locationTextField.text ?? "")
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -69,13 +68,13 @@ class AddClassViewController: UIViewController {
     let locationTextField = makeTextField(withPlaceholder: "Location", height: 45)
     let saveButton = makeSaveButton()
     let classTypeButton = setValueButton(withPlaceholder: "Class", height: 50)
-    let reminderButton = setValueButtonNoWidth(withPlaceholder: "When Class Starts")
+    let reminderButton = setValueButton(withPlaceholder: "When Class Starts", height: 45)
     let reminderSwitch = UISwitch()
     let locationView = makeAnimatedView()
     let reminderView = makeAnimatedView()
     let startTimeView = PentagonView()
     let endTimeView = UIView()
-    let timePickerView = makeTimePicker()
+    let timePickerView = makeTimePicker(withHeight: UIScreen.main.bounds.height/6)
     let startTime = makeLabel(ofSize: 20, weight: .semibold)
     let endTime = makeLabel(ofSize: 20, weight: .semibold)
     let clockIcon = UIImage(systemName: "clock.fill")
@@ -88,7 +87,7 @@ class AddClassViewController: UIViewController {
     let endDateView = UIView()
     let startDate = makeLabel(ofSize: 20, weight: .semibold)
     let endDate = makeLabel(ofSize: 20, weight: .semibold)
-    let datePicker = makeDatePicker()
+    let datePicker = makeDatePicker(withHeight: UIScreen.main.bounds.height / 6)
     let calendarIcon = UIImage(systemName: "calendar")
     var calendarImage = UIImageView(image: nil)
     
@@ -120,12 +119,12 @@ class AddClassViewController: UIViewController {
         view.addSubview(timePickerView)
         view.addSubview(classDayStackView)
         view.addSubview(stackViewContainer)
-        view.addSubview(saveButton)
         view.addSubview(classTypeButton)
         view.addSubview(endTimeView)
         view.addSubview(startTimeView)
         view.addSubview(clockImage)
         view.addSubview(hideReminderView)
+        view.addSubview(saveButton)
         
         repeatsButton.addSubview(nextImage)
         locationView.addSubview(locationTextField)
@@ -304,7 +303,7 @@ class AddClassViewController: UIViewController {
         classTypeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         
         saveButton.centerX(in: view)
-        saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: UIScreen.main.bounds.height/25)
+        saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: UIScreen.main.bounds.height/28)
         saveButton.addTarget(self, action: #selector(saveClass), for: .touchUpInside)
         
         //Setting button tags
@@ -625,7 +624,7 @@ class AddClassViewController: UIViewController {
                     }
                 } else {
                     realm.add(theClass, update: .modified)
-                    var course = AllCoursesService.shared.getSelectedCourse()
+                    let course = AllCoursesService.shared.getSelectedCourse()
                     course?.classes.append(theClass)
                     TaskService.shared.makeTasks(forClass: theClass)
                 }

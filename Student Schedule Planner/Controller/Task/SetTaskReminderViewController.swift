@@ -91,7 +91,11 @@ class SetTaskReminderViewController: PickerViewController {
         timeBeforePickerView.selectRow(hour, inComponent:0, animated: false)
         timeBeforePickerView.selectRow(minutes, inComponent:3, animated: false)
         
-        datePickerView.setDate(TaskService.shared.getReminderDate(), animated: true)
+        if TaskService.shared.getReminderDate() < Date() {
+            datePickerView.date = Date()
+        } else {
+            datePickerView.date = TaskService.shared.getReminderDate()
+        }
     }
     
     //MARK: - Actions
@@ -103,6 +107,7 @@ class SetTaskReminderViewController: PickerViewController {
         let time = [self.hour, self.minutes]
         let date = datePickerView.date
         TaskService.shared.setReminderTime(time)
+        print("Save \(date)")
         TaskService.shared.setReminderDate(date: date)
         TaskService.shared.setDateOrTime(scIndex: pickerTypeSegmentedControl.selectedSegmentIndex)
         TaskService.shared.setHideReminder(bool: false)

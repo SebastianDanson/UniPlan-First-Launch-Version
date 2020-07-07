@@ -75,7 +75,7 @@ class TimelineViewController: SwipeViewController  {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
         
-        tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height)
+        tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height - (2 * self.topbarHeight))
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self

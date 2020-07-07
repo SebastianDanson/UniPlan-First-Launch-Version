@@ -9,10 +9,10 @@
 import UIKit
 
 class TabBarController: UITabBarController {
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         let calendarImage = UIImage(named: "calendar")
         let scheduleNav = makeNavController(vc: TimelineViewController(), title: "Schedule", image: calendarImage)
         
@@ -21,11 +21,11 @@ class TabBarController: UITabBarController {
         
         let assignmentImage = UIImage(named: "assignments")
         let summativesNav = makeNavController(vc: SummativesViewController(), title: "Summatives", image: assignmentImage)
-
+        
         let tabBarList = [scheduleNav, coursesNav, summativesNav]
         tabBar.tintColor = .mainBlue
+        viewControllers = tabBarList
         
-        viewControllers = tabBarList   
     }
     
     func makeNavController(vc: UIViewController, title: String, image: UIImage?) -> UINavigationController{

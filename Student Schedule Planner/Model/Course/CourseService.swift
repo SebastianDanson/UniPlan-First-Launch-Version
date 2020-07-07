@@ -75,9 +75,6 @@ class CourseService {
         selectedAssignment = assignment
     }
     
-    func getAssignmentIndex() -> Int? {
-        return assignmentIndex
-    }
     func setAssignmentIndex(index: Int?) {
         assignmentIndex = index
         if let index = index {
@@ -100,10 +97,6 @@ class CourseService {
         if let course = realm.objects(Course.self).filter("id == %@", id).first {
             quizzes = course.quizzes
         }
-    }
-    
-    func getQuizIndex() -> Int? {
-        return quizIndex
     }
     
     func setQuizIndex(index: Int?) {
@@ -137,10 +130,6 @@ class CourseService {
         if let course = realm.objects(Course.self).filter("id == %@", id).first {
             exams = course.exams
         }
-    }
-    
-    func getExamIndex() -> Int? {
-        return examIndex
     }
     
     func setExamIndex(index: Int?) {
@@ -180,10 +169,6 @@ class CourseService {
         return startDate
     }
     
-    func getStartDateAsString() -> String {
-        return formatDate(from:  startDate)
-    }
-    
     func setStartDate(date: Date) {
         startDate = date
     }
@@ -191,10 +176,6 @@ class CourseService {
     //MARK: - End Date
     func getEndDate() -> Date{
         return endDate
-    }
-    
-    func getEndDateAsString() -> String {
-        return formatDate(from: endDate)
     }
     
     func setEndDate(date: Date) {

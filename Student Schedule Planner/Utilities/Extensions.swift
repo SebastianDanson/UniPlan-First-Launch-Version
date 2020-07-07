@@ -11,9 +11,7 @@ import UIKit
 //MARK: - UIColor
 extension UIColor {
     static let backgroundColor = UIColor.white
-    //static let mainBlue = UIColor(red: 41/255, green: 128/255, blue: 185/255, alpha: 1)
     static let mainBlue = UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1)
-    
     static let darkBlue = UIColor(red: 52/255, green: 73/255, blue: 94/255, alpha: 1)
     static let clouds = UIColor(red: 236/255, green: 240/255, blue: 241/255, alpha: 1)
     static let turquoise = UIColor(red: 0/255, green: 188/255, blue: 212/255, alpha: 1)
@@ -27,6 +25,7 @@ extension UIColor {
     static let silver = UIColor(red: 178/255, green: 190/255, blue: 195/255, alpha: 1)
     static let darkGray = UIColor(red: 99/255, green: 110/255, blue: 114/255, alpha: 1)
 }
+
 //MARK: - UIView
 extension UIView {
     
@@ -74,8 +73,8 @@ extension UIView {
 //MARK: - Button
 extension UIButton {
     func highlight(courseColor: Int? = nil) {
-        if let courseColor = courseColor {
-            let color = getColor(colorAsInt: CourseService.shared.getColor())
+        if courseColor != nil {
+            let color = TaskService.shared.getColor(colorAsInt: CourseService.shared.getColor())
             self.setTitleColor(.backgroundColor, for: .normal)
             self.backgroundColor = color
             self.layer.borderColor = color.cgColor
@@ -89,8 +88,8 @@ extension UIButton {
     }
     
     func unhighlight(courseColor: Int? = nil) {
-        if let courseColor = courseColor {
-            let color = getColor(colorAsInt: CourseService.shared.getColor())
+        if courseColor != nil {
+            let color = TaskService.shared.getColor(colorAsInt: CourseService.shared.getColor())
             self.setTitleColor(color, for: .normal)
             self.layer.borderColor = color.cgColor
             self.layer.borderWidth = 2
@@ -138,3 +137,9 @@ extension UITextField {
     }
 }
 
+extension UIViewController {
+    var topbarHeight: CGFloat {
+        return UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+    }
+}

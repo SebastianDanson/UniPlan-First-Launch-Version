@@ -11,7 +11,6 @@ import Foundation
 class SingleClassService {
     
     private var classDays: Array<Int> = [0, 0, 0, 0, 0, 0, 0]
-    private var location = ""
     private var startTime = Date()
     private var endTime = Date()
     private var startDate = Date()
@@ -21,9 +20,7 @@ class SingleClassService {
     private var reminderTime = [0, 0] //First index is hours, second is minutes
     private var reminder = false
     private var classIndex: Int?
-    private var initialLocation = ""
     private var isClassType = false
-    private var numClasses = 0
     
     static let shared = SingleClassService()
     
@@ -42,15 +39,6 @@ class SingleClassService {
         classDays = [0, 0, 0, 0, 0, 0, 0]
     }
     
-    //MARK: - Location
-    func getLocation() -> String {
-        return location
-    }
-    
-    func setLocation(locationName: String) {
-        location = locationName
-    }
-    
     //MARK: - Repeats
     func getRepeats() -> String {
         return repeats
@@ -60,23 +48,11 @@ class SingleClassService {
         repeats = every
     }
     
-    //MARK: - numClasses
-    func getNumClasses() -> Int {
-        return numClasses
-    }
-    
-    func setNumClasses(num: Int) {
-        numClasses = num
-    }
-    
     //MARK: - Start Time
     func getStartTime() -> Date{
         return startTime
     }
     
-    func getStartTimeAsString() -> String {
-        return formatTime(from: startTime)
-    }
     
     func setStartTime(time: Date) {
         startTime = time
@@ -87,31 +63,27 @@ class SingleClassService {
         return endTime
     }
     
-    func getEndTimeAsString() -> String {
-        return formatTime(from: endTime)
-    }
-    
     func setEndTime(time: Date) {
         endTime = time
     }
     
     //MARK: - startDate
-      func getStartDate() -> Date{
-          return startDate
-      }
-      
-      func setStartDate(date: Date) {
-          startDate = date
-      }
-      
-      //MARK: - endDate
-      func getEndDate() -> Date{
-          return endDate
-      }
-      
-      func setEndDate(date: Date) {
-          endDate = date
-      }
+    func getStartDate() -> Date{
+        return startDate
+    }
+    
+    func setStartDate(date: Date) {
+        startDate = date
+    }
+    
+    //MARK: - endDate
+    func getEndDate() -> Date{
+        return endDate
+    }
+    
+    func setEndDate(date: Date) {
+        endDate = date
+    }
     
     //MARK: - Type
     func getType() -> ClassType {
@@ -149,6 +121,7 @@ class SingleClassService {
     func setIsClassType(bool: Bool) {
         isClassType = bool
     }
+    
     //MARK: - reminderTime
     func getReminderTime() -> [Int] {
         return reminderTime
@@ -200,14 +173,5 @@ class SingleClassService {
     }
     func setClassIndex(index: Int?) {
         classIndex = index
-    }
-    
-    //MARK: - initialLocation
-    func getInitialLocation() -> String {
-        return initialLocation
-    }
-    
-    func setInitialLocation(location: String){
-        initialLocation = location
     }
 }

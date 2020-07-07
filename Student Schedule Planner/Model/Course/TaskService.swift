@@ -141,6 +141,9 @@ class TaskService {
     }
     
     func setupReminderString(dateOrTime: Int, reminderTime: [Int], reminderDate: Date) -> String {
+        self.dateOrTime = dateOrTime
+        self.reminderTime = reminderTime
+        self.reminderDate = reminderDate
         if dateOrTime == 0 {
             return formatReminderString(reminderTime: reminderTime)
         } else {
@@ -157,10 +160,12 @@ class TaskService {
             return "\(reminderTime[0]) \(hourString), \(reminderTime[1]) min before"
         }
     }
+
     
     func formatDate(from date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E MMM d, h:mm a"
+        print("Format Date \(date)")
         let date = dateFormatter.string(from: date)
         return date
     }
@@ -287,7 +292,7 @@ class TaskService {
     func updateTasks(forQuiz quiz: Quiz) {
         
         let taskToUpdate = realm.objects(Task.self).filter("summativeId == %@", quiz.id).first
-        taskToUpdate?.dateOrTime = 0
+        taskToUpdate?.dateOrTime = quiz.dateOrTime
         taskToUpdate?.startDate = quiz.startDate
         taskToUpdate?.endDate = quiz.endDate
         taskToUpdate?.location = quiz.location
@@ -303,7 +308,7 @@ class TaskService {
     
     func updateTasks(forAssignment assignment: Assignment) {
         let taskToUpdate = realm.objects(Task.self).filter("summativeId == %@", assignment.id).first
-        taskToUpdate?.dateOrTime = 0
+        taskToUpdate?.dateOrTime = assignment.dateOrTime
         taskToUpdate?.title = assignment.title
         taskToUpdate?.startDate = assignment.dueDate
         taskToUpdate?.endDate = assignment.dueDate
@@ -319,7 +324,7 @@ class TaskService {
     
     func updateTasks(forExam exam: Exam) {
         let taskToUpdate = realm.objects(Task.self).filter("summativeId == %@", exam.id).first
-        taskToUpdate?.dateOrTime = 0
+        taskToUpdate?.dateOrTime = exam.dateOrTime
         taskToUpdate?.startDate = exam.startDate
         taskToUpdate?.endDate = exam.endDate
         taskToUpdate?.location = exam.location
@@ -336,7 +341,7 @@ class TaskService {
     func deleteTasks(forClass theClass: SingleClass) {
         let tasksToDelete = realm.objects(Task.self).filter("summativeId == %@", theClass.id)
         let center = UNUserNotificationCenter.current()
-
+        
         for task in tasksToDelete {
             center.removePendingNotificationRequests(withIdentifiers: [task.id])
             realm.delete(task)
@@ -344,9 +349,8 @@ class TaskService {
     }
     
     func deleteTasks(forQuiz quiz: Quiz) {
-        let course = AllCoursesService.shared.getSelectedCourse()
         let taskToDelete = realm.objects(Task.self).filter("summativeId == %@", quiz.id).first
-
+        
         if let taskToDelete = taskToDelete {
             let center = UNUserNotificationCenter.current()
             center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
@@ -355,10 +359,8 @@ class TaskService {
     }
     
     func deleteTasks(forAssigment assignment: Assignment) {
-        
-        let course = AllCoursesService.shared.getSelectedCourse()
         let taskToDelete = realm.objects(Task.self).filter("summativeId == %@", assignment.id).first
-
+        
         if let taskToDelete = taskToDelete {
             let center = UNUserNotificationCenter.current()
             center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
@@ -367,9 +369,8 @@ class TaskService {
     }
     
     func deleteTasks(forExam exam: Exam) {
-        let course = AllCoursesService.shared.getSelectedCourse()
         let taskToDelete = realm.objects(Task.self).filter("summativeId == %@", exam.id).first
-
+        
         if let taskToDelete = taskToDelete {
             let center = UNUserNotificationCenter.current()
             center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
@@ -415,6 +416,7 @@ class TaskService {
             let date = formatDate(from: task.startDate)
             content.body = "Your task will start on \(date)"
         }
+        
         if task.title != "" {
             content.title = task.title
         } else {
@@ -429,4 +431,29 @@ class TaskService {
         let request = UNNotificationRequest(identifier: task.id, content: content, trigger: trigger)
         center.add(request)
     }
+    //MARK: - Color
+    func getColor(colorAsInt color: Int) -> UIColor {
+        
+        switch color {
+        case 0:
+            return .alizarin
+        case 1:
+            return .carrot
+        case 2:
+            return .sunflower
+        case 3:
+            return .emerald
+        case 4:
+            return .turquoise
+        case 5:
+            return .riverBlue
+        case 6:
+            return .midnightBlue
+        case 7:
+            return .amethyst
+        default:
+            return .clear
+        }
+    }
 }
+

@@ -88,12 +88,12 @@ func makeHeading(withText text: String) -> UILabel{
 }
 
 func makeDateAndTimePicker(height: CGFloat) -> UIDatePicker{
-    let startDatePicker = UIDatePicker()
-    startDatePicker.setDimensions(width: UIScreen.main.bounds.width - 40, height: height)
-    startDatePicker.backgroundColor = .backgroundColor
-    startDatePicker.minimumDate = Date()
+    let picker = UIDatePicker()
+    picker.setDimensions(width: UIScreen.main.bounds.width - 40, height: height)
+    picker.backgroundColor = .backgroundColor
+    picker.minimumDate = Date()
     
-    return startDatePicker
+    return picker
 }
 
 func makeTextField(withPlaceholder text: String, height: CGFloat) -> UITextField {
@@ -157,7 +157,6 @@ func setImageButton(withPlaceholder text: String, imageName: String) -> UIButton
     button.setTitle(text, for: .normal)
     button.setTitleColor(.darkBlue, for: .normal)
     button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-   // button.titleLabel?.alpha = 0.3
     button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
     button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 42, bottom: 0, right: 0)
     button.setDimensions(width: UIScreen.main.bounds.width - 40, height: 45)
@@ -173,22 +172,6 @@ func setImageButton(withPlaceholder text: String, imageName: String) -> UIButton
     imageView.setDimensions(width: 30, height: 30)
     imageView.tintColor = .mainBlue
     
-    return button
-}
-
-func setValueButtonNoWidth(withPlaceholder text: String) -> UIButton {
-    let button = UIButton()
-    button.setTitle(text, for: .normal)
-    button.setTitleColor(.darkBlue, for: .normal)
-    button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-    button.layer.borderColor = UIColor.mainBlue.cgColor
-    button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
-    button.setDimensions(height: 45)
-    button.layer.borderWidth = 2
-    button.layer.cornerRadius = 3
-    let nextIcon = UIImage(named: "nextMenuButtonGray")
-    button.setImage(nextIcon, for: .normal)
-
     return button
 }
 
@@ -263,16 +246,6 @@ func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
     return button
 }
 
-func makeRepeatsButton(withText text: String) -> UIButton{
-    let button = UIButton()
-    button.setDimensions(height: UIScreen.main.bounds.height/15)
-    button.setTitle(text, for: .normal)
-    button.unhighlight()
-    button.layer.cornerRadius = 5
-    
-    return button
-}
-
 func makeSpacerView(height: CGFloat) -> UIView {
     let view = UIView()
     view.backgroundColor = .backgroundColor
@@ -281,18 +254,18 @@ func makeSpacerView(height: CGFloat) -> UIView {
     return view
 }
 
-func makeTimePicker() -> UIDatePicker {
+func makeTimePicker(withHeight height: CGFloat) -> UIDatePicker {
     let timePicker = UIDatePicker()
     timePicker.datePickerMode = .time
-    timePicker.setDimensions(height: UIScreen.main.bounds.height/6)
+    timePicker.setDimensions(height: height)
     
     return timePicker
 }
 
-func makeDatePicker() -> UIDatePicker {
+func makeDatePicker(withHeight height: CGFloat) -> UIDatePicker {
     let datePicker = UIDatePicker()
     datePicker.datePickerMode = .date
-    datePicker.setDimensions(height: UIScreen.main.bounds.height/6)
+    datePicker.setDimensions(height: height)
     
     return datePicker
 }
@@ -325,6 +298,7 @@ func formatDateNoYear(from date: Date) -> String {
     let date = dateFormatter.string(from: date)
     return date
 }
+
 //MARK: - AddCourse
 func makeColorButton(ofColor color: UIColor) -> UIButton {
     let button = UIButton()

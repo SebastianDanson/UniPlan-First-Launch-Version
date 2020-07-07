@@ -32,7 +32,7 @@ class AddCourseViewController: PickerViewController {
     let titleTextField = makeTextField(withPlaceholder: "Course Name:", height: 50 )
     let startDateView = PentagonView()
     let endDateView = UIView()
-    let datePickerView = makeDatePicker()
+    let datePickerView = makeDatePicker(withHeight: UIScreen.main.bounds.height/4.5)
     let startDate = makeLabel(ofSize: 20, weight: .semibold)
     let endDate = makeLabel(ofSize: 20, weight: .semibold)
     let colorHeading = makeHeading(withText: "Color:")

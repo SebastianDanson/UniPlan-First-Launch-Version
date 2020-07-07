@@ -66,7 +66,7 @@ class SummativesViewController: SwipeViewController {
         
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
-        tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height)
+        tableView.setDimensions(width: view.frame.width, height: view.frame.height - topView.frame.height - (2 * self.topbarHeight))
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self

@@ -23,9 +23,7 @@ class AddQuizAndExamViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)
-        print("INDEX: \(CourseService.shared.getQuizOrExam())")
-        
+        reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -51,8 +49,8 @@ class AddQuizAndExamViewController: UIViewController {
     
     let startTimeView = PentagonView()
     let endTimeView = UIView()
-    let timePickerView = makeTimePicker()
-    let datePickerView = makeDatePicker()
+    let timePickerView = makeTimePicker(withHeight: UIScreen.main.bounds.height/4.5)
+    let datePickerView = makeDatePicker(withHeight: UIScreen.main.bounds.height/4.5)
     let startTime = makeLabel(ofSize: 20, weight: .semibold)
     let endTime = makeLabel(ofSize: 20, weight: .semibold)
     
@@ -67,12 +65,8 @@ class AddQuizAndExamViewController: UIViewController {
     let clockIcon = UIImage(systemName: "clock.fill")
     var clockImage = UIImageView(image: nil)
     
-    var reminderTopAnchorConstaint = NSLayoutConstraint()
-    var reminderOtherAnchorConstaint = NSLayoutConstraint()
-    
     var locationTopAnchorConstaint = NSLayoutConstraint()
     var locationOtherAnchorConstaint = NSLayoutConstraint()
-    
     
     //MARK: - setup UI
     func setupViews() {
@@ -84,8 +78,8 @@ class AddQuizAndExamViewController: UIViewController {
         view.addSubview(startTimeView)
         view.addSubview(timePickerView)
         view.addSubview(locationView)
-        view.addSubview(saveButton)
         view.addSubview(hideReminderView)
+        view.addSubview(saveButton)
         
         locationView.addSubview(dateButton)
         locationView.addSubview(datePickerView)
@@ -182,9 +176,9 @@ class AddQuizAndExamViewController: UIViewController {
         locationView.anchor(left: reminderButton.leftAnchor,
                             bottom: saveButton.topAnchor)
         
-        reminderTopAnchorConstaint = locationView.topAnchor.constraint(equalTo: startTimeView.bottomAnchor)
-        reminderOtherAnchorConstaint = locationView.topAnchor.constraint(equalTo: timePickerView.bottomAnchor)
-        reminderTopAnchorConstaint.isActive = true
+        locationTopAnchorConstaint = locationView.topAnchor.constraint(equalTo: startTimeView.bottomAnchor)
+        locationOtherAnchorConstaint = locationView.topAnchor.constraint(equalTo: timePickerView.bottomAnchor)
+        locationTopAnchorConstaint.isActive = true
         
         locationTextField.anchor(top: reminderView.topAnchor,
                                  left: reminderButton.leftAnchor,
@@ -199,6 +193,9 @@ class AddQuizAndExamViewController: UIViewController {
         
         setupTimePickerView()
         
+        datePickerView.setDimensions(height: UIScreen.main.bounds.height / 4 )
+        timePickerView.setDimensions(height: UIScreen.main.bounds.height / 4 )
+
         startTime.text = "\(formatTime(from: Date()))"
         endTime.text = "\(formatTime(from: Date().addingTimeInterval(3600)))"
         
@@ -232,6 +229,7 @@ class AddQuizAndExamViewController: UIViewController {
             datePickerView.date = exam.startDate
             
             locationTextField.text = exam.location
+         
             if exam.reminder {
                 reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: exam.dateOrTime, reminderTime: [exam.reminderTime[0], exam.reminderTime[1]], reminderDate: exam.reminderDate), for: .normal)
                 reminderSwitch.isOn = true
@@ -256,8 +254,8 @@ class AddQuizAndExamViewController: UIViewController {
     
     //MARK: - Actions
     @objc func timePickerDateChanged() {
-        reminderTopAnchorConstaint.isActive = false
-        reminderOtherAnchorConstaint.isActive = true
+        locationTopAnchorConstaint.isActive = false
+        locationOtherAnchorConstaint.isActive = true
         
         if startTimeView.color == UIColor.mainBlue {
             TaskService.shared.setStartTime(time: timePickerView.date)
@@ -296,6 +294,8 @@ class AddQuizAndExamViewController: UIViewController {
                 })
             }
         }
+        locationOtherAnchorConstaint.isActive = false
+        locationTopAnchorConstaint.isActive = true
     }
     
     @objc func startDateViewTapped() {
@@ -415,7 +415,6 @@ class AddQuizAndExamViewController: UIViewController {
                     quiz.endDate = date.addingTimeInterval(TimeInterval(endComponents.hour! * 3600 + endComponents.minute! * 60))
                     quiz.dateOrTime = TaskService.shared.getDateOrTime()
                     quiz.courseId = course?.id ?? ""
-                    
                     if quiz.dateOrTime == 0 {
                         let reminderTime = TaskService.shared.getReminderTime()
                         quiz.reminderTime[0] = reminderTime[0]
@@ -432,6 +431,7 @@ class AddQuizAndExamViewController: UIViewController {
                         quizToUpdate.reminderTime[0] = quiz.reminderTime[0]
                         quizToUpdate.reminderTime[1] = quiz.reminderTime[1]
                         quizToUpdate.reminder = quiz.reminder
+                        quizToUpdate.dateOrTime = quiz.dateOrTime
                         TaskService.shared.updateTasks(forQuiz: quizToUpdate)
                         
                     } else {
@@ -496,6 +496,11 @@ class AddQuizAndExamViewController: UIViewController {
     }
     
     @objc func reminderButtonPressed() {
+        if CourseService.shared.getQuizOrExam() == 0 {
+            TaskService.shared.setReminderDate(date: CourseService.shared.getSelectedQuiz()?.reminderDate ?? Date())
+        } else {
+            TaskService.shared.setReminderDate(date: CourseService.shared.getSelectedExam()?.reminderDate ?? Date())
+        }
         let vc = SetTaskReminderViewController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
@@ -507,5 +512,12 @@ extension AddQuizAndExamViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if startTimeView.color == UIColor.mainBlue || endTimeView.backgroundColor == UIColor.mainBlue{
+            locationOtherAnchorConstaint.isActive = true
+            locationTopAnchorConstaint.isActive = false
+        }
     }
 }
