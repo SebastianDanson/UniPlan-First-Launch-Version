@@ -129,6 +129,7 @@ func makeDeleteButton() -> UIButton {
     let deleteButton = UIButton()
     deleteButton.setImage(UIImage(systemName: "trash"), for: .normal)
     deleteButton.tintColor = .backgroundColor
+    deleteButton.setDimensions(width: 40, height: 40)
     
     return deleteButton
 }

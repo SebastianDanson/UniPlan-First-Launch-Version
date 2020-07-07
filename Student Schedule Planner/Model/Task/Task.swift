@@ -20,7 +20,7 @@ class Task: Object {
     @objc dynamic var reminderDate: Date = Date()
     @objc dynamic var location = ""
     @objc dynamic var color = 0
-    @objc dynamic var course = ""
+    @objc dynamic var courseId = ""
     @objc dynamic var type = ""
     @objc dynamic var summativeId = UUID().uuidString //for deleting summatie associated with task
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task

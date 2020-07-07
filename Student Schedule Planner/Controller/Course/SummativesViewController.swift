@@ -100,7 +100,8 @@ class SummativesViewController: SwipeViewController {
     
     //MARK: - Helper Functions
     func filterSummatives(){
-        let summatives = realm.objects(Task.self).filter("course != %@ AND type != %@", "", "Class")
+        let summatives = realm.objects(Task.self).filter("courseId != %@ AND type != %@", "", "Class").sorted(byKeyPath: "startDate", ascending: true)
+        
         for summative in summatives {
             if summative.endDate > Date() {
                 upcomingSummatives.append(summative)
@@ -246,7 +247,7 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
             task = pastDueSummatives[indexPath.row]
         }
         
-        let course = realm.objects(Course.self).filter("title == %@", task.course).first
+        let course = realm.objects(Course.self).filter("id == %@", task.courseId).first
         AllCoursesService.shared.setSelectedCourse(course: course)
 
         switch task.type {
@@ -261,30 +262,10 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
         case "exam":
             let exam = realm.objects(Exam.self).filter("id == %@", task.summativeId).first
             CourseService.shared.setSelectedExam(exam: exam)
-            presentQuizVC()
+            presentExamVC()
         default:
             break
         }
-        
-        //       switch indexPath.section {
-        //       case 0:
-        //           SingleClassService.shared.setClassIndex(index: indexPath.row)
-        //           AddClassButtonPressed()
-        //       case 1:
-        //           AssignmentService.shared.setAssignmentIndex(index: indexPath.row)
-        //           AddAssignmentButtonPressed()
-        //       case 2:
-        //           QuizService.shared.setQuizIndex(index: indexPath.row)
-        //           AddQuizButtonPressed()
-        //       case 3:
-        //           ExamService.shared.setExamIndex(index: indexPath.row)
-        //           AddExamButtonPressed()
-        //       default:
-        //           break
-        //       }
-        
-        
-        
     }
 }
 

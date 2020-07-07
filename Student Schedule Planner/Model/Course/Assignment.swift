@@ -17,7 +17,7 @@ class Assignment: Object {
     @objc dynamic var dateOrTime = 0 //0 means time was set, non zero means date was set
     @objc dynamic var reminderDate: Date = Date()
     @objc dynamic var dueDate = Date()
-    @objc dynamic var course = ""
+    @objc dynamic var courseId = ""
 
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
 

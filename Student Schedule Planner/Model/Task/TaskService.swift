@@ -35,7 +35,7 @@ class TaskService {
             let components = DateComponents(day: 1, second: -1)
             return Calendar.current.date(byAdding: components, to: dateSelected)!
         }()
-        tasks = realm.objects(Task.self).filter("startDate BETWEEN %@", [dateSelected, endOfDay])
+        tasks = realm.objects(Task.self).filter("startDate BETWEEN %@", [dateSelected, endOfDay]).sorted(byKeyPath: "startDate", ascending: true)
     }
     
     //MARK: - tasks
@@ -48,7 +48,7 @@ class TaskService {
     }
     
     func updateTasks() {
-        tasks = realm.objects(Task.self)
+        tasks = realm.objects(Task.self).sorted(byKeyPath: "startDate", ascending: false)
     }
     
     
@@ -183,7 +183,7 @@ class TaskService {
                 task.reminder = theClass.reminder
                 task.reminderTime = theClass.reminderTime
                 task.location = theClass.location
-                task.course = course?.title ?? ""
+                task.courseId = course?.id ?? ""
                 task.type = theClass.type
                 task.summativeId = theClass.id
                 task.color = course?.color ?? 0
@@ -228,7 +228,7 @@ class TaskService {
         task.reminderTime[0] = quiz.reminderTime[0]
         task.reminderTime[1] = quiz.reminderTime[1]
         task.reminderDate = quiz.reminderDate
-        task.course = course?.title ?? ""
+        task.courseId = course?.id ?? ""
         task.type = "quiz"
         task.summativeId = quiz.summativeId
         task.color = course?.color ?? 0
@@ -249,7 +249,7 @@ class TaskService {
         task.reminderTime[0] = assignment.reminderTime[0]
         task.reminderTime[1] = assignment.reminderTime[1]
         task.reminderDate = assignment.reminderDate
-        task.course = course?.title ?? ""
+        task.courseId = course?.id ?? ""
         task.type = "assignment"
         task.summativeId = assignment.id
         task.color = course?.color ?? 0
@@ -270,7 +270,7 @@ class TaskService {
         task.reminderTime[0] = exam.reminderTime[0]
         task.reminderTime[1] = exam.reminderTime[1]
         task.reminderDate = exam.reminderDate
-        task.course = course?.title ?? ""
+        task.courseId = course?.id ?? ""
         task.type = "exam"
         task.color = course?.color ?? 0
         task.summativeId = exam.id

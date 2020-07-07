@@ -25,7 +25,7 @@ class AddQuizAndExamViewController: UIViewController {
         super.viewWillAppear(animated)
         reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)
         print("INDEX: \(CourseService.shared.getQuizOrExam())")
-
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -117,7 +117,7 @@ class AddQuizAndExamViewController: UIViewController {
         
         deleteButton.anchor(right: topView.rightAnchor, paddingRight: 20)
         deleteButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
-        //deleteButton.addTarget(self, action: #selector(deletebutt), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
         
         //Not topView
         let startTap = UITapGestureRecognizer(target: self, action: #selector(startDateViewTapped))
@@ -221,7 +221,6 @@ class AddQuizAndExamViewController: UIViewController {
                 reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: quiz.dateOrTime, reminderTime: [quiz.reminderTime[0],quiz.reminderTime[1]],reminderDate: quiz.reminderDate), for: .normal)
                 SingleClassService.shared.setReminder(true)
             }
-            
             titleLabel.text = "Edit Quiz"
         }
         
@@ -231,7 +230,7 @@ class AddQuizAndExamViewController: UIViewController {
             TaskService.shared.setStartTime(time: exam.startDate)
             TaskService.shared.setEndTime(time: exam.endDate)
             datePickerView.date = exam.startDate
-
+            
             locationTextField.text = exam.location
             if exam.reminder {
                 reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: exam.dateOrTime, reminderTime: [exam.reminderTime[0], exam.reminderTime[1]], reminderDate: exam.reminderDate), for: .normal)
@@ -378,6 +377,28 @@ class AddQuizAndExamViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @objc func deleteButtonPressed() {
+        
+        do {
+            try realm.write {
+                if CourseService.shared.getQuizOrExam() == 0 {
+                    if let quiz = CourseService.shared.getSelectedQuiz() {
+                        TaskService.shared.deleteTasks(forQuiz: quiz)
+                        realm.delete(quiz)
+                    }
+                } else {
+                    if let exam = CourseService.shared.getSelectedExam() {
+                        TaskService.shared.deleteTasks(forExam: exam)
+                        realm.delete(exam)
+                    }
+                }
+            }
+        } catch {
+            print("Error deleting quiz or exam from realm \(error.localizedDescription)")
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
     @objc func saveButtonPressed() {
         let startComponents = Calendar.current.dateComponents([.hour, .minute], from: TaskService.shared.getStartTime())
         let endComponents = Calendar.current.dateComponents([.hour, .minute], from: TaskService.shared.getEndTime())
@@ -393,7 +414,7 @@ class AddQuizAndExamViewController: UIViewController {
                     quiz.startDate = date.addingTimeInterval(TimeInterval(startComponents.hour! * 3600 + startComponents.minute! * 60))
                     quiz.endDate = date.addingTimeInterval(TimeInterval(endComponents.hour! * 3600 + endComponents.minute! * 60))
                     quiz.dateOrTime = TaskService.shared.getDateOrTime()
-                    quiz.course = course?.title ?? ""
+                    quiz.courseId = course?.id ?? ""
                     
                     if quiz.dateOrTime == 0 {
                         let reminderTime = TaskService.shared.getReminderTime()
@@ -427,7 +448,7 @@ class AddQuizAndExamViewController: UIViewController {
                     exam.location = locationTextField.text ?? ""
                     exam.startDate = date.addingTimeInterval(TimeInterval(startComponents.hour! * 3600 + startComponents.minute! * 60))
                     exam.endDate = date.addingTimeInterval(TimeInterval(endComponents.hour! * 3600 + endComponents.minute! * 60))
-                    exam.course = course?.title ?? ""
+                    exam.courseId = course?.id ?? ""
                     
                     if exam.dateOrTime == 0 {
                         let reminderTime = TaskService.shared.getReminderTime()

@@ -22,7 +22,7 @@ class SingleClass: Object {
     @objc dynamic var type = "Class"
     @objc dynamic var subType = "Class"
     @objc dynamic var id = UUID().uuidString
-    @objc dynamic var course = ""
+    @objc dynamic var courseId = ""
 
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
 

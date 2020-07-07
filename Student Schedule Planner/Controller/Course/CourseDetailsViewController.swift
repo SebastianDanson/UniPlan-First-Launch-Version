@@ -27,6 +27,7 @@ class CourseDetailsViewController: SwipeViewController {
         CourseService.shared.setSelectedAssignment(assignment: nil)
         CourseService.shared.setSelectedQuiz(quiz: nil)
         CourseService.shared.setSelectedExam(exam: nil)
+        titleLabel.text = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
      
         tableView.reloadData()
         topView.backgroundColor = getColor(colorAsInt: CourseService.shared.getColor())
@@ -72,6 +73,7 @@ class CourseDetailsViewController: SwipeViewController {
         
         titleLabel.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
         titleLabel.centerX(in: topView)
+        titleLabel.setDimensions(width: UIScreen.main.bounds.width * 0.65)
         backButton.anchor(left: topView.leftAnchor, paddingLeft: 20)
         backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
@@ -81,9 +83,7 @@ class CourseDetailsViewController: SwipeViewController {
         editButton.addTarget(self, action: #selector(editButtonPressed), for: .touchUpInside)
         
         tableView.anchor(top:topView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
-        
-        titleLabel.text = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
-        
+                
         let course = AllCoursesService.shared.getSelectedCourse()
         SingleClassService.shared.setNumClasses(num: course?.classes.count ?? 0)
     }
@@ -265,7 +265,8 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
         case 0:
             return 110
         case 1:
-            return 75
+            tableView.estimatedRowHeight = 75
+            return UITableView.automaticDimension
         case 2:
             return 65
         default:

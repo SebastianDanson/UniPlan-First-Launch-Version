@@ -29,7 +29,7 @@ class AddClassViewController: UIViewController {
         super.viewWillAppear(animated)
         classTypeButton.setTitle(SingleClassService.shared.getType().description, for: .normal)
         reminderButton.setTitle(SingleClassService.shared.setupReminderString(), for: .normal)
-        repeatsButton.setTitle(SingleClassService.shared.getRepeats(), for: .normal)
+        repeatsButton.setTitle("Every \(SingleClassService.shared.getRepeats())", for: .normal)
         SingleClassService.shared.setInitialLocation(location: locationTextField.text ?? "")
     }
     
@@ -349,6 +349,8 @@ class AddClassViewController: UIViewController {
                 SingleClassService.shared.setTypeAsString(classTypeString: theClass.subType)
                 classTypeButton.setTitle(theClass.subType, for: .normal)
                 
+                SingleClassService.shared.setRepeats(every: theClass.repeats)
+                
                 for (index, day) in theClass.classDays.enumerated() {
                     if day == 1 {
                         switch index {
@@ -593,7 +595,7 @@ class AddClassViewController: UIViewController {
         theClass.reminderTime[0] = SingleClassService.shared.getReminderTime()[0]
         theClass.reminderTime[1] = SingleClassService.shared.getReminderTime()[1]
         theClass.reminder = SingleClassService.shared.getReminder()
-        theClass.course = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
+        theClass.courseId = AllCoursesService.shared.getSelectedCourse()?.id ?? ""
         theClass.startDate = SingleClassService.shared.getStartDate()
         theClass.endDate = SingleClassService.shared.getEndDate()
         TaskService.shared.setReminderTime([theClass.reminderTime[0], theClass.reminderTime[1]])
@@ -601,7 +603,7 @@ class AddClassViewController: UIViewController {
         do {
             try realm.write {
                 if let classIndex = SingleClassService.shared.getClassIndex() {
-                    var classToUpdate = CourseService.shared.getClass(atIndex: classIndex)
+                    let classToUpdate = CourseService.shared.getClass(atIndex: classIndex)
                     
                     for index in 0..<theClass.classDays.count{
                         classToUpdate?.classDays[index] = theClass.classDays[index]
@@ -635,9 +637,7 @@ class AddClassViewController: UIViewController {
     }
     
     @objc func backButtonPressed() {
-        dismiss(animated: true, completion: {
-            [0, 0, 0, 0, 0, 0, 0]
-        })
+        dismiss(animated: true, completion: nil)
     }
     
     @objc func deleteButtonPressed() {

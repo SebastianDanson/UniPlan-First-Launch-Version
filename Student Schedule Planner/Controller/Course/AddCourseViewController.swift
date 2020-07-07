@@ -177,8 +177,8 @@ class AddCourseViewController: PickerViewController {
         darkBlue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         purple.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
         
-        if let courseIndex = AllCoursesService.shared.getCourseIndex() {
-            if let course = AllCoursesService.shared.getCourse(atIndex: courseIndex) {
+
+        if let course = AllCoursesService.shared.getSelectedCourse() {
                 titleTextField.text = course.title
                 
                 startDate.text = formatDateNoDay(from: course.startDate)
@@ -206,7 +206,6 @@ class AddCourseViewController: PickerViewController {
                     colorButtonPressed(button: purple)
                 default:
                     break
-                }
             }
         }
     }
@@ -293,7 +292,8 @@ class AddCourseViewController: PickerViewController {
                     courseToUpdate.endDate = course.endDate
                     courseToUpdate.color = course.color
                     courseToUpdate.title = course.title
-                    let tasksToUpdate = realm.objects(Task.self).filter("course == %@ AND type == %@ OR type == %@ OR type == %@ OR type == %@", courseToUpdate.title, "Class", "quiz", "exam", "assignment")
+                    
+                    let tasksToUpdate = realm.objects(Task.self).filter("courseId == %@", courseToUpdate.id)
                     
                     for task in tasksToUpdate {
                         task.color = course.color

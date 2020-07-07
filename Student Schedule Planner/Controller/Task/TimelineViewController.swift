@@ -50,7 +50,7 @@ class TimelineViewController: SwipeViewController  {
     func setupViews() {
         tableView.isScrollEnabled = true
         tableView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         view.backgroundColor = .backgroundColor
         
         view.addSubview(topView)
@@ -156,7 +156,41 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         TaskService.shared.setTaskIndex(index: indexPath.row)
-        addButtonTapped()
+        
+        let task = TaskService.shared.getTask(atIndex: indexPath.row)
+        if let task = task {
+            var vc = UIViewController()
+            switch task.type {
+            case "assignment":
+                let assignment = realm.objects(Assignment.self).filter("id == %@", task.summativeId).first
+                
+                CourseService.shared.setSelectedAssignment(assignment: assignment)
+               
+                vc = AddAssignmentViewController()
+                vc.modalPresentationStyle = .fullScreen
+                present(vc, animated: true, completion: nil)
+            case "quiz":
+                let quiz = realm.objects(Quiz.self).filter("id == %@", task.summativeId).first
+                
+                CourseService.shared.setSelectedQuiz(quiz: quiz)
+                CourseService.shared.setQuizOrExam(int: 0)
+                
+                vc = AddQuizAndExamViewController()
+                vc.modalPresentationStyle = .fullScreen
+                present(vc, animated: true, completion: nil)
+            case "exam":
+                let exam = realm.objects(Exam.self).filter("id == %@", task.summativeId).first
+               
+                CourseService.shared.setSelectedExam(exam: exam)
+                CourseService.shared.setQuizOrExam(int: 1)
+           
+                vc = AddQuizAndExamViewController()
+                vc.modalPresentationStyle = .fullScreen
+                present(vc, animated: true, completion: nil)
+            default:
+                addButtonTapped()
+            }
+        }
     }
 }
 

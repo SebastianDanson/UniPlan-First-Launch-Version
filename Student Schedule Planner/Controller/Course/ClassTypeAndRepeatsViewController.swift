@@ -133,7 +133,7 @@ extension ClassTypeAndRepeatsViewController: UITableViewDataSource, UITableViewD
             cell.textLabel?.text = classType.description
         } else {
             guard let RepeatOption = RepeatOptions(rawValue: indexPath.row) else {return cell}
-            cell.textLabel?.text = RepeatOption.description
+            cell.textLabel?.text = "Every \(RepeatOption.description)"
         }
         return cell
     }

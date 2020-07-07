@@ -73,11 +73,11 @@ class CoursesViewController: SwipeViewController {
                 try self.realm.write {
                     if let courseToDelete = AllCoursesService.shared.getCourse(atIndex: index) {
                         AllCoursesService.shared.setCourseIndex(index: nil)
-                        let tasksToUpDelete = self.realm.objects(Task.self).filter("course == %@", courseToDelete.title)
-                        let assignmentsToDelete = self.realm.objects(Assignment.self).filter("course == %@", courseToDelete.title)
-                        let classesToDelete = self.realm.objects(SingleClass.self).filter("course == %@", courseToDelete.title)
-                        let examsToDelete = self.realm.objects(Exam.self).filter("course == %@", courseToDelete.title)
-                        let quizzesToDelete = self.realm.objects(Quiz.self).filter("course == %@", courseToDelete.title)
+                        let tasksToUpDelete = self.realm.objects(Task.self).filter("courseId == %@", courseToDelete.id)
+                        let assignmentsToDelete = self.realm.objects(Assignment.self).filter("courseId == %@", courseToDelete.id)
+                        let classesToDelete = self.realm.objects(SingleClass.self).filter("courseId == %@", courseToDelete.id)
+                        let examsToDelete = self.realm.objects(Exam.self).filter("courseId == %@", courseToDelete.id)
+                        let quizzesToDelete = self.realm.objects(Quiz.self).filter("courseId == %@", courseToDelete.id)
                         
                         for assignment in assignmentsToDelete {
                             self.realm.delete(assignment)

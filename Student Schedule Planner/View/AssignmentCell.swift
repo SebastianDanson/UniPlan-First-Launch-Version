@@ -40,7 +40,9 @@ class AssignmentCell: SwipeTableViewCell {
         taskView.layer.borderColor = color.cgColor
         reminderImage.tintColor = color
         backgroundColor = .backgroundColor
-        addSubview(taskView)
+        let marginGuide = contentView.layoutMarginsGuide
+
+        contentView.addSubview(taskView)
         taskView.addSubview(titleLabel)
         taskView.addSubview(dueLabel)
         taskView.addSubview(dateLabel)
@@ -49,21 +51,21 @@ class AssignmentCell: SwipeTableViewCell {
         taskView.addSubview(reminderImage)
         taskView.addSubview(reminderLabel)
         
-        taskView.anchor(top: topAnchor,
-                        left: leftAnchor,
-                        right: rightAnchor,
-                        bottom: bottomAnchor,
-                        paddingTop: 5,
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                        paddingBottom: 5)
+       taskView.anchor(top: topAnchor, bottom: bottomAnchor,
+                        paddingTop: 5, paddingBottom: 5)
+        taskView.setDimensions(width: UIScreen.main.bounds.width - 20)
+        taskView.centerX(in: self)
         
-        titleLabel.anchor(top: taskView.topAnchor, left: taskView.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        titleLabel.lineBreakMode = .byWordWrapping
+        titleLabel.numberOfLines = 0
+        titleLabel.setDimensions(width: UIScreen.main.bounds.width * 0.57)
+
+        titleLabel.anchor(top: marginGuide.topAnchor, left: marginGuide.leftAnchor, bottom: marginGuide.bottomAnchor, paddingTop: 20, paddingLeft: 10, paddingBottom: 20)
         
-        dueLabel.anchor(top: taskView.topAnchor, left: dateLabel.leftAnchor, paddingTop: 5)
+        dueLabel.anchor(left: dateLabel.leftAnchor, bottom: dateLabel.topAnchor)
         dueLabel.text = "Due:"
-        dateLabel.anchor(top: dueLabel.bottomAnchor, right: nextImage.rightAnchor, paddingRight: 20)
-        
+        dateLabel.centerY(in: taskView)
+        dateLabel.anchor(right: nextImage.rightAnchor, paddingRight: 20)
         timeLabel.anchor(top: dateLabel.bottomAnchor, left: dateLabel.leftAnchor)
         
         nextImage.centerY(in: taskView)
@@ -77,7 +79,7 @@ class AssignmentCell: SwipeTableViewCell {
     //MARK: - Actions
     func update(assignment: Assignment) {
         titleLabel.text = assignment.title
-        dateLabel.text = formatDate(from: assignment.dueDate)
+        dateLabel.text = formatDateNoDay(from: assignment.dueDate)
         timeLabel.text = formatTime(from: assignment.dueDate)
         
         if assignment.title == "" {

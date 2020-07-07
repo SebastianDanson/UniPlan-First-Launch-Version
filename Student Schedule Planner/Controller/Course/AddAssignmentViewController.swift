@@ -45,6 +45,7 @@ class AddAssignmentViewController: UIViewController {
     let reminderSwitch = UISwitch()
     let reminderButton = setValueButton(withPlaceholder: "When Task Starts", height: 45)
     let hideReminderView = makeAnimatedView()
+    let deleteButton = makeDeleteButton()
     
     var reminderViewTopAnchorConstaint = NSLayoutConstraint()
     var reminderViewOtherAnchorConstaint = NSLayoutConstraint()
@@ -65,6 +66,7 @@ class AddAssignmentViewController: UIViewController {
         //topView
         topView.addSubview(titleLabel)
         topView.addSubview(backButton)
+        topView.addSubview(deleteButton)
         
         topView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
         
@@ -74,6 +76,10 @@ class AddAssignmentViewController: UIViewController {
         backButton.anchor(left: topView.leftAnchor, paddingLeft: 20)
         backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        
+        deleteButton.anchor(right: topView.rightAnchor, paddingRight: 20)
+        deleteButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        deleteButton.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
         
         //Not topView
         titleTextField.layer.borderWidth = 5
@@ -123,6 +129,20 @@ class AddAssignmentViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @objc func deleteButtonPressed() {
+        if let assignment = CourseService.shared.getSelectedAssignment() {
+            do {
+                try realm.write{
+                    TaskService.shared.deleteTasks(forAssigment: assignment)
+                    realm.delete(assignment)
+                }
+            } catch {
+                print("Error deleting assignment from realm \(error.localizedDescription)")
+            }
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
     @objc func saveButtonPressed() {
         let course = AllCoursesService.shared.getSelectedCourse()
         let assignment = Assignment()
@@ -130,7 +150,7 @@ class AddAssignmentViewController: UIViewController {
         assignment.dueDate = datePicker.date
         assignment.dateOrTime = TaskService.shared.getDateOrTime()
         assignment.reminder = reminderSwitch.isOn
-        assignment.course = course?.title ?? ""
+        assignment.courseId = course?.id ?? ""
         
         if assignment.dateOrTime == 0 {
             let reminderTime = TaskService.shared.getReminderTime()
