@@ -52,9 +52,9 @@ class CourseCell: SwipeTableViewCell {
         taskLabel.anchor(top: marginGuide.topAnchor,
                          left: marginGuide.leftAnchor,
                          bottom: marginGuide.bottomAnchor,
-                         paddingTop: 10,
+                         paddingTop: 15,
                          paddingLeft: 10,
-                         paddingBottom: 10)
+                         paddingBottom: 15)
     }
     
     func update(course: Course) {

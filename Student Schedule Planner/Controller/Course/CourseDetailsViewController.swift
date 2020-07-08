@@ -28,6 +28,10 @@ class CourseDetailsViewController: SwipeViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         SingleClassService.shared.setClassIndex(index: nil)
+        SingleClassService.shared.setType(classType: .Class)
+        TaskService.shared.setReminderTime([0, 0])
+        TaskService.shared.setReminderDate(date: Date())
+        SingleClassService.shared.setReminder(false)
         CourseService.shared.setSelectedAssignment(assignment: nil)
         CourseService.shared.setSelectedQuiz(quiz: nil)
         CourseService.shared.setSelectedExam(exam: nil)

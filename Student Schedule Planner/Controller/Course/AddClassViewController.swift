@@ -20,6 +20,9 @@ class AddClassViewController: UIViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        TaskService.shared.setDateOrTime(scIndex: 0)
+        TaskService.shared.setReminderTime([0, 0])
+        TaskService.shared.setReminderDate(date: Date())
         SingleClassService.shared.setReminder(false)
         SingleClassService.shared.setRepeats(every: "Week")
         SingleClassService.shared.resetClassDays()
@@ -38,7 +41,7 @@ class AddClassViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         reminderButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: reminderButton.frame.width-30, bottom: 0, right: 0)
-        if SingleClassService.shared.getReminder() {
+        if SingleClassService.shared.getReminder(), !reminderSwitch.isOn {
             reminderSwitch.isOn = true
             reminderSwitchToggled()
         }
@@ -102,7 +105,7 @@ class AddClassViewController: UIViewController {
     var calendarImage = UIImageView(image: nil)
     
     //Spacers and sperators
-    let spacerView1 = makeSpacerView(height: UIScreen.main.bounds.height/90)
+    let spacerView1 = makeSpacerView(height: UIScreen.main.bounds.height/180)
     let spacerView2 = makeSpacerView(height: UIScreen.main.bounds.height/180)
     let spacerView3 = makeSpacerView(height: UIScreen.main.bounds.height/180)
     let spacerView4 = makeSpacerView(height: UIScreen.main.bounds.height/180)
@@ -111,9 +114,13 @@ class AddClassViewController: UIViewController {
     let seperatorView1 = makeSpacerView(height: 2)
     let seperatorView2 = makeSpacerView(height: 2)
     
-    //Anchors for the stackViewContainer
+    //Top Anchors for the stackViewContainer
     var stackViewContainerTopAnchorConstaint = NSLayoutConstraint()
     var stackViewContainerOtherAnchorConstaint = NSLayoutConstraint()
+    
+    //Top Anchors for the locationView
+    var locationViewTopAnchorConstaint = NSLayoutConstraint()
+    var locationViewOtherAnchorConstaint = NSLayoutConstraint()
     
     //MARK: - setup UI
     func setupViews() {
@@ -163,6 +170,7 @@ class AddClassViewController: UIViewController {
         stackViewContainer.addSubview(endDateView)
         stackViewContainer.addSubview(startDateView)
         
+        stackView.addArrangedSubview(locationTextField)
         stackView.addArrangedSubview(spacerView1)
         stackView.addArrangedSubview(seperatorView1)
         stackView.addArrangedSubview(spacerView2)
@@ -262,7 +270,7 @@ class AddClassViewController: UIViewController {
         startDate.centerX(in: startDateView)
         startDate.centerY(in: startDateView)
         
-        endDate.centerX(in: endDateView)
+        endDate.centerXAnchor.constraint(equalTo: endDateView.centerXAnchor, constant: 10).isActive = true
         endDate.centerY(in: endDateView)
         
         let course = AllCoursesService.shared.getSelectedCourse()
@@ -286,17 +294,20 @@ class AddClassViewController: UIViewController {
         stackViewContainerOtherAnchorConstaint = stackViewContainer.topAnchor.constraint(equalTo: timePicker.bottomAnchor)
         stackViewContainerTopAnchorConstaint.isActive = true
         
-        locationTextField.anchor(top: locationView.topAnchor, left: startTimeView.leftAnchor, paddingTop: 10)
+        locationTextField.anchor(top: stackView.topAnchor, left: startTimeView.leftAnchor, paddingTop: 10)
         locationTextField.setIcon(UIImage(named: "location")!)
         
         nextImage.centerY(in: repeatsButton)
         nextImage.anchor(right: repeatsButton.rightAnchor, paddingRight: 10)
         
         locationView.backgroundColor = .backgroundColor
-        locationView.anchor(top: startDateView.bottomAnchor, left: startTimeView.leftAnchor)
+        locationView.anchor(left: startTimeView.leftAnchor)
         locationView.setDimensions(height: 200)
+        locationViewTopAnchorConstaint = locationView.topAnchor.constraint(equalTo: startDateView.bottomAnchor)
+        locationViewOtherAnchorConstaint = locationView.topAnchor.constraint(equalTo: datePicker.bottomAnchor)
+        locationViewTopAnchorConstaint.isActive = true
         
-        reminderHeading.anchor(top: locationTextField.bottomAnchor, left: locationView.leftAnchor, paddingTop: 10)
+        reminderHeading.anchor(top: locationView.topAnchor, left: locationView.leftAnchor, paddingTop: 10)
         reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
         reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
         reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
@@ -360,7 +371,6 @@ class AddClassViewController: UIViewController {
                 endDate.text = formatDateNoDay(from: theClass.endDate)
                 
                 SingleClassService.shared.setTypeAsString(classTypeString: theClass.subType)
-                classTypeButton.setTitle(theClass.subType, for: .normal)
                 
                 SingleClassService.shared.setRepeats(every: theClass.repeats)
                 
@@ -402,7 +412,7 @@ class AddClassViewController: UIViewController {
                     SingleClassService.shared.setReminder(true)
                 }
             }
-        }
+        }        
     }
     
     func setupTimePickerView() {
@@ -416,6 +426,8 @@ class AddClassViewController: UIViewController {
     //MARK: - Actions
     @objc func reminderSwitchToggled() {
         if reminderSwitch.isOn {
+            resetDateViews()
+            resetTimeViews()
             SingleClassService.shared.setReminder(true)
             TaskService.shared.askToSendNotifications()
             UIView.animate(withDuration: 0.3, animations: {
@@ -443,7 +455,6 @@ class AddClassViewController: UIViewController {
     }
     
     @objc func datePickerDateChanged() {
-        
         if startDateView.color == UIColor.mainBlue {
             SingleClassService.shared.setStartDate(date: datePicker.date)
             startDate.text = "\(formatDateNoDay(from: datePicker.date))"
@@ -477,6 +488,9 @@ class AddClassViewController: UIViewController {
         }
         endTimeView.backgroundColor = .backgroundColor
         endTimeView.layer.borderColor = UIColor.silver.cgColor
+        locationTextField.resignFirstResponder()
+        stackViewContainerTopAnchorConstaint.isActive = false
+        stackViewContainerOtherAnchorConstaint.isActive = true
     }
     
     @objc func endTimeViewTapped() {
@@ -502,6 +516,9 @@ class AddClassViewController: UIViewController {
         startTimeView.color = .clouds
         startTimeView.borderColor = .silver
         clockImage.tintColor = .darkGray
+        locationTextField.resignFirstResponder()
+        stackViewContainerTopAnchorConstaint.isActive = false
+        stackViewContainerOtherAnchorConstaint.isActive = true
     }
     
     @objc func startDateViewTapped() {
@@ -516,6 +533,8 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.datePicker.frame.maxY
             })
+            locationViewTopAnchorConstaint.isActive = false
+            locationViewOtherAnchorConstaint.isActive = true
         } else {
             startDateView.color = .clouds
             startDateView.borderColor = .silver
@@ -525,9 +544,15 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.startDateView.frame.maxY
             })
+            locationViewTopAnchorConstaint.isActive = true
+            locationViewOtherAnchorConstaint.isActive = false
         }
         endDateView.backgroundColor = .backgroundColor
         endDateView.layer.borderColor = UIColor.silver.cgColor
+        locationTextField.resignFirstResponder()
+        
+        //stackViewContainerTopAnchorConstaint.isActive = true
+        //stackViewContainerOtherAnchorConstaint.isActive = false
     }
     
     @objc func endDateViewTapped() {
@@ -541,6 +566,8 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.datePicker.frame.maxY
             })
+            locationViewTopAnchorConstaint.isActive = false
+            locationViewOtherAnchorConstaint.isActive = true
         } else {
             endDateView.backgroundColor = .backgroundColor
             endDateView.layer.borderColor = UIColor.silver.cgColor
@@ -548,10 +575,13 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.endDateView.frame.maxY
             })
+            locationViewTopAnchorConstaint.isActive = true
+            locationViewOtherAnchorConstaint.isActive = false
         }
         calendarImage.tintColor = .darkGray
         startDateView.color = .clouds
         startDateView.borderColor = .silver
+        locationTextField.resignFirstResponder()
     }
     @objc func dayButtonTapped(button: UIButton) {
         if startTimeView.color == UIColor.mainBlue || endTimeView.backgroundColor == UIColor.mainBlue {
@@ -692,6 +722,8 @@ class AddClassViewController: UIViewController {
             calendarImage.tintColor = .darkGray
             endDateView.layer.borderColor = UIColor.silver.cgColor
             startDateView.borderColor = .silver
+            locationViewTopAnchorConstaint.isActive = true
+            locationViewOtherAnchorConstaint.isActive = false
         }
     }
     
@@ -700,7 +732,8 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.stackViewContainer.frame.origin.y = self.startTimeView.frame.maxY
             })
-            
+            stackViewContainerTopAnchorConstaint.isActive = true
+            stackViewContainerOtherAnchorConstaint.isActive = false
             startTimeView.color = .clouds
             endTimeView.backgroundColor = .backgroundColor
             startTime.textColor = .darkBlue
@@ -708,6 +741,9 @@ class AddClassViewController: UIViewController {
             clockImage.tintColor = .darkGray
             endTimeView.layer.borderColor = UIColor.silver.cgColor
             startTimeView.borderColor = .silver
+            
+            stackViewContainerTopAnchorConstaint.isActive = true
+            stackViewContainerOtherAnchorConstaint.isActive = false
         }
     }
 }
@@ -717,5 +753,10 @@ extension AddClassViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        resetDateViews()
+        resetTimeViews()
     }
 }

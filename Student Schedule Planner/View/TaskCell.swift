@@ -60,7 +60,6 @@ class TaskCell: SwipeTableViewCell {
     
     //MARK: - setupUI
     func setupViews() {
-        let marginGuide = contentView.layoutMarginsGuide
         
         nextImage = UIImageView(image: nextIcon!)
         reminderImage = UIImageView(image: reminderIcon!)
@@ -92,42 +91,36 @@ class TaskCell: SwipeTableViewCell {
         
         taskLabel.lineBreakMode = .byWordWrapping
         taskLabel.numberOfLines = 0
-        taskLabel.setDimensions(width: UIScreen.main.bounds.width * 0.60)
-        taskLabel.anchor(top: marginGuide.topAnchor,
-                         left: marginGuide.leftAnchor,
-                         bottom: marginGuide.bottomAnchor,
-                         paddingTop: 15,
-                         paddingLeft: 10,
-                         paddingBottom: 15)
         
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  10)
         
-        reminderImage.anchor(bottom: taskView.bottomAnchor, paddingBottom: 4)
+        reminderImage.anchor(bottom: taskView.bottomAnchor, paddingBottom: 3)
         reminderImage.tintColor = .white
         reminderImage.setDimensions(width: 15, height: 15)
         reminderLabel.anchor(left: reminderImage.rightAnchor,
                              bottom: taskView.bottomAnchor,
                              paddingLeft: 2,
-                             paddingBottom: 4)
+                             paddingBottom: 3)
         
-        locationImage.anchor(left: taskLabel.leftAnchor, bottom: taskView.bottomAnchor, paddingBottom: 4)
+        locationImage.anchor(left: taskLabel.leftAnchor, bottom: taskView.bottomAnchor, paddingBottom: 3)
         locationImage.setDimensions(width: 15, height: 15)
         
+        locationLabel.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width * 0.45).isActive = true
         locationLabel.anchor(left: locationImage.rightAnchor,
                              bottom: taskView.bottomAnchor,
                              paddingLeft: 2,
-                             paddingBottom: 4)
+                             paddingBottom: 3)
         
         reminderLeftAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: locationLabel.rightAnchor, constant: 10)
         reminderOtherAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: locationImage.leftAnchor)
         reminderLeftAnchorConstaint.isActive = true
         
-        startTimeLabel.anchor(right: nextImage.leftAnchor, paddingRight:  10)
-        endTimeLabel.anchor(top: startTimeLabel.bottomAnchor, left: startTimeLabel.leftAnchor)
+        startTimeLabel.anchor(left: endTimeLabel.leftAnchor)
+        endTimeLabel.anchor(top: startTimeLabel.bottomAnchor,  right: nextImage.leftAnchor, paddingRight:  20)
         
         startTimeTopAnchorConstaint = startTimeLabel.centerYAnchor.constraint(equalTo: taskView.centerYAnchor, constant: -10)
-        startTimeSummativeAnchorConstraint = startTimeLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 2)
+        startTimeSummativeAnchorConstraint = startTimeLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor)
         startTimeAssignmentAnchorConstraint = startTimeLabel.centerYAnchor.constraint(equalTo: taskView.centerYAnchor)
         startTimeTopAnchorConstaint.isActive = true
         
@@ -135,7 +128,7 @@ class TaskCell: SwipeTableViewCell {
         dueLabelOtherAnchorConstaint = dueLabel.bottomAnchor.constraint(equalTo: dateLabel.topAnchor)
         
         dateLabelTopAnchorConstaint = dateLabel.centerYAnchor.constraint(equalTo: taskView.centerYAnchor)
-        dateLabelOtherAnchorConstaint = dateLabel.bottomAnchor.constraint(equalTo: startTimeLabel.topAnchor)
+        dateLabelOtherAnchorConstaint = dateLabel.bottomAnchor.constraint(equalTo: startTimeLabel.topAnchor, constant: 5)
     }
     
     //MARK: - Actions
@@ -159,6 +152,16 @@ class TaskCell: SwipeTableViewCell {
         
         endTimeLabel.text = dateFormatter.string(from: task.endDate)
         endTimeLabel.textColor = .white
+        
+        let marginGuide = contentView.layoutMarginsGuide
+        let padding: CGFloat = summative ? 22:16
+        taskLabel.setDimensions(width: UIScreen.main.bounds.width * 0.55)
+        taskLabel.anchor(top: marginGuide.topAnchor,
+                         left: marginGuide.leftAnchor,
+                         bottom: marginGuide.bottomAnchor,
+                         paddingTop: padding,
+                         paddingLeft: 10,
+                         paddingBottom: padding)
         
         if task.reminder {
             reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: task.dateOrTime, reminderTime: [task.reminderTime[0], task.reminderTime[1]], reminderDate: task.reminderDate)

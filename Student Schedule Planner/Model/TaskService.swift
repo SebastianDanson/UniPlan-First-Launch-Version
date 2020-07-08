@@ -154,17 +154,17 @@ class TaskService {
     }
     
     func formatReminderString(reminderTime: [Int]) -> String{
-        let hourString = reminderTime[0] == 1 ? "Hour" : "Hours"
+        let hourString = "h"
         if reminderTime == [0,0] {
-            return "When Task Starts"
+            return "When It Starts"
         } else {
-            return "\(reminderTime[0]) \(hourString), \(reminderTime[1]) min before"
+            return "\(reminderTime[0])\(hourString), \(reminderTime[1])m before"
         }
     }
     
     func formatDate(from date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E MMM d, h:mm a"
+        dateFormatter.dateFormat = "E MMM d, h:mma"
         let date = dateFormatter.string(from: date)
         return date
     }
@@ -173,17 +173,19 @@ class TaskService {
     func makeTasks(forClass theClass: SingleClass) {
         let startDate = Calendar.current.startOfDay(for: theClass.startDate)
         var dayIncrementor = startDate
-        let endDate = Calendar.current.startOfDay(for: theClass.endDate)
+        let endDate = Calendar.current.startOfDay(for: theClass.endDate.addingTimeInterval(86400))
         var skipDates = 0
-        
+        let course = AllCoursesService.shared.getSelectedCourse()
+        var numDays: Int = {
+            return (Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: startDate).day ?? 0)
+        }()
         while dayIncrementor < endDate {
             if theClass.classDays[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
-                let course = AllCoursesService.shared.getSelectedCourse()
                 let task = Task()
                 task.title = "\(course?.title ?? "") \(theClass.subType)"
                 task.dateOrTime = 0
-                task.startDate = theClass.startTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
-                task.endDate = theClass.endTime.addingTimeInterval(dayIncrementor.timeIntervalSince(startDate))
+                task.startDate = theClass.startTime.addingTimeInterval(TimeInterval(86400*numDays))
+                task.endDate = theClass.endTime.addingTimeInterval(TimeInterval(86400*numDays))
                 task.reminder = theClass.reminder
                 task.reminderTime = theClass.reminderTime
                 task.location = theClass.location
@@ -216,6 +218,7 @@ class TaskService {
                     scheduleNotification(forTask: task)
                 }
             }
+            numDays+=1
             dayIncrementor.addTimeInterval(86400)
         }
     }

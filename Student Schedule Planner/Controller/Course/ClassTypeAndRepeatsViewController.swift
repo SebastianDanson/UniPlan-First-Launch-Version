@@ -17,6 +17,7 @@ enum ClassType: Int, CustomStringConvertible, CaseIterable{
     case Tutorial
     case Seminar
     case StudySession
+    case OfficeHours
     
     var description: String {
         switch self {
@@ -30,8 +31,10 @@ enum ClassType: Int, CustomStringConvertible, CaseIterable{
             return "Tutorial"
         case .Seminar:
             return "Seminar"
-        case.StudySession:
+        case .StudySession:
             return "Study Session"
+        case .OfficeHours:
+            return "Office Hours"
         }
     }
 }

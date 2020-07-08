@@ -30,7 +30,7 @@ class SetReminderViewController: PickerViewController {
     
     //Not topView
     let pickerTypeSegmentedControl = UISegmentedControl(items: ["Time Before", "Date"])
-    let pickerTypeLabel = makeHeading(withText: "Time Before Task:")
+    let pickerTypeLabel = makeHeading(withText: "Time Before:")
     let timeBeforePickerView = UIPickerView()
     let datePickerView = makeDateAndTimePicker(height: 160)
     let saveButton = makeSaveButton()
@@ -85,7 +85,9 @@ class SetReminderViewController: PickerViewController {
         if TaskService.shared.getIsClass() {
             pickerTypeSegmentedControl.selectedSegmentIndex = 0
             pickerTypeSegmentedControl.isHidden = true
-            pickerTypeLabel.text = "Time Before Class"
+            timeBeforePickerView.isHidden = false
+            datePickerView.isHidden = true
+            pickerTypeLabel.text = "Time Before"
             pickerTypeLabel.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
         } else {
             pickerTypeLabel.anchor(top: pickerTypeSegmentedControl.bottomAnchor, left: view.leftAnchor, paddingTop: 40, paddingLeft: 20)
@@ -127,12 +129,14 @@ class SetReminderViewController: PickerViewController {
         TaskService.shared.setReminderDate(date: date)
         TaskService.shared.setDateOrTime(scIndex: pickerTypeSegmentedControl.selectedSegmentIndex)
         TaskService.shared.setHideReminder(bool: false)
+        SingleClassService.shared.setReminder(true)
+
         dismiss(animated: true)
     }
     
     @objc func pickerTypeSCToggled() {
         if pickerTypeSegmentedControl.selectedSegmentIndex == 0 {
-            pickerTypeLabel.text = "Time Before Task:"
+            pickerTypeLabel.text = "Time Before:"
             timeBeforePickerView.isHidden = false
             datePickerView.isHidden = true
         } else {

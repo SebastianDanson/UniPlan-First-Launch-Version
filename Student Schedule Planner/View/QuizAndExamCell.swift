@@ -120,6 +120,7 @@ class QuizAndExamCell: SwipeTableViewCell {
                              bottom: taskView.bottomAnchor,
                              paddingBottom: 5)
         
+        locationLabel.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width * 0.40).isActive = true
         locationLabel.anchor(left: locationImage.rightAnchor,
                              bottom: taskView.bottomAnchor,
                              paddingLeft: 2,

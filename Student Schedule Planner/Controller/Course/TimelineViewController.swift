@@ -116,6 +116,10 @@ class TimelineViewController: SwipeViewController  {
     
     //MARK: - Actions
     @objc func addButtonTapped() {
+        TaskService.shared.setDateOrTime(scIndex: 0)
+        TaskService.shared.setReminderDate(date: Date())
+        TaskService.shared.setReminderTime([0,0])
+
         let vc = AddTaskViewController()
         vc.modalPresentationStyle = .fullScreen 
         self.present(vc, animated: true, completion: nil)
@@ -191,8 +195,9 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
                 vc.modalPresentationStyle = .fullScreen
                 present(vc, animated: true, completion: nil)
             default:
-                addButtonTapped()
-            }
+                vc = AddTaskViewController()
+                vc.modalPresentationStyle = .fullScreen
+                present(vc, animated: true, completion: nil)            }
         }
     }
 }

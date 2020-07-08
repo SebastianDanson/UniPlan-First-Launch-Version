@@ -109,6 +109,7 @@ class SingleClassCell: SwipeTableViewCell {
                              paddingTop: 7,
                              paddingLeft: 15)
         
+        locationLabel.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width * 0.55).isActive = true
         locationLabel.anchor(top: classDayStackView.bottomAnchor,
                              left: locationImage.rightAnchor,
                              paddingTop: 7,
@@ -221,7 +222,11 @@ class SingleClassCell: SwipeTableViewCell {
         let repeats = theClass.repeats
         classFrequencyLabel.text = repeats == "Never Repeats" ? repeats : "Every \(repeats)"
         
-        reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [theClass.reminderTime[0], theClass.reminderTime[1]], reminderDate: Date())
+        if theClass.reminder {
+            reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [theClass.reminderTime[0], theClass.reminderTime[1]], reminderDate: Date())
+        } else {
+            reminderLabel.text = "None"
+        }
     }
 }
 

@@ -109,6 +109,8 @@ class SingleClassService {
             type = .Seminar
         case "Study Session":
             type = .StudySession
+        case "Office Hours":
+            type = .OfficeHours
         default:
             break
         }

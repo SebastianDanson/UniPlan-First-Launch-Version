@@ -18,6 +18,8 @@ class AddQuizAndExamViewController: UIViewController {
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
+        TaskService.shared.setReminderTime([0, 0])
+        TaskService.shared.setReminderDate(date: Date())
         SingleClassService.shared.setReminder(false)
         setupViews()
         
@@ -31,7 +33,7 @@ class AddQuizAndExamViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if SingleClassService.shared.getReminder() {
+        if SingleClassService.shared.getReminder(){
             reminderSwitch.isOn = true
             reminderSwitchToggled()
         }
@@ -70,8 +72,13 @@ class AddQuizAndExamViewController: UIViewController {
     let clockIcon = UIImage(systemName: "clock.fill")
     var clockImage = UIImageView(image: nil)
     
+    //Top Anchors for locationView
     var locationTopAnchorConstaint = NSLayoutConstraint()
     var locationOtherAnchorConstaint = NSLayoutConstraint()
+    
+    //Top Anchors for reminderView
+    var reminderTopAnchorConstaint = NSLayoutConstraint()
+    var reminderOtherAnchorConstaint = NSLayoutConstraint()
     
     //MARK: - setup UI
     func setupViews() {
@@ -160,7 +167,10 @@ class AddQuizAndExamViewController: UIViewController {
         datePickerView.centerX(in: view)
         datePickerView.addTarget(self, action: #selector(datePickerChanged), for: .valueChanged)
         
-        reminderView.topAnchor.constraint(equalTo: dateButton.bottomAnchor).isActive = true
+        reminderTopAnchorConstaint = reminderView.topAnchor.constraint(equalTo: dateButton.bottomAnchor)
+        reminderOtherAnchorConstaint = reminderView.topAnchor.constraint(equalTo: datePickerView.bottomAnchor)
+        reminderTopAnchorConstaint.isActive = true
+    
         reminderView.anchor(left: view.leftAnchor, paddingLeft: 20)
         reminderView.setDimensions(height: 275)
         reminderHeading.anchor(top: locationTextField.bottomAnchor,
@@ -171,6 +181,7 @@ class AddQuizAndExamViewController: UIViewController {
         reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
         reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
         reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
+        reminderSwitch.isOn = false
         
         reminderButton.centerX(in: view)
         reminderButton.anchor(top: reminderHeading.bottomAnchor, paddingTop: UIScreen.main.bounds.height/80)
@@ -239,7 +250,7 @@ class AddQuizAndExamViewController: UIViewController {
             
             if exam.reminder {
                 reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: exam.dateOrTime, reminderTime: [exam.reminderTime[0], exam.reminderTime[1]], reminderDate: exam.reminderDate), for: .normal)
-                reminderSwitch.isOn = true
+                SingleClassService.shared.setReminder(true)
             }
             titleLabel.text = "Edit Exam"
         }
@@ -287,22 +298,26 @@ class AddQuizAndExamViewController: UIViewController {
         } else if self.endTimeView.backgroundColor == UIColor.mainBlue {
             self.endDateViewTapped()
         }
+        locationOtherAnchorConstaint.isActive = false
+        locationTopAnchorConstaint.isActive = true
         
         if reminderView.frame.origin.y == dateButton.frame.maxY {
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.3, animations: {
                     self.reminderView.frame.origin.y = self.datePickerView.frame.maxY
                 })
+                self.reminderTopAnchorConstaint.isActive = false
+                self.reminderOtherAnchorConstaint.isActive = true
             }
         } else {
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.3, animations: {
                     self.reminderView.frame.origin.y = self.dateButton.frame.maxY
                 })
+                self.reminderTopAnchorConstaint.isActive = true
+                self.reminderOtherAnchorConstaint.isActive = false
             }
         }
-        locationOtherAnchorConstaint.isActive = false
-        locationTopAnchorConstaint.isActive = true
     }
     
     @objc func startDateViewTapped() {
@@ -311,6 +326,9 @@ class AddQuizAndExamViewController: UIViewController {
                 self.reminderView.frame.origin.y = self.dateButton.frame.maxY
             })
         }
+        
+        reminderTopAnchorConstaint.isActive = true
+        reminderOtherAnchorConstaint.isActive = false
         
         if startTimeView.color != UIColor.mainBlue {
             timePickerView.date = TaskService.shared.getStartTime()
@@ -336,6 +354,10 @@ class AddQuizAndExamViewController: UIViewController {
     }
     
     @objc func endDateViewTapped() {
+        
+        reminderTopAnchorConstaint.isActive = true
+        reminderOtherAnchorConstaint.isActive = false
+        
         if reminderView.frame.origin.y == datePickerView.frame.maxY {
             UIView.animate(withDuration: 0.3, animations: {
                 self.reminderView.frame.origin.y = self.dateButton.frame.maxY
@@ -364,7 +386,6 @@ class AddQuizAndExamViewController: UIViewController {
         clockImage.tintColor = .darkGray
     }
     
-    //MARK: - Actions
     @objc func reminderSwitchToggled() {
         if reminderSwitch.isOn {
             TaskService.shared.setHideReminder(bool: false)

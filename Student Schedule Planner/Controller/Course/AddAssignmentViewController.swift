@@ -18,6 +18,8 @@ class AddAssignmentViewController: UIViewController {
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
+        TaskService.shared.setReminderTime([0, 0])
+        TaskService.shared.setReminderDate(date: Date())
         SingleClassService.shared.setReminder(false)
         setupViews()
         self.dismissKey()
@@ -92,7 +94,7 @@ class AddAssignmentViewController: UIViewController {
         
         //Not topView
         titleTextField.layer.borderWidth = 5
-        titleTextField.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        titleTextField.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         titleTextField.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
         titleTextField.delegate = self
         dateHeading.anchor(top: titleTextField.bottomAnchor, left: titleTextField.leftAnchor, paddingTop: 25)
@@ -107,6 +109,7 @@ class AddAssignmentViewController: UIViewController {
         reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
         reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
         reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
+        reminderSwitch.isOn = false
         
         reminderButton.centerX(in: view)
         reminderButton.anchor(top: reminderHeading.bottomAnchor, paddingTop: UIScreen.main.bounds.height/80)
