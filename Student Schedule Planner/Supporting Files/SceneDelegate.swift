@@ -18,24 +18,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
     
         guard let scene = (scene as? UIWindowScene) else { return }
-        window = UIWindow(windowScene: scene)
-        window?.makeKeyAndVisible()
-        //window?.rootViewController = CoursesViewController()
-        //window?.rootViewController = AddTaskViewController()
-        //window?.rootViewController = TimelineViewController()
-        //window?.rootViewController = CourseDetailsViewController()
+        window = UIWindow(frame: scene.coordinateSpace.bounds)
+        window?.windowScene = scene
         window?.rootViewController = TabBarController()
-        //window?.rootViewController = ClassTypeViewController()
-        //window?.rootViewController = AddClassViewController()
-        //window?.rootViewController = AddAssignmentViewController()
-        //window?.rootViewController = AddCourseViewController()
-       // window?.rootViewController = AddQuizAndExamViewController()
-        //window?.rootViewController = SummativesViewController()
-        
-       // window?.rootViewController = SetTaskReminderViewController()
-        //window?.rootViewController = SetClassReminderViewController()
-
-
+        window?.makeKeyAndVisible()
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

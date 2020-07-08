@@ -33,7 +33,6 @@
 		3F94E2D12492CD0100B0F958 /* CourseDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */; };
 		3F94E2D52492E3B700B0F958 /* SwipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2D42492E3B700B0F958 /* SwipeViewController.swift */; };
 		3F94E2D72492FDD100B0F958 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2D62492FDD100B0F958 /* TabBarController.swift */; };
-		3F94E2D92492FF3200B0F958 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F94E2D82492FF3200B0F958 /* Main.storyboard */; };
 		3F94E3212495A35B00B0F958 /* SingleClassCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3202495A35B00B0F958 /* SingleClassCell.swift */; };
 		3F94E3252496895900B0F958 /* AssignmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3242496895900B0F958 /* AssignmentCell.swift */; };
 		3F94E32724968FED00B0F958 /* QuizAndExamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */; };
@@ -74,7 +73,6 @@
 		3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailsViewController.swift; sourceTree = "<group>"; };
 		3F94E2D42492E3B700B0F958 /* SwipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeViewController.swift; sourceTree = "<group>"; };
 		3F94E2D62492FDD100B0F958 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
-		3F94E2D82492FF3200B0F958 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		3F94E3202495A35B00B0F958 /* SingleClassCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleClassCell.swift; sourceTree = "<group>"; };
 		3F94E3242496895900B0F958 /* AssignmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentCell.swift; sourceTree = "<group>"; };
 		3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizAndExamCell.swift; sourceTree = "<group>"; };
@@ -132,7 +130,6 @@
 				3FAEC8362497D545000ADD9D /* Supporting Files */,
 				3F383E642486B26100D2A5D1 /* Assets.xcassets */,
 				3F383E662486B26100D2A5D1 /* LaunchScreen.storyboard */,
-				3F94E2D82492FF3200B0F958 /* Main.storyboard */,
 				3F383E692486B26100D2A5D1 /* Info.plist */,
 			);
 			path = "Student Schedule Planner";
@@ -297,7 +294,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F94E2D92492FF3200B0F958 /* Main.storyboard in Resources */,
 				3F383E682486B26100D2A5D1 /* LaunchScreen.storyboard in Resources */,
 				3F383E652486B26100D2A5D1 /* Assets.xcassets in Resources */,
 			);
@@ -532,7 +528,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.SebastianDanson.Student-Schedule-Planner";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -552,7 +548,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.SebastianDanson.Student-Schedule-Planner";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
