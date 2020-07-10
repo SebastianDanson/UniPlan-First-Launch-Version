@@ -550,9 +550,6 @@ class AddClassViewController: UIViewController {
         endDateView.backgroundColor = .backgroundColor
         endDateView.layer.borderColor = UIColor.silver.cgColor
         locationTextField.resignFirstResponder()
-        
-        //stackViewContainerTopAnchorConstaint.isActive = true
-        //stackViewContainerOtherAnchorConstaint.isActive = false
     }
     
     @objc func endDateViewTapped() {
@@ -609,15 +606,6 @@ class AddClassViewController: UIViewController {
         let vc = ClassTypeAndRepeatsViewController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
-    }
-    
-    @objc func repeatsButtonTapped(button: UIButton) {
-        if SingleClassService.shared.getRepeats() != button.titleLabel?.text {
-            button.highlight()
-            SingleClassService.shared.setRepeats(every: button.titleLabel?.text ?? "Never")
-            return
-        }
-        SingleClassService.shared.setRepeats(every: "Never")
     }
     
     @objc func reminderButtonPressed() {

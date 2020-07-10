@@ -11,17 +11,24 @@
         <scene sceneID="EHf-IW-A2E">
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                    <view key="view" contentMode="scaleToFill" id="mRn-2E-JEI">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="location" translatesAutoresizingMaskIntoConstraints="NO" id="Fy2-p0-ePs">
-                                <rect key="frame" x="103" y="263" width="27" height="14"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="booksIcon" translatesAutoresizingMaskIntoConstraints="NO" id="OWb-8c-gyt">
+                                <rect key="frame" x="157" y="398" width="100" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="HrE-A9-6ye"/>
+                                    <constraint firstAttribute="height" constant="100" id="XYp-yU-JZc"/>
+                                </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" red="0.2135993242" green="0.59348243469999995" blue="0.85322380070000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="OWb-8c-gyt" firstAttribute="centerX" secondItem="mRn-2E-JEI" secondAttribute="centerX" id="BlB-YC-CUb"/>
+                            <constraint firstItem="OWb-8c-gyt" firstAttribute="centerY" secondItem="mRn-2E-JEI" secondAttribute="centerY" id="Qt6-C5-joD"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="3CP-h3-3ck"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -30,6 +37,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="location" width="13" height="18"/>
+        <image name="booksIcon" width="781" height="792"/>
     </resources>
 </document>

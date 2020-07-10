@@ -214,7 +214,9 @@ class TaskCell: SwipeTableViewCell {
             locationImage.isHidden = true
             locationLabel.isHidden = true
         }
-        taskView.backgroundColor = TaskService.shared.getColor(colorAsInt: task.color)
+        let color = UIColor.init(red: CGFloat(task.color[0]), green: CGFloat(task.color[1]), blue: CGFloat(task.color[2]), alpha: 1)
+        
+        taskView.backgroundColor = color
         
         //Changes the layout for the summativeVC cells
         if summative {

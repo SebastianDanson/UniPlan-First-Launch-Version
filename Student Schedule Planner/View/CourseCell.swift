@@ -66,7 +66,8 @@ class CourseCell: SwipeTableViewCell {
         taskLabel.text = course.title
         taskLabel.textColor = .white
         
-        taskView.backgroundColor = TaskService.shared.getColor(colorAsInt: course.color)
+        let color = UIColor.init(red: CGFloat(course.color[0]), green: CGFloat(course.color[1]), blue: CGFloat(course.color[2]), alpha: 1)
+        taskView.backgroundColor = color
     }
 }
 

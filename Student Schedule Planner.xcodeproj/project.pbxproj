@@ -19,6 +19,7 @@
 		3F59239C24A17677008F45D6 /* PentagonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F59239B24A17677008F45D6 /* PentagonView.swift */; };
 		3F5923BE24AA9FCC008F45D6 /* SummativesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */; };
 		3F5923C424AC0C13008F45D6 /* SelectSummativeTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5923C324AC0C13008F45D6 /* SelectSummativeTypeViewController.swift */; };
+		3F63BF9524B7CB0B00404806 /* ColorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F63BF9424B7CB0B00404806 /* ColorsViewController.swift */; };
 		3F67BBF124872A4C00BFD6E5 /* AddTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */; };
 		3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */; };
 		3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBFB24893AF100BFD6E5 /* Task.swift */; };
@@ -60,6 +61,7 @@
 		3F59239B24A17677008F45D6 /* PentagonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PentagonView.swift; sourceTree = "<group>"; };
 		3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummativesViewController.swift; sourceTree = "<group>"; };
 		3F5923C324AC0C13008F45D6 /* SelectSummativeTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSummativeTypeViewController.swift; sourceTree = "<group>"; };
+		3F63BF9424B7CB0B00404806 /* ColorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsViewController.swift; sourceTree = "<group>"; };
 		3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskViewController.swift; sourceTree = "<group>"; };
 		3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		3F67BBFB24893AF100BFD6E5 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Task.swift; path = Course/Task.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 			children = (
 				3F383E722486B2EE00D2A5D1 /* TimelineViewController.swift */,
 				3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */,
+				3F63BF9424B7CB0B00404806 /* ColorsViewController.swift */,
 				3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */,
 				3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */,
 				3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */,
@@ -372,6 +375,7 @@
 				3F94E3252496895900B0F958 /* AssignmentCell.swift in Sources */,
 				3F67BC29248EE6AA00BFD6E5 /* PickerViewController.swift in Sources */,
 				3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */,
+				3F63BF9524B7CB0B00404806 /* ColorsViewController.swift in Sources */,
 				3F383E5C2486B25E00D2A5D1 /* AppDelegate.swift in Sources */,
 				3F5923BE24AA9FCC008F45D6 /* SummativesViewController.swift in Sources */,
 				3F94E2CD2492A68B00B0F958 /* CourseCell.swift in Sources */,

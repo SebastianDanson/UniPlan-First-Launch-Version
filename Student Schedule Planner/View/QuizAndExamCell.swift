@@ -40,38 +40,19 @@ class QuizAndExamCell: SwipeTableViewCell {
     
     //MARK: - setupUI
     func setupViews() {
-        let color = TaskService.shared.getColor(colorAsInt: AllCoursesService.shared.getSelectedCourse()?.color ?? 0)
         let nextImage = UIImageView(image: nextIcon!)
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
         
         reminderImage = UIImageView(image: reminderIcon!)
         reminderImage.tintColor = color
         
-        let course = AllCoursesService.shared.getSelectedCourse()
-        //Sets the color of the locationIcon based on the color of the course
-        if let color = course?.color {
-            switch color {
-            case 0:
-                locationIcon = UIImage(named: "locationRed")
-            case 1:
-                locationIcon = UIImage(named: "locationOrange")
-            case 2:
-                locationIcon = UIImage(named: "locationYellow")
-            case 3:
-                locationIcon = UIImage(named: "locationGreen")
-            case 4:
-                locationIcon = UIImage(named: "locationTurquoise")
-            case 5:
-                locationIcon = UIImage(named: "locationBlue")
-            case 6:
-                locationIcon = UIImage(named: "locationDarkBlue")
-            case 7:
-                locationIcon = UIImage(named: "locationPurple")
-            default:
-                break
-            }
-        }
-        
         locationImage = UIImageView(image: locationIcon!)
+        
+        let tintedLocationIcon = locationIcon?.withRenderingMode(.alwaysTemplate)
+        locationImage.image = tintedLocationIcon
+        locationImage.tintColor = color
+        
         backgroundColor = .backgroundColor
         addSubview(taskView)
         
@@ -134,6 +115,16 @@ class QuizAndExamCell: SwipeTableViewCell {
          * When updating the cell I check for if the object is a quiz or exam,
          */
         
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+        
+        let tintedLocationIcon = locationIcon?.withRenderingMode(.alwaysTemplate)
+        locationImage.image = tintedLocationIcon
+        locationImage.tintColor = color
+        
+        reminderImage.tintColor = color
+        taskView.layer.borderColor = color.cgColor
+        
         if let quiz = quiz {
             dateLabel.text = formatDate(from: quiz.startDate)
             timeLabel.text = "\(formatTime(from: quiz.startDate))-\(formatTime(from: quiz.endDate))"
@@ -153,7 +144,6 @@ class QuizAndExamCell: SwipeTableViewCell {
         if let exam = exam {
             dateLabel.text = formatDate(from: exam.startDate)
             timeLabel.text = "\(formatTime(from: exam.startDate))-\(formatTime(from: exam.endDate))"
-            
             locationLabel.text = exam.location
             
             if exam.reminder {

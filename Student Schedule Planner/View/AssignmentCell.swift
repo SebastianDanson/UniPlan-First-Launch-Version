@@ -30,14 +30,14 @@ class AssignmentCell: SwipeTableViewCell {
     let dateLabel = makeLabel(ofSize: 16, weight: .regular)
     let timeLabel = makeLabel(ofSize: 16, weight: .regular)
     let nextIcon = UIImage(named: "nextMenuButtonGray")
+    var reminderImage = UIImageView()
     
     //MARK: - setupUI
     func setupViews() {
-        let color = TaskService.shared.getColor(colorAsInt: AllCoursesService.shared.getSelectedCourse()?.color ?? 0)
+        let color = TaskService.shared.getColor()
         
         let nextImage = UIImageView(image: nextIcon!)
-        let reminderImage = UIImageView(image: reminderIcon!)
-        reminderImage.tintColor = color
+        reminderImage = UIImageView(image: reminderIcon!)
         
         let marginGuide = contentView.layoutMarginsGuide
         
@@ -97,6 +97,12 @@ class AssignmentCell: SwipeTableViewCell {
         titleLabel.text = assignment.title
         dateLabel.text = formatDateNoDay(from: assignment.dueDate)
         timeLabel.text = formatTime(from: assignment.dueDate)
+        
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+        
+        reminderImage.tintColor = color
+        taskView.layer.borderColor = color.cgColor
         
         if assignment.title == "" {
             titleLabel.text = "Untitled"

@@ -151,74 +151,61 @@ class SingleClassCell: SwipeTableViewCell {
     //MARK: - Actions
     func update(theClass: SingleClass) {
         let course = AllCoursesService.shared.getSelectedCourse()
+        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+        
+        let tintedLocationIcon = locationIcon?.withRenderingMode(.alwaysTemplate)
+        locationImage.image = tintedLocationIcon
+        locationImage.tintColor = color
         
         classTypeLabel.text = theClass.subType.description
         
-        taskView.layer.borderColor = TaskService.shared.getColor(colorAsInt: course?.color ?? 0).cgColor
+        taskView.layer.borderColor = color.cgColor
         
-        if let color = course?.color {
-            switch color {
-            case 0:
-                locationIcon = UIImage(named: "locationRed")
-            case 1:
-                locationIcon = UIImage(named: "locationOrange")
-            case 2:
-                locationIcon = UIImage(named: "locationYellow")
-            case 3:
-                locationIcon = UIImage(named: "locationGreen")
-            case 4:
-                locationIcon = UIImage(named: "locationTurquoise")
-            case 5:
-                locationIcon = UIImage(named: "locationBlue")
-            case 6:
-                locationIcon = UIImage(named: "locationDarkBlue")
-            case 7:
-                locationIcon = UIImage(named: "locationPurple")
-            default:
-                break
-            }
-        }
-        locationImage.image = locationIcon
-        reminderImage.tintColor = TaskService.shared.getColor(colorAsInt: course?.color ?? 0)
-        
-        //Unhighlights all buttons
-        monday.unhighlight(courseColor: 0)
-        tuesday.unhighlight(courseColor: 0)
-        wednesday.unhighlight(courseColor: 0)
-        thursday.unhighlight(courseColor: 0)
-        friday.unhighlight(courseColor: 0)
-        saturday.unhighlight(courseColor: 0)
-        sunday.unhighlight(courseColor: 0)
-        
-        //Highlights the specified class days
-        for(index, day) in theClass.classDays.enumerated() {
-            if day == 1 {
-                switch index {
-                case 0:
-                    sunday.highlight(courseColor: 0)
-                case 1:
-                    monday.highlight(courseColor: 0)
-                case 2:
-                    tuesday.highlight(courseColor: 0)
-                case 3:
-                    wednesday.highlight(courseColor: 0)
-                case 4:
-                    thursday.highlight(courseColor: 0)
-                case 5:
-                    friday.highlight(courseColor: 0)
-                case 6:
-                    saturday.highlight(courseColor: 0)
-                default:
-                    break
-                }
-            }
-        }
+        reminderImage.tintColor = color
         
         locationLabel.text = theClass.location == "" ? "Not set": theClass.location
         
         startTimeLabel.text = "\(formatTime(from: theClass.startTime))-"
         endTimeLabel.text = formatTime(from: theClass.endTime)
         
+        monday.unhighlight(courseColor: color)
+        tuesday.unhighlight(courseColor: color)
+        wednesday.unhighlight(courseColor: color)
+        thursday.unhighlight(courseColor: color)
+        friday.unhighlight(courseColor: color)
+        saturday.unhighlight(courseColor: color)
+        sunday.unhighlight(courseColor: color)
+        
+        //Highlights the days of the class
+        for (index, day) in theClass.classDays.enumerated() {
+            if day == 1 {
+                switch index {
+                case 0:
+                    sunday.highlight(courseColor: color)
+                    SingleClassService.shared.setClassDay(day: 0)
+                case 1:
+                    monday.highlight(courseColor: color)
+                    SingleClassService.shared.setClassDay(day: 1)
+                case 2:
+                    tuesday.highlight(courseColor: color)
+                    SingleClassService.shared.setClassDay(day: 2)
+                case 3:
+                    wednesday.highlight(courseColor: color)
+                    SingleClassService.shared.setClassDay(day: 3)
+                case 4:
+                    thursday.highlight(courseColor: color)
+                    SingleClassService.shared.setClassDay(day: 4)
+                case 5:
+                    friday.highlight(courseColor: color)
+                    SingleClassService.shared.setClassDay(day: 5)
+                case 6:
+                    saturday.highlight(courseColor: color)
+                    SingleClassService.shared.setClassDay(day: 6)
+                default:
+                    break
+                }
+            }
+        }
         let repeats = theClass.repeats
         classFrequencyLabel.text = repeats == "Never Repeats" ? repeats : "Every \(repeats)"
         

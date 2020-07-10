@@ -22,6 +22,7 @@ class TaskService {
     private var startTime = Date()
     private var endTime = Date().addingTimeInterval(3600)
     private var isClass = false //If the task is associated with a class
+    private var color = UIColor.alizarin
     
     let realm =  try! Realm()
     init() {
@@ -154,11 +155,10 @@ class TaskService {
     }
     
     func formatReminderString(reminderTime: [Int]) -> String{
-        let hourString = "h"
         if reminderTime == [0,0] {
             return "When It Starts"
         } else {
-            return "\(reminderTime[0])\(hourString), \(reminderTime[1])m before"
+            return "\(reminderTime[0])h, \(reminderTime[1])m before"
         }
     }
     
@@ -176,6 +176,8 @@ class TaskService {
         let endDate = Calendar.current.startOfDay(for: theClass.endDate.addingTimeInterval(86400))
         var skipDates = 0
         let course = AllCoursesService.shared.getSelectedCourse()
+        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+        
         var numDays: Int = {
             return (Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: startDate).day ?? 0)
         }()
@@ -192,7 +194,11 @@ class TaskService {
                 task.courseId = course?.id ?? ""
                 task.type = theClass.type
                 task.summativeId = theClass.id
-                task.color = course?.color ?? 0
+                
+                let rgb = color.components
+                task.color[0] = Double(rgb.red)
+                task.color[1] = Double(rgb.green)
+                task.color[2] = Double(rgb.blue)
                 
                 switch theClass.repeats {
                 case "2 Weeks":
@@ -238,7 +244,10 @@ class TaskService {
         task.courseId = course?.id ?? ""
         task.type = "quiz"
         task.summativeId = quiz.summativeId
-        task.color = course?.color ?? 0
+        task.color[0] = course?.color[0] ?? 0
+        task.color[1] = course?.color[1] ?? 0
+        task.color[2] = course?.color[2] ?? 0
+        
         task.summativeId = quiz.id
         
         scheduleNotification(forTask: task)
@@ -259,7 +268,11 @@ class TaskService {
         task.courseId = course?.id ?? ""
         task.type = "assignment"
         task.summativeId = assignment.id
-        task.color = course?.color ?? 0
+        
+        task.color[0] = course?.color[0] ?? 0
+        task.color[1] = course?.color[1] ?? 0
+        task.color[2] = course?.color[2] ?? 0
+        
         
         scheduleNotification(forTask: task)
         realm.add(task, update: .modified)
@@ -279,7 +292,9 @@ class TaskService {
         task.reminderDate = exam.reminderDate
         task.courseId = course?.id ?? ""
         task.type = "exam"
-        task.color = course?.color ?? 0
+        task.color[0] = course?.color[0] ?? 0
+        task.color[1] = course?.color[1] ?? 0
+        task.color[2] = course?.color[2] ?? 0
         task.summativeId = exam.id
         
         scheduleNotification(forTask: task)
@@ -386,8 +401,14 @@ class TaskService {
         center.requestAuthorization(options: [.alert, .badge, .sound], completionHandler: {_,_ in })
     }
     
+    func deleteNotification(forTask task: Task){
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [task.id])
+    }
+    
     @objc func scheduleNotification(forTask task: Task) {
         let center = UNUserNotificationCenter.current()
+        
         let content = UNMutableNotificationContent()
         center.removePendingNotificationRequests(withIdentifiers: [task.id])
         
@@ -433,38 +454,22 @@ class TaskService {
         let request = UNNotificationRequest(identifier: task.id, content: content, trigger: trigger)
         center.add(request)
     }
-    //MARK: - Color
-    func getColor(colorAsInt color: Int) -> UIColor {
-        
-        switch color {
-        case 0:
-            return .alizarin
-        case 1:
-            return .carrot
-        case 2:
-            return .sunflower
-        case 3:
-            return .emerald
-        case 4:
-            return .turquoise
-        case 5:
-            return .riverBlue
-        case 6:
-            return .midnightBlue
-        case 7:
-            return .amethyst
-        default:
-            return .clear
-        }
-    }
     
-    //MARK: - isCLass
+    //MARK: - isClass
     func getIsClass() -> Bool {
         return isClass
     }
     
     func setIsClass(bool: Bool) {
         isClass = bool
+    }
+    //MARK: - color
+    func getColor() -> UIColor {
+        return color
+    }
+    
+    func setColor(color: UIColor) {
+        self.color = color
     }
 }
 

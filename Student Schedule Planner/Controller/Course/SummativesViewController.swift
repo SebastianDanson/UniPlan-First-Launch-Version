@@ -183,7 +183,7 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
         let sectionName = makeHeading(withText: "")
         let seperator = makeSpacerView(height: 2)
         
-        tableView.backgroundColor = .backgroundColor
+        view.backgroundColor = .backgroundColor
         view.addSubview(sectionName)
         view.addSubview(seperator)
         

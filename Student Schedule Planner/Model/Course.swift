@@ -13,10 +13,10 @@ import RealmSwift
 
 class Course: Object {
     
-    @objc dynamic var color = 0
     @objc dynamic var startDate = Date()
     @objc dynamic var endDate = Date()
     @objc dynamic var title = ""
+    var color = List<Double>() //Stores RGB values of color
     
     var classes = List<SingleClass>()
     var assignments = List<Assignment>()
@@ -24,6 +24,10 @@ class Course: Object {
     var exams = List<Exam>()
     
     @objc dynamic var id = UUID().uuidString
+    
+    required init() {
+         color.append(objectsIn: [0, 0, 0])
+     }
     
     override class func primaryKey() -> String? {
         return "id"

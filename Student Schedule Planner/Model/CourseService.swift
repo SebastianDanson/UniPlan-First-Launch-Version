@@ -30,7 +30,6 @@ class CourseService {
     private var endDate = Date()
     
     private var quizOrExam = 0 //0 -> quiz, non zero ->Exam
-    private var color = 0
     
     static let shared = CourseService()
     private init() {}
@@ -158,14 +157,6 @@ class CourseService {
     
     func setQuizOrExam(int: Int) {
         quizOrExam = int
-    }
-    
-    func getColor() -> Int {
-        return color
-    }
-    
-    func setColor(int: Int) {
-        color = int
     }
     
     //MARK: - Start Date

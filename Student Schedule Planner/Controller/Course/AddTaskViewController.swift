@@ -20,7 +20,6 @@ class AddTaskViewController: PickerViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        CourseService.shared.setColor(int: 0)
         TaskService.shared.setCheckForTimeConflict(bool: true)
         self.dismissKey()
         setupViews()
@@ -29,6 +28,7 @@ class AddTaskViewController: PickerViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupReminderTime() //sets up initial reminder time
+        colorRectangle.backgroundColor = TaskService.shared.getColor()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -48,6 +48,7 @@ class AddTaskViewController: PickerViewController {
     let titleLabel = makeTitleLabel(withText: "Add Task")
     let backButton = makeBackButton()
     let deleteButton = makeDeleteButton()
+    let colorRectangle = UIButton()
     
     //Not topView
     let titleTextField = makeTextField(withPlaceholder: "Title", height: 50 )
@@ -90,17 +91,6 @@ class AddTaskViewController: PickerViewController {
     var locationTopAnchorConstaint = NSLayoutConstraint()
     var locationOtherAnchorConstaint = NSLayoutConstraint()
     
-    //Color Buttons
-    let red = makeColorButton(ofColor: .alizarin)
-    let orange = makeColorButton(ofColor: .carrot)
-    let yellow = makeColorButton(ofColor: .sunflower)
-    let green = makeColorButton(ofColor: .emerald)
-    let turquoise = makeColorButton(ofColor: .turquoise)
-    let blue = makeColorButton(ofColor: .riverBlue)
-    let darkBlue = makeColorButton(ofColor: .midnightBlue)
-    let purple = makeColorButton(ofColor: .amethyst)
-    let colorStackView = makeStackView(withOrientation: .horizontal, spacing: 3)
-    
     //MARK: - setup UI
     func setupViews() {
         clockImage = UIImageView(image: clockIcon!)
@@ -125,16 +115,7 @@ class AddTaskViewController: PickerViewController {
         reminderView.addSubview(colorView)
         
         colorView.addSubview(colorHeading)
-        colorView.addSubview(colorStackView)
-        
-        colorStackView.addArrangedSubview(red)
-        colorStackView.addArrangedSubview(orange)
-        colorStackView.addArrangedSubview(yellow)
-        colorStackView.addArrangedSubview(green)
-        colorStackView.addArrangedSubview(turquoise)
-        colorStackView.addArrangedSubview(blue)
-        colorStackView.addArrangedSubview(darkBlue)
-        colorStackView.addArrangedSubview(purple)
+        colorView.addSubview(colorRectangle)
         
         startTimeView.addSubview(clockImage)
         startTimeView.addSubview(startTime)
@@ -213,6 +194,12 @@ class AddTaskViewController: PickerViewController {
         colorView.setDimensions(height: 100)
         colorView.centerX(in: reminderView)
         
+        colorRectangle.backgroundColor = TaskService.shared.getColor()
+        colorRectangle.anchor(top: colorHeading.bottomAnchor, left: reminderHeading.leftAnchor)
+        colorRectangle.setDimensions(width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.height/18)
+        colorRectangle.layer.cornerRadius = 6
+        colorRectangle.addTarget(self, action: #selector(colorRectanglePressed), for: .touchUpInside)
+        
         reminderView.topAnchor.constraint(equalTo: dateButton.bottomAnchor).isActive = true
         reminderView.anchor(left: view.leftAnchor, paddingLeft: 20)
         reminderView.setDimensions(height: 275)
@@ -246,10 +233,6 @@ class AddTaskViewController: PickerViewController {
                             left: reminderHeading.leftAnchor,
                             paddingTop: 5)
         
-        colorStackView.anchor(top: colorHeading.bottomAnchor,
-                              left: colorHeading.leftAnchor,
-                              paddingTop: 5)
-        
         saveButton.centerX(in: view)
         saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: UIScreen.main.bounds.height/25)
         saveButton.addTarget(self, action: #selector(saveTask), for: .touchUpInside)
@@ -269,25 +252,6 @@ class AddTaskViewController: PickerViewController {
         
         datePickerView.date = TaskService.shared.getDateSelected()
         
-        red.tag = 0
-        orange.tag = 1
-        yellow.tag = 2
-        green.tag = 3
-        turquoise.tag = 4
-        blue.tag = 5
-        darkBlue.tag = 6
-        purple.tag = 7
-        
-        red.alpha = 0.3
-        red.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        orange.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        yellow.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        green.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        turquoise.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        blue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        darkBlue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        purple.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        
         //If a previous task was selected
         if let taskIndex = TaskService.shared.getTaskIndex() {
             if let task = TaskService.shared.getTask(atIndex: taskIndex) {
@@ -298,7 +262,6 @@ class AddTaskViewController: PickerViewController {
                 TaskService.shared.setDateOrTime(scIndex: task.dateOrTime)
                 let reminderTime: [Int] = [task.reminderTime[0], task.reminderTime[1]]
                 TaskService.shared.setReminderTime(reminderTime)
-                CourseService.shared.setColor(int: task.color)
                 locationTextField.text = task.location
                 startTime.text = formatTime(from: task.startDate)
                 endTime.text = formatTime(from: task.endDate)
@@ -306,26 +269,7 @@ class AddTaskViewController: PickerViewController {
                 TaskService.shared.setEndTime(time: task.endDate)
                 titleLabel.text = "Edit Task"
                 
-                switch task.color {
-                case 0:
-                    colorButtonPressed(button: red)
-                case 1:
-                    colorButtonPressed(button: orange)
-                case 2:
-                    colorButtonPressed(button: yellow)
-                case 3:
-                    colorButtonPressed(button: green)
-                case 4:
-                    colorButtonPressed(button: turquoise)
-                case 5:
-                    colorButtonPressed(button: blue)
-                case 6:
-                    colorButtonPressed(button: darkBlue)
-                case 7:
-                    colorButtonPressed(button: purple)
-                default:
-                    break
-                }
+                //set color
             }
         }
     }
@@ -345,6 +289,12 @@ class AddTaskViewController: PickerViewController {
     }
     
     //MARK: - Actions
+    @objc func colorRectanglePressed() {
+        let vc = ColorsViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
+    }
+    
     @objc func timePickerDateChanged() {
         reminderTopAnchorConstaint.isActive = false
         reminderOtherAnchorConstaint.isActive = true
@@ -458,8 +408,13 @@ class AddTaskViewController: PickerViewController {
         task.endDate = date.addingTimeInterval(TimeInterval(endComponents.hour! * 3600 + endComponents.minute! * 60))
         task.dateOrTime = TaskService.shared.getDateOrTime()
         task.reminder = reminderSwitch.isOn
-        task.color = CourseService.shared.getColor()
         task.location = locationTextField.text ?? ""
+        
+        let rgb = TaskService.shared.getColor().components
+        
+        task.color[0] = Double(rgb.red)
+        task.color[1] = Double(rgb.green)
+        task.color[2] = Double(rgb.blue)
         
         if task.dateOrTime == 0 {
             let reminderTime = TaskService.shared.getReminderTime()
@@ -483,17 +438,28 @@ class AddTaskViewController: PickerViewController {
                         taskToUpdate?.reminder = task.reminder
                         taskToUpdate?.reminderTime[0] = task.reminderTime[0]
                         taskToUpdate?.reminderTime[1] = task.reminderTime[1]
-                        taskToUpdate?.color = task.color
+                        
+                        taskToUpdate?.color[0] = task.color[0]
+                        taskToUpdate?.color[1] = task.color[1]
+                        taskToUpdate?.color[2] = task.color[2]
+                        
                         taskToUpdate?.location = task.location
+                        if task.reminder, let taskToUpdate = taskToUpdate {
+                            TaskService.shared.scheduleNotification(forTask: taskToUpdate)
+                        } else if let taskToUpdate = taskToUpdate {
+                            TaskService.shared.deleteNotification(forTask: taskToUpdate)
+                        }
                     } else {
                         realm.add(task, update: .modified)
+                        if task.reminder {
+                            TaskService.shared.scheduleNotification(forTask: task)
+                        }
                     }
                 }
             } catch {
                 print("Error writing task to realm, \(error.localizedDescription)")
             }
             TaskService.shared.updateTasks()
-            TaskService.shared.scheduleNotification(forTask: task)
             dismiss(animated: true)
         }
     }
@@ -503,7 +469,28 @@ class AddTaskViewController: PickerViewController {
             try realm.write {
                 if let taskIndex = TaskService.shared.getTaskIndex() {
                     if let taskToDelete = TaskService.shared.getTask(atIndex: taskIndex) {
-                        realm.delete(taskToDelete)
+                        
+                        switch taskToDelete.type {
+                        case "assignment":
+                            let assignmentToDelete = realm.objects(Assignment.self).filter("id == %@", taskToDelete.summativeId).first
+                            if let assignmentToDelete = assignmentToDelete {
+                                realm.delete(assignmentToDelete)
+                            }
+                        case "quiz":
+                            let quizToDelete = realm.objects(Quiz.self).filter("id == %@", taskToDelete.summativeId).first
+                            if let quizToDelete = quizToDelete {
+                                realm.delete(quizToDelete)
+                            }
+                        case "exam":
+                            let examToDelete = realm.objects(Exam.self).filter("id == %@", taskToDelete.summativeId).first
+                            if let examToDelete = examToDelete {
+                                realm.delete(examToDelete)
+                            }
+                        default:
+                            break
+                        }
+                        TaskService.shared.deleteNotification(forTask: taskToDelete)
+                        self.realm.delete(taskToDelete)
                         TaskService.shared.updateTasks()
                     }
                 }
@@ -543,19 +530,6 @@ class AddTaskViewController: PickerViewController {
                 self.colorView.frame.origin.y = self.reminderSwitch.frame.maxY
             })
         }
-    }
-    
-    @objc func colorButtonPressed(button: UIButton) {
-        red.alpha = 1
-        orange.alpha = 1
-        yellow.alpha = 1
-        green.alpha = 1
-        turquoise.alpha = 1
-        blue.alpha = 1
-        darkBlue.alpha = 1
-        purple.alpha = 1
-        button.alpha = 0.3
-        CourseService.shared.setColor(int: button.tag)
     }
     
     //MARK: - Helper methods

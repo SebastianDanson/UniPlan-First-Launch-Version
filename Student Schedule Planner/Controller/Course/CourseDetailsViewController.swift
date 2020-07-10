@@ -36,10 +36,13 @@ class CourseDetailsViewController: SwipeViewController {
         CourseService.shared.setSelectedQuiz(quiz: nil)
         CourseService.shared.setSelectedExam(exam: nil)
         
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+        topView.backgroundColor = color
+        
         titleLabel.text = AllCoursesService.shared.getSelectedCourse()?.title ?? ""
         
         tableView.reloadData()
-        topView.backgroundColor = TaskService.shared.getColor(colorAsInt: CourseService.shared.getColor())
     }
     
     //MARK: - Properties
@@ -243,7 +246,10 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
         sectionName.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, paddingLeft: 10, paddingBottom: 5)
         addButton.anchor(left: sectionName.rightAnchor, paddingLeft: 5)
         addButton.centerYAnchor.constraint(equalTo: sectionName.centerYAnchor).isActive = true
-        addButton.backgroundColor = TaskService.shared.getColor(colorAsInt: CourseService.shared.getColor())
+        
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+        addButton.backgroundColor = color
         
         seperator.backgroundColor = .silver
         seperator.anchor(top: view.topAnchor, paddingTop: 5)
@@ -260,9 +266,11 @@ extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSourc
             addButton.addTarget(self, action: #selector(AddAssignmentButtonPressed), for: .touchUpInside)
         case 2:
             sectionName.text = "Quizzes"
+            CourseService.shared.setSelectedQuiz(quiz: nil)
             addButton.addTarget(self, action: #selector(AddQuizButtonPressed), for: .touchUpInside)
         case 3:
             sectionName.text = "Exams"
+            CourseService.shared.setSelectedExam(exam: nil)
             addButton.addTarget(self, action: #selector(AddExamButtonPressed), for: .touchUpInside)
         default:
             break

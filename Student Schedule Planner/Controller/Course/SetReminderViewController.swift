@@ -125,12 +125,13 @@ class SetReminderViewController: PickerViewController {
     @objc func saveButtonPressed() {
         let time = [self.hour, self.minutes]
         let date = datePickerView.date
+        print(time)
         TaskService.shared.setReminderTime(time)
         TaskService.shared.setReminderDate(date: date)
         TaskService.shared.setDateOrTime(scIndex: pickerTypeSegmentedControl.selectedSegmentIndex)
         TaskService.shared.setHideReminder(bool: false)
         SingleClassService.shared.setReminder(true)
-
+        
         dismiss(animated: true)
     }
     

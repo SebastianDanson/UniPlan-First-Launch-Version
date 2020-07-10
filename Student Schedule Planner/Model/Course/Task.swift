@@ -19,14 +19,15 @@ class Task: Object {
     @objc dynamic var dateOrTime = 0 //0 means time was set, non zero means date was set
     @objc dynamic var reminderDate: Date = Date()
     @objc dynamic var location = ""
-    @objc dynamic var color = 0
     @objc dynamic var courseId = ""
     @objc dynamic var type = ""
     @objc dynamic var summativeId = UUID().uuidString //for deleting summative associated with task
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
+    var color = List<Double>() //Stores RGB values of color
     
     required init() {
         reminderTime.append(objectsIn: [0, 0])
+        color.append(objectsIn: [0, 0, 0])
     }
     
     override class func primaryKey() -> String? {

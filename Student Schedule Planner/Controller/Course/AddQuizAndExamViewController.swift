@@ -170,7 +170,7 @@ class AddQuizAndExamViewController: UIViewController {
         reminderTopAnchorConstaint = reminderView.topAnchor.constraint(equalTo: dateButton.bottomAnchor)
         reminderOtherAnchorConstaint = reminderView.topAnchor.constraint(equalTo: datePickerView.bottomAnchor)
         reminderTopAnchorConstaint.isActive = true
-    
+        
         reminderView.anchor(left: view.leftAnchor, paddingLeft: 20)
         reminderView.setDimensions(height: 275)
         reminderHeading.anchor(top: locationTextField.bottomAnchor,

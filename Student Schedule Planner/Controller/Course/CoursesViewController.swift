@@ -105,6 +105,7 @@ class CoursesViewController: SwipeViewController {
                         }
                         
                         for task in tasksToUpDelete {
+                            TaskService.shared.deleteNotification(forTask: task)
                             self.realm.delete(task)
                         }
                         
@@ -179,13 +180,16 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AllCoursesService.shared.setCourseIndex(index: indexPath.row)
         
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+        
+        TaskService.shared.setColor(color: color)
         if AllCoursesService.shared.getAddSummative() {
             let vc = SelectSummativeTypeViewController()
             vc.modalPresentationStyle = .fullScreen
             present(vc, animated: true, completion: nil)
         }
         
-        CourseService.shared.setColor(int: AllCoursesService.shared.getSelectedCourse()?.color ?? 0)
         let vc = CourseDetailsViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)

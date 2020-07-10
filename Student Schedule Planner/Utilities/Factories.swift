@@ -26,15 +26,15 @@ func makeTopView(height: CGFloat) -> UIView {
 
 //The Calendar on TimelineVC
 func makeCalendar() -> FSCalendar{
-    let calendar = FSCalendar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height/35, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height/3))
+    let calendar = FSCalendar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height/38, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height/2.5))
     calendar.scope = .week
-    calendar.appearance.headerDateFormat = "MMMM"
+    calendar.appearance.headerDateFormat = "MMMM Y"
     calendar.appearance.weekdayTextColor = UIColor.backgroundColor
     calendar.appearance.headerTitleColor = UIColor.backgroundColor
     calendar.appearance.titleDefaultColor = UIColor.backgroundColor
-    calendar.appearance.headerTitleFont = UIFont.systemFont(ofSize: 28, weight: .bold)
+    calendar.appearance.headerTitleFont = UIFont.systemFont(ofSize: 24, weight: .bold)
     calendar.appearance.titleFont = UIFont.systemFont(ofSize: 16, weight: .bold)
-    calendar.appearance.weekdayFont = UIFont.systemFont(ofSize: 16, weight: .bold)
+    calendar.appearance.weekdayFont = UIFont.systemFont(ofSize: 14, weight: .bold)
     calendar.appearance.titleTodayColor = .mainBlue
     calendar.appearance.todayColor = .backgroundColor
     calendar.firstWeekday = 2
@@ -215,8 +215,7 @@ func makeDayCircleButton(withLetter day: String) -> UIButton {
     button.setDimensions(width: 26, height: 26)
     button.layer.cornerRadius = 13
     button.setTitle(day, for: .normal)
-    button.unhighlight()
-    
+
     return button
 }
 
@@ -250,9 +249,9 @@ func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
     button.setDimensions(width: (UIScreen.main.bounds.width - 70)/7, height: (UIScreen.main.bounds.width - 70)/7)
     button.layer.cornerRadius = (UIScreen.main.bounds.width - 70)/14
     button.clipsToBounds = true
-    button.unhighlight()
     button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
-    
+    button.unhighlight()
+
     return button
 }
 
@@ -321,3 +320,4 @@ func makeColorButton(ofColor color: UIColor) -> UIButton {
     
     return button
 }
+

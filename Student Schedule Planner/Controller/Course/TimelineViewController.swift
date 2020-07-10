@@ -24,9 +24,13 @@ class TimelineViewController: SwipeViewController  {
     
     //MARK: - Properties
     var tableView = makeTableView(withRowHeight: 80)
-    let topView = makeTopView(height: UIScreen.main.bounds.height/5.5)
+    let topView = UIView()
     let addButton = makeAddButton()
     let calendar = makeCalendar()
+    let pullDownView = UIView()
+    
+    var topViewWeekHeightAnchor = NSLayoutConstraint()
+    var topViewMonthHeightAnchor = NSLayoutConstraint()
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -49,6 +53,7 @@ class TimelineViewController: SwipeViewController  {
     
     //MARK: - setup UI
     func setupViews() {
+        
         tableView.isScrollEnabled = true
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -58,10 +63,32 @@ class TimelineViewController: SwipeViewController  {
         view.addSubview(tableView)
         topView.addSubview(calendar)
         topView.addSubview(addButton)
+        topView.addSubview(pullDownView)
+        
+        pullDownView.anchor(bottom: topView.bottomAnchor, paddingBottom: 3)
+        pullDownView.centerX(in: topView)
+        pullDownView.setDimensions(width: UIScreen.main.bounds.width/5, height: 5)
+        pullDownView.layer.cornerRadius = 2.5
+        pullDownView.backgroundColor = .white
+        
+        topView.backgroundColor = .mainBlue
+        topView.setDimensions(width: UIScreen.main.bounds.width)
+        
+        topViewWeekHeightAnchor = topView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height/5)
+        topViewMonthHeightAnchor = topView.heightAnchor.constraint(equalToConstant: calendar.bounds.height + UIScreen.main.bounds.height/20)
+        topViewWeekHeightAnchor.isActive = true
         
         calendar.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         calendar.delegate = self
         calendar.dataSource = self
+        
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(calendarSwipeUp))
+        swipeUp.direction = .up
+        self.view.addGestureRecognizer(swipeUp)
+        
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(calendarSwipeDown))
+        swipeDown.direction = .down
+        self.view.addGestureRecognizer(swipeDown)
         
         topView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         topView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -105,6 +132,7 @@ class TimelineViewController: SwipeViewController  {
                     default:
                         break
                     }
+                    TaskService.shared.deleteNotification(forTask: taskToDelete)
                     self.realm.delete(taskToDelete)
                     self.tableView.reloadData()
                 }
@@ -115,11 +143,36 @@ class TimelineViewController: SwipeViewController  {
     }
     
     //MARK: - Actions
+    @objc func calendarSwipeDown() {
+        view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.5, animations: {
+            self.topViewWeekHeightAnchor.isActive = false
+            self.topViewMonthHeightAnchor.isActive = true
+            self.view.layoutIfNeeded()
+        })
+        calendar.scope = .month
+        
+    }
+    
+    @objc func calendarSwipeUp() {
+        view.layoutIfNeeded()
+        
+        UIView.animate(withDuration: 0.5, animations: {
+            self.topViewWeekHeightAnchor.isActive = true
+            self.topViewMonthHeightAnchor.isActive = false
+            self.view.layoutIfNeeded()
+        })
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: {
+            self.calendar.scope = .week
+        })
+        
+    }
+    
     @objc func addButtonTapped() {
         TaskService.shared.setDateOrTime(scIndex: 0)
         TaskService.shared.setReminderDate(date: Date())
         TaskService.shared.setReminderTime([0,0])
-
+        
         let vc = AddTaskViewController()
         vc.modalPresentationStyle = .fullScreen 
         self.present(vc, animated: true, completion: nil)

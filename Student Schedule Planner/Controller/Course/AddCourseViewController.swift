@@ -16,13 +16,13 @@ class AddCourseViewController: PickerViewController {
     //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        CourseService.shared.setColor(int: 0)
         self.dismissKey()
         setupViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        colorRectangle.backgroundColor = TaskService.shared.getColor()
     }
     
     //MARK: - properties
@@ -33,30 +33,23 @@ class AddCourseViewController: PickerViewController {
     
     //Not topView
     let titleTextField = makeTextField(withPlaceholder: "Course Name:", height: 50 )
+    let saveButton = makeSaveButton()
+    
     let startDateView = PentagonView()
     let endDateView = UIView()
     let datePickerView = makeDatePicker(withHeight: UIScreen.main.bounds.height/4.5)
     let startDate = makeLabel(ofSize: 20, weight: .semibold)
     let endDate = makeLabel(ofSize: 20, weight: .semibold)
+    
     let colorHeading = makeHeading(withText: "Color:")
-    let colorStackView = makeStackView(withOrientation: .horizontal, spacing: 3)
-    let saveButton = makeSaveButton()
     let colorView = makeAnimatedView()
+    let colorRectangle = UIButton()
+    
     let calendarIcon = UIImage(systemName: "calendar")
     var calendarImage = UIImageView(image: nil)
     
     var colorTopAnchorConstaint = NSLayoutConstraint()
     var colorOtherAnchorConstaint = NSLayoutConstraint()
-    
-    //Color Buttons
-    let red = makeColorButton(ofColor: .alizarin)
-    let orange = makeColorButton(ofColor: .carrot)
-    let yellow = makeColorButton(ofColor: .sunflower)
-    let green = makeColorButton(ofColor: .emerald)
-    let turquoise = makeColorButton(ofColor: .turquoise)
-    let blue = makeColorButton(ofColor: .riverBlue)
-    let darkBlue = makeColorButton(ofColor: .midnightBlue)
-    let purple = makeColorButton(ofColor: .amethyst)
     
     //MARK: - UISetup
     func setupViews() {
@@ -79,16 +72,7 @@ class AddCourseViewController: PickerViewController {
         topView.addSubview(backButton)
         
         colorView.addSubview(colorHeading)
-        colorView.addSubview(colorStackView)
-        
-        colorStackView.addArrangedSubview(red)
-        colorStackView.addArrangedSubview(orange)
-        colorStackView.addArrangedSubview(yellow)
-        colorStackView.addArrangedSubview(green)
-        colorStackView.addArrangedSubview(turquoise)
-        colorStackView.addArrangedSubview(blue)
-        colorStackView.addArrangedSubview(darkBlue)
-        colorStackView.addArrangedSubview(purple)
+        colorView.addSubview(colorRectangle)
         
         topView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
         
@@ -108,7 +92,11 @@ class AddCourseViewController: PickerViewController {
         colorView.setDimensions(height: 200)
         
         colorHeading.anchor(top: colorView.topAnchor, left: colorView.leftAnchor, paddingTop: 20)
-        colorStackView.anchor(top: colorHeading.bottomAnchor, left: colorHeading.leftAnchor, paddingTop: 5)
+        colorRectangle.backgroundColor = TaskService.shared.getColor()
+        colorRectangle.anchor(top: colorHeading.bottomAnchor, left: colorHeading.leftAnchor)
+        colorRectangle.setDimensions(width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.height/18)
+        colorRectangle.layer.cornerRadius = 6
+        colorRectangle.addTarget(self, action: #selector(colorRectanglePressed), for: .touchUpInside)
         
         let startTap = UITapGestureRecognizer(target: self, action: #selector(startDateViewTapped))
         startDateView.setDimensions(width: UIScreen.main.bounds.width/2,
@@ -161,26 +149,6 @@ class AddCourseViewController: PickerViewController {
         saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: 40)
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         
-        red.tag = 0
-        orange.tag = 1
-        yellow.tag = 2
-        green.tag = 3
-        turquoise.tag = 4
-        blue.tag = 5
-        darkBlue.tag = 6
-        purple.tag = 7
-        
-        red.alpha = 0.3
-        red.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        orange.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        yellow.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        green.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        turquoise.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        blue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        darkBlue.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        purple.addTarget(self, action: #selector(colorButtonPressed), for: .touchUpInside)
-        
-        
         if let course = AllCoursesService.shared.getSelectedCourse() {
             titleTextField.text = course.title
             
@@ -190,30 +158,16 @@ class AddCourseViewController: PickerViewController {
             CourseService.shared.setEndDate(date: course.endDate)
             titleLabel.text = "Edit Course"
             
-            switch course.color {
-            case 0:
-                colorButtonPressed(button: red)
-            case 1:
-                colorButtonPressed(button: orange)
-            case 2:
-                colorButtonPressed(button: yellow)
-            case 3:
-                colorButtonPressed(button: green)
-            case 4:
-                colorButtonPressed(button: turquoise)
-            case 5:
-                colorButtonPressed(button: blue)
-            case 6:
-                colorButtonPressed(button: darkBlue)
-            case 7:
-                colorButtonPressed(button: purple)
-            default:
-                break
-            }
         }
     }
     
     //MARK: - Actions
+    @objc func colorRectanglePressed() {
+        let vc = ColorsViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
+    }
+    
     @objc func datePickerDateChanged() {
         colorTopAnchorConstaint.isActive = false
         colorOtherAnchorConstaint.isActive = true
@@ -288,18 +242,28 @@ class AddCourseViewController: PickerViewController {
                 }
                 course.startDate = CourseService.shared.getStartDate()
                 course.endDate = CourseService.shared.getEndDate()
-                course.color = CourseService.shared.getColor()
+                
+                let rgb = TaskService.shared.getColor().components
+                course.color[0] = Double(rgb.red)
+                course.color[1] = Double(rgb.green)
+                course.color[2] = Double(rgb.blue)
                 
                 if let courseToUpdate = AllCoursesService.shared.getSelectedCourse() {
                     courseToUpdate.startDate = course.startDate
                     courseToUpdate.endDate = course.endDate
-                    courseToUpdate.color = course.color
+                    
+                    courseToUpdate.color[0] = course.color[0]
+                    courseToUpdate.color[1] = course.color[1]
+                    courseToUpdate.color[2] = course.color[2]
+                    
                     courseToUpdate.title = course.title
                     
                     let tasksToUpdate = realm.objects(Task.self).filter("courseId == %@", courseToUpdate.id)
                     
                     for task in tasksToUpdate {
-                        task.color = course.color
+                        task.color[0] = course.color[0]
+                        task.color[1] = course.color[1]
+                        task.color[2] = course.color[2]
                         
                         if task.type != "assignment"{
                             task.title = "\(course.title) \(task.type)"
@@ -320,17 +284,7 @@ class AddCourseViewController: PickerViewController {
     }
     
     @objc func colorButtonPressed(button: UIButton) {
-        red.alpha = 1
-        orange.alpha = 1
-        yellow.alpha = 1
-        green.alpha = 1
-        turquoise.alpha = 1
-        blue.alpha = 1
-        darkBlue.alpha = 1
-        purple.alpha = 1
         
-        button.alpha = 0.3
-        CourseService.shared.setColor(int: button.tag)
     }
 }
 
