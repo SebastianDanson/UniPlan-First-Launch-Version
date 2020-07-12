@@ -284,6 +284,7 @@ class AddClassViewController: UIViewController {
         datePicker.anchor(top: startDateView.bottomAnchor)
         datePicker.centerX(in: view)
         datePicker.addTarget(self, action: #selector(datePickerDateChanged), for: .valueChanged)
+        datePicker.minimumDate = Date()
         
         stackViewContainer.anchor(bottom: view.bottomAnchor)
         stackViewContainer.centerX(in: view)
@@ -421,6 +422,7 @@ class AddClassViewController: UIViewController {
         timePicker.setDimensions(width: UIScreen.main.bounds.width - 100)
         timePicker.backgroundColor = .backgroundColor
         timePicker.addTarget(self, action: #selector(timePickerDateChanged), for: .valueChanged)
+        timePicker.minimumDate = Date()
     }
     
     //MARK: - Actions
@@ -448,6 +450,11 @@ class AddClassViewController: UIViewController {
         if startTimeView.color == UIColor.mainBlue {
             SingleClassService.shared.setStartTime(time: timePicker.date)
             startTime.text = "\(formatTime(from: timePicker.date))"
+            
+            if SingleClassService.shared.getStartTime() > SingleClassService.shared.getEndTime() {
+                SingleClassService.shared.setEndTime(time: timePicker.date)
+                endTime.text = "\(formatTime(from: timePicker.date))"
+            }
         } else {
             SingleClassService.shared.setEndTime(time: timePicker.date)
             endTime.text  = "\(formatTime(from: timePicker.date))"
@@ -458,6 +465,10 @@ class AddClassViewController: UIViewController {
         if startDateView.color == UIColor.mainBlue {
             SingleClassService.shared.setStartDate(date: datePicker.date)
             startDate.text = "\(formatDateNoDay(from: datePicker.date))"
+            if SingleClassService.shared.getStartDate() > SingleClassService.shared.getEndDate() {
+                SingleClassService.shared.setEndDate(date: datePicker.date)
+                endDate.text = "\(formatDateNoDay(from: datePicker.date))"
+            }
         } else {
             SingleClassService.shared.setEndDate(date: datePicker.date)
             endDate.text  = "\(formatDateNoDay(from: datePicker.date))"
@@ -477,6 +488,7 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.stackViewContainer.frame.origin.y = self.timePicker.frame.maxY
             })
+            timePicker.minimumDate = Date()
         } else {
             startTimeView.color = .clouds
             startTimeView.borderColor = .silver
@@ -505,6 +517,7 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.stackViewContainer.frame.origin.y = self.timePicker.frame.maxY
             })
+            timePicker.minimumDate = SingleClassService.shared.getStartTime()
         } else {
             endTimeView.backgroundColor = .backgroundColor
             endTimeView.layer.borderColor = UIColor.silver.cgColor
@@ -533,6 +546,7 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.datePicker.frame.maxY
             })
+            datePicker.minimumDate = Date()
             locationViewTopAnchorConstaint.isActive = false
             locationViewOtherAnchorConstaint.isActive = true
         } else {
@@ -565,6 +579,8 @@ class AddClassViewController: UIViewController {
             })
             locationViewTopAnchorConstaint.isActive = false
             locationViewOtherAnchorConstaint.isActive = true
+            datePicker.minimumDate = SingleClassService.shared.getStartDate()
+
         } else {
             endDateView.backgroundColor = .backgroundColor
             endDateView.layer.borderColor = UIColor.silver.cgColor
@@ -720,8 +736,7 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.stackViewContainer.frame.origin.y = self.startTimeView.frame.maxY
             })
-            stackViewContainerTopAnchorConstaint.isActive = true
-            stackViewContainerOtherAnchorConstaint.isActive = false
+           
             startTimeView.color = .clouds
             endTimeView.backgroundColor = .backgroundColor
             startTime.textColor = .darkBlue

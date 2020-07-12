@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		383879C0AE500539D45E3F18 /* Pods_Student_Schedule_Planner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */; };
+		3F0AEB1624BA8284001501F3 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1524BA8284001501F3 /* Note.swift */; };
+		3F0AEB1824BA83C7001501F3 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1724BA83C7001501F3 /* NoteCell.swift */; };
+		3F0AEB1A24BA8593001501F3 /* AddNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1924BA8593001501F3 /* AddNotesViewController.swift */; };
+		3F0AEB1C24BB617D001501F3 /* SwipeNoCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1B24BB617D001501F3 /* SwipeNoCompleteViewController.swift */; };
+		3F0AEB1E24BB79A0001501F3 /* NotesViewControlelr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1D24BB79A0001501F3 /* NotesViewControlelr.swift */; };
 		3F383E5C2486B25E00D2A5D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E5B2486B25E00D2A5D1 /* AppDelegate.swift */; };
 		3F383E5E2486B25E00D2A5D1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E5D2486B25E00D2A5D1 /* SceneDelegate.swift */; };
 		3F383E652486B26100D2A5D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F383E642486B26100D2A5D1 /* Assets.xcassets */; };
@@ -32,7 +37,7 @@
 		3F94E2CB24929E4200B0F958 /* CoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */; };
 		3F94E2CD2492A68B00B0F958 /* CourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2CC2492A68B00B0F958 /* CourseCell.swift */; };
 		3F94E2D12492CD0100B0F958 /* CourseDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */; };
-		3F94E2D52492E3B700B0F958 /* SwipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2D42492E3B700B0F958 /* SwipeViewController.swift */; };
+		3F94E2D52492E3B700B0F958 /* SwipeCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2D42492E3B700B0F958 /* SwipeCompleteViewController.swift */; };
 		3F94E2D72492FDD100B0F958 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E2D62492FDD100B0F958 /* TabBarController.swift */; };
 		3F94E3212495A35B00B0F958 /* SingleClassCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3202495A35B00B0F958 /* SingleClassCell.swift */; };
 		3F94E3252496895900B0F958 /* AssignmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3242496895900B0F958 /* AssignmentCell.swift */; };
@@ -48,7 +53,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3F383E582486B25E00D2A5D1 /* Student Schedule Planner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Student Schedule Planner.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F0AEB1524BA8284001501F3 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		3F0AEB1724BA83C7001501F3 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
+		3F0AEB1924BA8593001501F3 /* AddNotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNotesViewController.swift; sourceTree = "<group>"; };
+		3F0AEB1B24BB617D001501F3 /* SwipeNoCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeNoCompleteViewController.swift; sourceTree = "<group>"; };
+		3F0AEB1D24BB79A0001501F3 /* NotesViewControlelr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewControlelr.swift; sourceTree = "<group>"; };
+		3F383E582486B25E00D2A5D1 /* UniPlan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UniPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F383E5B2486B25E00D2A5D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F383E5D2486B25E00D2A5D1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		3F383E642486B26100D2A5D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -73,7 +83,7 @@
 		3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoursesViewController.swift; sourceTree = "<group>"; };
 		3F94E2CC2492A68B00B0F958 /* CourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCell.swift; sourceTree = "<group>"; };
 		3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailsViewController.swift; sourceTree = "<group>"; };
-		3F94E2D42492E3B700B0F958 /* SwipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeViewController.swift; sourceTree = "<group>"; };
+		3F94E2D42492E3B700B0F958 /* SwipeCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeCompleteViewController.swift; sourceTree = "<group>"; };
 		3F94E2D62492FDD100B0F958 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		3F94E3202495A35B00B0F958 /* SingleClassCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleClassCell.swift; sourceTree = "<group>"; };
 		3F94E3242496895900B0F958 /* AssignmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentCell.swift; sourceTree = "<group>"; };
@@ -117,7 +127,7 @@
 		3F383E592486B25E00D2A5D1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3F383E582486B25E00D2A5D1 /* Student Schedule Planner.app */,
+				3F383E582486B25E00D2A5D1 /* UniPlan.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -144,6 +154,7 @@
 				3F94E2C824929CF600B0F958 /* AllCoursesService.swift */,
 				3F94E2C62492963400B0F958 /* Course.swift */,
 				3FAEC8392497FD1A000ADD9D /* CourseService.swift */,
+				3F0AEB1524BA8284001501F3 /* Note.swift */,
 				3FAEC8252496F816000ADD9D /* SingleClass.swift */,
 				3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */,
 				3F67BBFB24893AF100BFD6E5 /* Task.swift */,
@@ -161,6 +172,7 @@
 				3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */,
 				3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */,
 				3F59239B24A17677008F45D6 /* PentagonView.swift */,
+				3F0AEB1724BA83C7001501F3 /* NoteCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -170,7 +182,8 @@
 			children = (
 				3F94E2D62492FDD100B0F958 /* TabBarController.swift */,
 				3F67BC28248EE6AA00BFD6E5 /* PickerViewController.swift */,
-				3F94E2D42492E3B700B0F958 /* SwipeViewController.swift */,
+				3F94E2D42492E3B700B0F958 /* SwipeCompleteViewController.swift */,
+				3F0AEB1B24BB617D001501F3 /* SwipeNoCompleteViewController.swift */,
 				3FAEC8352497D524000ADD9D /* Course */,
 			);
 			path = Controller;
@@ -188,10 +201,11 @@
 		3FAEC8352497D524000ADD9D /* Course */ = {
 			isa = PBXGroup;
 			children = (
+				3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */,
+				3F0AEB1D24BB79A0001501F3 /* NotesViewControlelr.swift */,
 				3F383E722486B2EE00D2A5D1 /* TimelineViewController.swift */,
 				3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */,
 				3F63BF9424B7CB0B00404806 /* ColorsViewController.swift */,
-				3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */,
 				3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */,
 				3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */,
 				3F5923C324AC0C13008F45D6 /* SelectSummativeTypeViewController.swift */,
@@ -201,6 +215,7 @@
 				3FAEC83F24992C2A000ADD9D /* AddQuizAndExamViewController.swift */,
 				3FAEC849249BF859000ADD9D /* AddCourseViewController.swift */,
 				3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */,
+				3F0AEB1924BA8593001501F3 /* AddNotesViewController.swift */,
 			);
 			path = Course;
 			sourceTree = "<group>";
@@ -234,9 +249,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3F383E572486B25E00D2A5D1 /* Student Schedule Planner */ = {
+		3F383E572486B25E00D2A5D1 /* UniPlan */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3F383E6C2486B26100D2A5D1 /* Build configuration list for PBXNativeTarget "Student Schedule Planner" */;
+			buildConfigurationList = 3F383E6C2486B26100D2A5D1 /* Build configuration list for PBXNativeTarget "UniPlan" */;
 			buildPhases = (
 				CDFA78004CD7BEE36F399C4A /* [CP] Check Pods Manifest.lock */,
 				3F383E542486B25E00D2A5D1 /* Sources */,
@@ -248,12 +263,12 @@
 			);
 			dependencies = (
 			);
-			name = "Student Schedule Planner";
+			name = UniPlan;
 			packageProductDependencies = (
 				3F67BC002489AB6E00BFD6E5 /* SwipeCellKit */,
 			);
 			productName = "Student Schedule Planner";
-			productReference = 3F383E582486B25E00D2A5D1 /* Student Schedule Planner.app */;
+			productReference = 3F383E582486B25E00D2A5D1 /* UniPlan.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -271,7 +286,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3F383E532486B25E00D2A5D1 /* Build configuration list for PBXProject "Student Schedule Planner" */;
+			buildConfigurationList = 3F383E532486B25E00D2A5D1 /* Build configuration list for PBXProject "UniPlan" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -287,7 +302,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3F383E572486B25E00D2A5D1 /* Student Schedule Planner */,
+				3F383E572486B25E00D2A5D1 /* UniPlan */,
 			);
 		};
 /* End PBXProject section */
@@ -352,24 +367,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F94E32724968FED00B0F958 /* QuizAndExamCell.swift in Sources */,
+				3F0AEB1624BA8284001501F3 /* Note.swift in Sources */,
+				3F0AEB1A24BA8593001501F3 /* AddNotesViewController.swift in Sources */,
 				3F94E2C72492963400B0F958 /* Course.swift in Sources */,
 				3F67BC27248EDE4200BFD6E5 /* SetReminderViewController.swift in Sources */,
 				3F94E2C924929CF600B0F958 /* AllCoursesService.swift in Sources */,
 				3F94E2D12492CD0100B0F958 /* CourseDetailsViewController.swift in Sources */,
+				3F0AEB1C24BB617D001501F3 /* SwipeNoCompleteViewController.swift in Sources */,
 				3F94E3292496A90500B0F958 /* AddClassViewController.swift in Sources */,
 				3F94E3212495A35B00B0F958 /* SingleClassCell.swift in Sources */,
-				3F94E2D52492E3B700B0F958 /* SwipeViewController.swift in Sources */,
+				3F94E2D52492E3B700B0F958 /* SwipeCompleteViewController.swift in Sources */,
 				3F59234624A13798008F45D6 /* Assignment.swift in Sources */,
 				3FAEC84024992C2A000ADD9D /* AddQuizAndExamViewController.swift in Sources */,
 				3F5923C424AC0C13008F45D6 /* SelectSummativeTypeViewController.swift in Sources */,
 				3F67BC05248C7B9E00BFD6E5 /* TaskService.swift in Sources */,
 				3F59239C24A17677008F45D6 /* PentagonView.swift in Sources */,
 				3F383E7A2486BD0600D2A5D1 /* Factories.swift in Sources */,
+				3F0AEB1824BA83C7001501F3 /* NoteCell.swift in Sources */,
 				3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */,
 				3FAEC83C2499242C000ADD9D /* AddAssignmentViewController.swift in Sources */,
 				3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */,
 				3F383E732486B2EE00D2A5D1 /* TimelineViewController.swift in Sources */,
 				3F94E2D72492FDD100B0F958 /* TabBarController.swift in Sources */,
+				3F0AEB1E24BB79A0001501F3 /* NotesViewControlelr.swift in Sources */,
 				3FAEC83A2497FD1A000ADD9D /* CourseService.swift in Sources */,
 				3FAEC84A249BF85A000ADD9D /* AddCourseViewController.swift in Sources */,
 				3F94E3252496895900B0F958 /* AssignmentCell.swift in Sources */,
@@ -522,14 +542,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PVV4QAF8VB;
+				DEVELOPMENT_TEAM = S5GWMTL4BM;
 				INFOPLIST_FILE = "Student Schedule Planner/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.SebastianDanson.Student-Schedule-Planner";
+				MARKETING_VERSION = 1.01;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SebastianDanson.UniPlan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -542,14 +563,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PVV4QAF8VB;
+				DEVELOPMENT_TEAM = S5GWMTL4BM;
 				INFOPLIST_FILE = "Student Schedule Planner/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.SebastianDanson.Student-Schedule-Planner";
+				MARKETING_VERSION = 1.01;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SebastianDanson.UniPlan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -559,7 +581,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3F383E532486B25E00D2A5D1 /* Build configuration list for PBXProject "Student Schedule Planner" */ = {
+		3F383E532486B25E00D2A5D1 /* Build configuration list for PBXProject "UniPlan" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3F383E6A2486B26100D2A5D1 /* Debug */,
@@ -568,7 +590,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3F383E6C2486B26100D2A5D1 /* Build configuration list for PBXNativeTarget "Student Schedule Planner" */ = {
+		3F383E6C2486B26100D2A5D1 /* Build configuration list for PBXNativeTarget "UniPlan" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3F383E6D2486B26100D2A5D1 /* Debug */,

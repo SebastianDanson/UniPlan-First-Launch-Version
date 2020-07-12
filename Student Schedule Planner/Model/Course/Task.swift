@@ -22,6 +22,7 @@ class Task: Object {
     @objc dynamic var courseId = ""
     @objc dynamic var type = ""
     @objc dynamic var summativeId = UUID().uuidString //for deleting summative associated with task
+    @objc dynamic var isComplete = false
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
     var color = List<Double>() //Stores RGB values of color
     

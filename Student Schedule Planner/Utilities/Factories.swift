@@ -201,8 +201,6 @@ func makeLabel(ofSize size: CGFloat, weight: UIFont.Weight) -> UILabel {
 //View where all cell Views are added
 func makeTaskView() -> UIView {
     let taskView = UIView()
-    taskView.layer.borderColor = UIColor.mainBlue.cgColor
-    taskView.layer.borderWidth = 3
     taskView.layer.cornerRadius = 10
     
     return taskView

@@ -38,6 +38,10 @@ class QuizAndExamCell: SwipeTableViewCell {
     let locationLabel = makeLabel(ofSize: 14, weight: .semibold)
     var locationImage = UIImageView()
     
+    let overlay = UIView()
+    let checkImage = UIImage(named: "check")
+    var checkImageView = UIImageView()
+    
     //MARK: - setupUI
     func setupViews() {
         let nextImage = UIImageView(image: nextIcon!)
@@ -45,6 +49,7 @@ class QuizAndExamCell: SwipeTableViewCell {
         let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
         
         reminderImage = UIImageView(image: reminderIcon!)
+        checkImageView = UIImageView(image: checkImage!)
         reminderImage.tintColor = color
         
         locationImage = UIImageView(image: locationIcon!)
@@ -63,8 +68,11 @@ class QuizAndExamCell: SwipeTableViewCell {
         taskView.addSubview(reminderImage)
         taskView.addSubview(locationImage)
         taskView.addSubview(locationLabel)
+        taskView.addSubview(overlay)
+        taskView.addSubview(checkImageView)
         
         taskView.layer.borderColor = color.cgColor
+        taskView.layer.borderWidth = 2.5
         taskView.anchor(top: topAnchor,
                         left: leftAnchor,
                         right: rightAnchor,
@@ -106,6 +114,20 @@ class QuizAndExamCell: SwipeTableViewCell {
                              bottom: taskView.bottomAnchor,
                              paddingLeft: 2,
                              paddingBottom: 5 )
+        
+        overlay.setDimensions(width: UIScreen.main.bounds.width - 20)
+        overlay.anchor(top: topAnchor,
+                       bottom: bottomAnchor,
+                       paddingTop: 5,
+                       paddingBottom: 5)
+        overlay.backgroundColor = UIColor(red: 11/255, green: 232/255, blue: 129/255, alpha: 0.5)
+        overlay.layer.cornerRadius = 10
+        overlay.centerX(in: taskView)
+        
+        checkImageView.setDimensions(width: 50, height: 50)
+        checkImageView.tintColor = .white
+        checkImageView.centerY(in: taskView)
+        checkImageView.anchor(right: taskView.rightAnchor, paddingRight: 20)
     }
     
     //MARK: - Actions
@@ -114,6 +136,9 @@ class QuizAndExamCell: SwipeTableViewCell {
          * This Cell is used for both quizzes and exams.
          * When updating the cell I check for if the object is a quiz or exam,
          */
+        
+        overlay.isHidden = true
+        checkImageView.isHidden = true
         
         let course = AllCoursesService.shared.getSelectedCourse()
         let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
@@ -139,6 +164,10 @@ class QuizAndExamCell: SwipeTableViewCell {
             if quiz.location == "" {
                 locationLabel.text = "Not Set"
             }
+            if quiz.isComplete {
+                overlay.isHidden = false
+                checkImageView.isHidden = false
+            }
         }
         
         if let exam = exam {
@@ -154,6 +183,11 @@ class QuizAndExamCell: SwipeTableViewCell {
             
             if exam.location == "" {
                 locationLabel.text = "Not Set"
+            }
+            
+            if exam.isComplete {
+                overlay.isHidden = false
+                checkImageView.isHidden = false
             }
         }
     }

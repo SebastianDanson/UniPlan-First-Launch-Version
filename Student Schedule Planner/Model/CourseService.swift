@@ -17,14 +17,18 @@ class CourseService {
     private var assignments: List<Assignment>?
     private var quizzes: List<Quiz>?
     private var exams: List<Exam>?
+    private var notes: List<Note>?
+    private var allNotes: Results<Note>?
     
     private var selectedQuiz: Quiz?
     private var selectedExam: Exam?
     private var selectedAssignment: Assignment?
+    private var selectedNote: Note?
     
     private var quizIndex: Int?
     private var examIndex: Int?
     private var assignmentIndex: Int?
+    private var noteIndex: Int?
     
     private var startDate = Date()
     private var endDate = Date()
@@ -148,6 +152,54 @@ class CourseService {
     
     func setSelectedExam(exam: Exam?) {
         selectedExam = exam
+    }
+    
+    //MARK: - Notes
+    func getNote(atIndex index: Int) -> Note? {
+        updateNotes()
+        return notes?[index]
+    }
+    
+    func getNotes() -> List<Note>? {
+        updateNotes()
+        return notes
+    }
+    
+    func updateNotes() {
+        let id = AllCoursesService.shared.getSelectedCourse()?.id
+        if let course = realm.objects(Course.self).filter("id == %@", id).first {
+            notes = course.notes
+        }
+    }
+    
+    //MARK: - allNotes
+    func getAllNotes(atIndex index: Int) -> Note? {
+        updateAllNotes()
+        return allNotes?[index]
+    }
+    
+    func getAllNotes() -> Results<Note>? {
+        updateAllNotes()
+        return allNotes
+    }
+    
+    func updateAllNotes() {
+       allNotes = realm.objects(Note.self).sorted(byKeyPath: "dateCreated", ascending: false)
+    }
+    
+    func setNoteIndex(index: Int?) {
+        noteIndex = index
+        if let index = index {
+            selectedNote = notes?[index]
+        }
+    }
+    
+    func getSelectedNote() -> Note? {
+        return selectedNote
+    }
+    
+    func setSelectedNote(note: Note?) {
+        selectedNote = note
     }
     
     //MARK: - quizOrExam

@@ -166,6 +166,7 @@ class AddQuizAndExamViewController: UIViewController {
         datePickerView.anchor(top: dateButton.bottomAnchor)
         datePickerView.centerX(in: view)
         datePickerView.addTarget(self, action: #selector(datePickerChanged), for: .valueChanged)
+        datePickerView.minimumDate = Date()
         
         reminderTopAnchorConstaint = reminderView.topAnchor.constraint(equalTo: dateButton.bottomAnchor)
         reminderOtherAnchorConstaint = reminderView.topAnchor.constraint(equalTo: datePickerView.bottomAnchor)
@@ -278,6 +279,10 @@ class AddQuizAndExamViewController: UIViewController {
         if startTimeView.color == UIColor.mainBlue {
             TaskService.shared.setStartTime(time: timePickerView.date)
             startTime.text = "\(formatTime(from: timePickerView.date))"
+            if TaskService.shared.getStartTime() > TaskService.shared.getEndTime() {
+                TaskService.shared.setEndTime(time: timePickerView.date)
+                endTime.text = "\(formatTime(from: timePickerView.date))"
+            }
         } else {
             TaskService.shared.setEndTime(time: timePickerView.date)
             endTime.text  = "\(formatTime(from: timePickerView.date))"
@@ -340,6 +345,7 @@ class AddQuizAndExamViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.timePickerView.frame.maxY
             })
+            timePickerView.minimumDate = Date()
         } else {
             startTimeView.color = .clouds
             startTimeView.borderColor = .silver
@@ -373,6 +379,7 @@ class AddQuizAndExamViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.timePickerView.frame.maxY
             })
+            timePickerView.minimumDate = TaskService.shared.getStartTime()
         } else {
             endTimeView.backgroundColor = .backgroundColor
             endTimeView.layer.borderColor = UIColor.silver.cgColor

@@ -15,6 +15,7 @@ class AllCoursesService {
     private var selectedCourse: Course?
     private var courseIndex: Int?
     private var addSummative = false //Changes how the CoursesVC looks if you are adding a summative from the SummativesVC
+    private var addNote = false //Changes how the CoursesVC looks if you are adding a not from the notesVC
     
     static let shared = AllCoursesService()
     
@@ -63,5 +64,14 @@ class AllCoursesService {
     }
     func setAddSummative(bool: Bool) {
         addSummative = bool
+    }
+    
+    //MARK: - addNote
+    func getAddNote() -> Bool {
+        return addNote
+    }
+    
+    func setAddNote(bool: Bool) {
+        addNote = bool
     }
 }

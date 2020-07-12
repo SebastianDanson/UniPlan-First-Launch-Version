@@ -31,7 +31,7 @@ enum SummativeType: Int, CustomStringConvertible, CaseIterable{
  * This VC allows the user to select the type of summative it wants to add
  * It then displays the proper VC depending on which summative was selected
  */
-class SelectSummativeTypeViewController: SwipeViewController {
+class SelectSummativeTypeViewController: SwipeCompleteViewController {
     
     let realm = try! Realm()
     

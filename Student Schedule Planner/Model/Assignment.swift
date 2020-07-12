@@ -18,7 +18,8 @@ class Assignment: Object {
     @objc dynamic var reminderDate: Date = Date()
     @objc dynamic var dueDate = Date()
     @objc dynamic var courseId = "" //The unique id of the course the assignment belongs to
-    
+    @objc dynamic var isComplete = false
+
     var reminderTime = List<Int>() //first index is hours, second index is minutes before task
     
     required init() {

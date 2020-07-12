@@ -80,16 +80,12 @@ class AddTaskViewController: PickerViewController {
     var clockImage = UIImageView(image: nil)
     
     //Top anchors for reminderView
-    var reminderTopAnchorConstaint = NSLayoutConstraint()
-    var reminderOtherAnchorConstaint = NSLayoutConstraint()
-    
-    //Top anchors for colorView
-    var colorTopAnchorConstaint = NSLayoutConstraint()
-    var colorOtherAnchorConstaint = NSLayoutConstraint()
-    
-    //Top anchors for locationView
     var locationTopAnchorConstaint = NSLayoutConstraint()
     var locationOtherAnchorConstaint = NSLayoutConstraint()
+        
+    //Top anchors for locationView
+    var reminderTopAnchorConstaint = NSLayoutConstraint()
+    var reminderOtherAnchorConstaint = NSLayoutConstraint()
     
     //MARK: - setup UI
     func setupViews() {
@@ -185,22 +181,18 @@ class AddTaskViewController: PickerViewController {
         datePickerView.anchor(top: dateButton.bottomAnchor)
         datePickerView.centerX(in: view)
         datePickerView.addTarget(self, action: #selector(datePickerChanged), for: .valueChanged)
-        
-        colorTopAnchorConstaint = colorView.topAnchor.constraint(equalTo: reminderSwitch.bottomAnchor)
-        colorOtherAnchorConstaint = colorView.topAnchor.constraint(equalTo: reminderButton.bottomAnchor)
-        colorTopAnchorConstaint.isActive = true
+        datePickerView.minimumDate = Date()
         
         colorView.topAnchor.constraint(equalTo: reminderSwitch.bottomAnchor).isActive = true
         colorView.setDimensions(height: 100)
         colorView.centerX(in: reminderView)
         
         colorRectangle.backgroundColor = TaskService.shared.getColor()
-        colorRectangle.anchor(top: colorHeading.bottomAnchor, left: reminderHeading.leftAnchor)
         colorRectangle.setDimensions(width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.height/18)
         colorRectangle.layer.cornerRadius = 6
+        colorRectangle.anchor(top: colorHeading.bottomAnchor, left: reminderHeading.leftAnchor, paddingTop: 5)
         colorRectangle.addTarget(self, action: #selector(colorRectanglePressed), for: .touchUpInside)
         
-        reminderView.topAnchor.constraint(equalTo: dateButton.bottomAnchor).isActive = true
         reminderView.anchor(left: view.leftAnchor, paddingLeft: 20)
         reminderView.setDimensions(height: 275)
         reminderHeading.anchor(top: locationTextField.bottomAnchor, left: view.leftAnchor, paddingTop: UIScreen.main.bounds.height/50, paddingLeft: 20)
@@ -219,8 +211,12 @@ class AddTaskViewController: PickerViewController {
         locationView.anchor(left: reminderButton.leftAnchor,
                             bottom: saveButton.topAnchor)
         
-        reminderTopAnchorConstaint = locationView.topAnchor.constraint(equalTo: startTimeView.bottomAnchor)
-        reminderOtherAnchorConstaint = locationView.topAnchor.constraint(equalTo: timePickerView.bottomAnchor)
+        locationTopAnchorConstaint = locationView.topAnchor.constraint(equalTo: startTimeView.bottomAnchor)
+        locationOtherAnchorConstaint = locationView.topAnchor.constraint(equalTo: timePickerView.bottomAnchor)
+        locationTopAnchorConstaint.isActive = true
+        
+        reminderTopAnchorConstaint = reminderView.topAnchor.constraint(equalTo: dateButton.bottomAnchor)
+        reminderOtherAnchorConstaint = reminderView.topAnchor.constraint(equalTo: datePickerView.bottomAnchor)
         reminderTopAnchorConstaint.isActive = true
         
         locationTextField.anchor(top: reminderView.topAnchor,
@@ -268,8 +264,6 @@ class AddTaskViewController: PickerViewController {
                 TaskService.shared.setStartTime(time: task.startDate)
                 TaskService.shared.setEndTime(time: task.endDate)
                 titleLabel.text = "Edit Task"
-                
-                //set color
             }
         }
     }
@@ -280,6 +274,7 @@ class AddTaskViewController: PickerViewController {
         timePickerView.setDimensions(width: UIScreen.main.bounds.width - 100)
         timePickerView.backgroundColor = .backgroundColor
         timePickerView.addTarget(self, action: #selector(timePickerDateChanged), for: .valueChanged)
+        timePickerView.minimumDate = Date()
     }
     
     func setupReminderTime() {
@@ -296,12 +291,16 @@ class AddTaskViewController: PickerViewController {
     }
     
     @objc func timePickerDateChanged() {
-        reminderTopAnchorConstaint.isActive = false
-        reminderOtherAnchorConstaint.isActive = true
+        locationTopAnchorConstaint.isActive = false
+        locationOtherAnchorConstaint.isActive = true
         
         if startTimeView.color == UIColor.mainBlue {
             TaskService.shared.setStartTime(time: timePickerView.date)
             startTime.text = "\(formatTime(from: timePickerView.date))"
+            if TaskService.shared.getStartTime() > TaskService.shared.getEndTime() {
+                TaskService.shared.setEndTime(time: timePickerView.date)
+                endTime.text = "\(formatTime(from: timePickerView.date))"
+            }
         } else {
             TaskService.shared.setEndTime(time: timePickerView.date)
             endTime.text  = "\(formatTime(from: timePickerView.date))"
@@ -309,32 +308,34 @@ class AddTaskViewController: PickerViewController {
     }
     
     @objc func datePickerChanged() {
-        reminderTopAnchorConstaint.isActive = true
-        reminderOtherAnchorConstaint.isActive = false
+        locationTopAnchorConstaint.isActive = true
+        locationOtherAnchorConstaint.isActive = false
         dateButton.setTitle("\(formatDate(from: datePickerView.date))", for: .normal)
     }
     
     @objc func dateButtonTapped() {
-        if self.startTimeView.color == UIColor.mainBlue {
-            self.startDateViewTapped()
-        } else if self.endTimeView.backgroundColor == UIColor.mainBlue {
-            self.endDateViewTapped()
-        }
+       resetTimeViews()
         
-        //This asyncAgter fixed a bug where the animation would glitch
+        //This asyncAfter fixed a bug where the animation would glitch
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.001){
             
-            if self.reminderView.frame.origin.y == self.dateButton.frame.maxY {
+            if self.reminderTopAnchorConstaint.isActive {
+                self.reminderTopAnchorConstaint.isActive = false
+                self.reminderOtherAnchorConstaint.isActive = true
                 UIView.animate(withDuration: 0.3, animations: {
                     self.reminderView.frame.origin.y = self.datePickerView.frame.maxY
-                    
                 })
             } else {
+                self.reminderTopAnchorConstaint.isActive = true
+                self.reminderOtherAnchorConstaint.isActive = false
                 UIView.animate(withDuration: 0.3, animations: {
                     self.reminderView.frame.origin.y = self.dateButton.frame.maxY
                 })
+              
             }
         }
+        self.locationTopAnchorConstaint.isActive = true
+        self.locationOtherAnchorConstaint.isActive = false
     }
     
     @objc func startDateViewTapped() {
@@ -351,9 +352,12 @@ class AddTaskViewController: PickerViewController {
             clockImage.tintColor = .white
             startTime.textColor = .backgroundColor
             endTime.textColor = .darkBlue
+            timePickerView.minimumDate = Date()
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.timePickerView.frame.maxY
             })
+            self.locationTopAnchorConstaint.isActive = false
+            self.locationOtherAnchorConstaint.isActive = true
         } else {
             startTimeView.color = .clouds
             startTimeView.borderColor = .silver
@@ -362,9 +366,13 @@ class AddTaskViewController: PickerViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.startTimeView.frame.maxY
             })
+            self.locationTopAnchorConstaint.isActive = true
+            self.locationOtherAnchorConstaint.isActive = false
         }
         endTimeView.backgroundColor = .backgroundColor
         endTimeView.layer.borderColor = UIColor.silver.cgColor
+        self.reminderTopAnchorConstaint.isActive = true
+        self.reminderOtherAnchorConstaint.isActive = false
     }
     
     @objc func endDateViewTapped() {
@@ -380,9 +388,12 @@ class AddTaskViewController: PickerViewController {
             endTimeView.layer.borderColor = UIColor.clear.cgColor
             endTime.textColor = .backgroundColor
             startTime.textColor = .darkBlue
+            timePickerView.minimumDate = TaskService.shared.getStartTime()
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.timePickerView.frame.maxY
             })
+            self.locationTopAnchorConstaint.isActive = false
+            self.locationOtherAnchorConstaint.isActive = true
         } else {
             endTimeView.backgroundColor = .backgroundColor
             endTimeView.layer.borderColor = UIColor.silver.cgColor
@@ -390,10 +401,32 @@ class AddTaskViewController: PickerViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.startTimeView.frame.maxY
             })
+            self.locationTopAnchorConstaint.isActive = true
+            self.locationOtherAnchorConstaint.isActive = false
         }
         startTimeView.color = .clouds
         startTimeView.borderColor = .silver
         clockImage.tintColor = .darkGray
+        self.reminderTopAnchorConstaint.isActive = true
+        self.reminderOtherAnchorConstaint.isActive = false
+    }
+    
+    func resetTimeViews() {
+        if locationView.frame.origin.y == timePickerView.frame.maxY {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.locationView.frame.origin.y = self.startTimeView.frame.maxY
+            })
+            startTimeView.color = .clouds
+            endTimeView.backgroundColor = .backgroundColor
+            startTime.textColor = .darkBlue
+            endTime.textColor = .darkBlue
+            clockImage.tintColor = .darkGray
+            endTimeView.layer.borderColor = UIColor.silver.cgColor
+            startTimeView.borderColor = .silver
+            
+            locationTopAnchorConstaint.isActive = true
+            locationOtherAnchorConstaint.isActive = false
+        }
     }
     
     @objc func saveTask() {

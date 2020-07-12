@@ -19,7 +19,8 @@ let courseReuseIdentifer = "CourseCell"
  * The user can also add, edit, and delete each of the events
  */
 
-class TimelineViewController: SwipeViewController  {
+class TimelineViewController: SwipeCompleteViewController  {
+    
     let realm = try! Realm()
     
     //MARK: - Properties
@@ -109,36 +110,16 @@ class TimelineViewController: SwipeViewController  {
     }
     
     override func updateModel(index: Int, section: Int) {
-        do {
-            try self.realm.write {
-                //Deletes task and the summative associated with that task if there is one
-                if let taskToDelete = TaskService.shared.getTask(atIndex: index) {
-                    switch taskToDelete.type {
-                    case "assignment":
-                        let assignmentToDelete = realm.objects(Assignment.self).filter("id == %@", taskToDelete.summativeId).first
-                        if let assignmentToDelete = assignmentToDelete {
-                            realm.delete(assignmentToDelete)
-                        }
-                    case "quiz":
-                        let quizToDelete = realm.objects(Quiz.self).filter("id == %@", taskToDelete.summativeId).first
-                        if let quizToDelete = quizToDelete {
-                            realm.delete(quizToDelete)
-                        }
-                    case "exam":
-                        let examToDelete = realm.objects(Exam.self).filter("id == %@", taskToDelete.summativeId).first
-                        if let examToDelete = examToDelete {
-                            realm.delete(examToDelete)
-                        }
-                    default:
-                        break
-                    }
-                    TaskService.shared.deleteNotification(forTask: taskToDelete)
-                    self.realm.delete(taskToDelete)
-                    self.tableView.reloadData()
-                }
-            }
-        } catch {
-            print("Error writing task to realm")
+        if let taskToDelete = TaskService.shared.getTask(atIndex: index) {
+            TaskService.shared.deleteSummativeForTask(taskToDelete: taskToDelete, type: taskToDelete.type)
+            self.tableView.reloadData()
+        }
+    }
+    
+    override func complete(index: Int, section: Int) {
+        if let taskToComplete = TaskService.shared.getTask(atIndex: index) {
+            TaskService.shared.setSummativeIsComplete(task: taskToComplete, type: taskToComplete.type)
+            tableView.reloadData()
         }
     }
     
@@ -250,7 +231,9 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
             default:
                 vc = AddTaskViewController()
                 vc.modalPresentationStyle = .fullScreen
-                present(vc, animated: true, completion: nil)            }
+                present(vc, animated: true, completion: nil)
+                
+            }
         }
     }
 }

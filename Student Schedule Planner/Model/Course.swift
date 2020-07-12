@@ -22,6 +22,7 @@ class Course: Object {
     var assignments = List<Assignment>()
     var quizzes = List<Quiz>()
     var exams = List<Exam>()
+    var notes = List<Note>()
     
     @objc dynamic var id = UUID().uuidString
     

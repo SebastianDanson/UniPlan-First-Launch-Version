@@ -81,6 +81,7 @@ class SingleClassCell: SwipeTableViewCell {
         classDayStackView.addArrangedSubview(friday)
         classDayStackView.addArrangedSubview(saturday)
         
+        taskView.layer.borderWidth = 2.5
         taskView.anchor(top: topAnchor,
                         left: leftAnchor,
                         right: rightAnchor,

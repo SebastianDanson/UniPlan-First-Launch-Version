@@ -31,6 +31,9 @@ class AssignmentCell: SwipeTableViewCell {
     let timeLabel = makeLabel(ofSize: 16, weight: .regular)
     let nextIcon = UIImage(named: "nextMenuButtonGray")
     var reminderImage = UIImageView()
+    let checkImage = UIImage(named: "check")
+    var checkImageView = UIImageView()
+    let overlay = UIView()
     
     //MARK: - setupUI
     func setupViews() {
@@ -38,6 +41,7 @@ class AssignmentCell: SwipeTableViewCell {
         
         let nextImage = UIImageView(image: nextIcon!)
         reminderImage = UIImageView(image: reminderIcon!)
+        checkImageView = UIImageView(image: checkImage!)
         
         let marginGuide = contentView.layoutMarginsGuide
         
@@ -51,7 +55,10 @@ class AssignmentCell: SwipeTableViewCell {
         taskView.addSubview(nextImage)
         taskView.addSubview(reminderImage)
         taskView.addSubview(reminderLabel)
+        taskView.addSubview(overlay)
+        taskView.addSubview(checkImageView)
         
+        taskView.layer.borderWidth = 2.5
         taskView.anchor(top: topAnchor,
                         bottom: bottomAnchor,
                         paddingTop: 5,
@@ -70,6 +77,20 @@ class AssignmentCell: SwipeTableViewCell {
                           paddingTop: 20,
                           paddingLeft: 10,
                           paddingBottom: 20)
+        
+        overlay.setDimensions(width: UIScreen.main.bounds.width - 20)
+        overlay.anchor(top: topAnchor,
+                       bottom: bottomAnchor,
+                       paddingTop: 5,
+                       paddingBottom: 5)
+        overlay.backgroundColor = UIColor(red: 11/255, green: 232/255, blue: 129/255, alpha: 0.5)
+        overlay.layer.cornerRadius = 10
+        overlay.centerX(in: taskView)
+        
+        checkImageView.setDimensions(width: 50, height: 50)
+        checkImageView.tintColor = .white
+        checkImageView.centerY(in: taskView)
+        checkImageView.anchor(right: taskView.rightAnchor, paddingRight: 20)
         
         dueLabel.anchor(left: dateLabel.leftAnchor, bottom: dateLabel.topAnchor)
         dueLabel.text = "Due:"
@@ -94,6 +115,9 @@ class AssignmentCell: SwipeTableViewCell {
     }
     
     func update(assignment: Assignment) {
+        overlay.isHidden = true
+        checkImageView.isHidden = true
+        
         titleLabel.text = assignment.title
         dateLabel.text = formatDateNoDay(from: assignment.dueDate)
         timeLabel.text = formatTime(from: assignment.dueDate)
@@ -111,6 +135,11 @@ class AssignmentCell: SwipeTableViewCell {
             reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: assignment.dateOrTime, reminderTime: [assignment.reminderTime[0], assignment.reminderTime[1]], reminderDate: assignment.reminderDate)
         } else {
             reminderLabel.text = "None"
+        }
+        
+        if assignment.isComplete {
+            overlay.isHidden = false
+            checkImageView.isHidden = false
         }
     }
 }

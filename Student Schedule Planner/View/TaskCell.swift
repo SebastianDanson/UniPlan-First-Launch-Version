@@ -30,6 +30,8 @@ class TaskCell: SwipeTableViewCell {
     let dueLabel = makeLabel(ofSize: 14, weight: .bold) //If the task is associated with an assignment
     
     let taskView = makeTaskView()
+    let checkImage = UIImage(named: "check")
+    var checkImageView = UIImageView()
     
     let reminderIcon = UIImage(systemName: "alarm.fill")
     var reminderImage = UIImageView()
@@ -40,6 +42,8 @@ class TaskCell: SwipeTableViewCell {
     
     let nextIcon = UIImage(named: "nextMenuButton")
     var nextImage = UIImageView()
+    
+    let overlay = UIView()
     
     //Anchors for reminderImage
     var reminderLeftAnchorConstaint = NSLayoutConstraint()
@@ -64,6 +68,7 @@ class TaskCell: SwipeTableViewCell {
         nextImage = UIImageView(image: nextIcon!)
         reminderImage = UIImageView(image: reminderIcon!)
         locationImage = UIImageView(image: locationIcon!)
+        checkImageView = UIImageView(image: checkImage!)
         
         backgroundColor = .backgroundColor
         
@@ -78,7 +83,9 @@ class TaskCell: SwipeTableViewCell {
         taskView.addSubview(locationLabel)
         taskView.addSubview(dueLabel)
         taskView.addSubview(dateLabel)
-        
+        taskView.addSubview(overlay)
+        taskView.addSubview(checkImageView)
+
         taskView.layer.borderWidth = 0
         taskView.backgroundColor = .backgroundColor
         
@@ -112,6 +119,20 @@ class TaskCell: SwipeTableViewCell {
                              paddingLeft: 2,
                              paddingBottom: 3)
         
+        overlay.setDimensions(width: UIScreen.main.bounds.width - 20)
+        overlay.anchor(top: topAnchor,
+                       bottom: bottomAnchor,
+                       paddingTop: 5,
+                       paddingBottom: 5)
+        overlay.backgroundColor = UIColor(red: 11/255, green: 232/255, blue: 129/255, alpha: 0.5)
+        overlay.layer.cornerRadius = 10
+        overlay.centerX(in: taskView)
+        
+        checkImageView.setDimensions(width: 50, height: 50)
+        checkImageView.tintColor = .white
+        checkImageView.centerY(in: taskView)
+        checkImageView.anchor(right: taskView.rightAnchor, paddingRight: 20)
+
         reminderLeftAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: locationLabel.rightAnchor, constant: 10)
         reminderOtherAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: locationImage.leftAnchor)
         reminderLeftAnchorConstaint.isActive = true
@@ -133,6 +154,8 @@ class TaskCell: SwipeTableViewCell {
     
     //MARK: - Actions
     func update(task: Task, summative: Bool) {
+        overlay.isHidden = true
+        checkImageView.isHidden = true
         reminderImage.isHidden = false
         reminderLabel.isHidden = false
         locationImage.isHidden = false
@@ -245,6 +268,11 @@ class TaskCell: SwipeTableViewCell {
                 startTimeAssignmentAnchorConstraint.isActive = false
                 startTimeSummativeAnchorConstraint.isActive = true
             }
+        }
+        
+        if task.isComplete {
+            overlay.isHidden = false
+            checkImageView.isHidden = false
         }
     }
 }

@@ -93,7 +93,7 @@ class AddCourseViewController: PickerViewController {
         
         colorHeading.anchor(top: colorView.topAnchor, left: colorView.leftAnchor, paddingTop: 20)
         colorRectangle.backgroundColor = TaskService.shared.getColor()
-        colorRectangle.anchor(top: colorHeading.bottomAnchor, left: colorHeading.leftAnchor)
+        colorRectangle.anchor(top: colorHeading.bottomAnchor, left: colorHeading.leftAnchor, paddingTop: 5)
         colorRectangle.setDimensions(width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.height/18)
         colorRectangle.layer.cornerRadius = 6
         colorRectangle.addTarget(self, action: #selector(colorRectanglePressed), for: .touchUpInside)
@@ -140,7 +140,8 @@ class AddCourseViewController: PickerViewController {
         datePickerView.anchor(top: startDateView.bottomAnchor)
         datePickerView.centerX(in: view)
         datePickerView.addTarget(self, action: #selector(datePickerDateChanged), for: .valueChanged)
-        
+        datePickerView.minimumDate = Date()
+
         colorTopAnchorConstaint = colorView.topAnchor.constraint(equalTo: startDateView.bottomAnchor)
         colorOtherAnchorConstaint = colorView.topAnchor.constraint(equalTo: datePickerView.bottomAnchor)
         colorTopAnchorConstaint.isActive = true
@@ -175,6 +176,10 @@ class AddCourseViewController: PickerViewController {
         if startDateView.color == UIColor.mainBlue {
             CourseService.shared.setStartDate(date: datePickerView.date)
             startDate.text = "\(formatDateNoDay(from: datePickerView.date))"
+            if CourseService.shared.getStartDate() > CourseService.shared.getEndDate() {
+                CourseService.shared.setEndDate(date: datePickerView.date)
+                endDate.text = "\(formatDateNoDay(from: datePickerView.date))"
+            }
         } else {
             CourseService.shared.setEndDate(date: datePickerView.date)
             endDate.text  = "\(formatDateNoDay(from: datePickerView.date))"
@@ -189,6 +194,7 @@ class AddCourseViewController: PickerViewController {
             calendarImage.tintColor = .white
             startDate.textColor = .backgroundColor
             endDate.textColor = .darkBlue
+            datePickerView.minimumDate = Date()
             UIView.animate(withDuration: 0.3, animations: {
                 self.colorView.frame.origin.y = self.datePickerView.frame.maxY
             })
@@ -215,6 +221,7 @@ class AddCourseViewController: PickerViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.colorView.frame.origin.y = self.datePickerView.frame.maxY
             })
+            datePickerView.minimumDate = CourseService.shared.getStartDate()
         } else {
             endDateView.backgroundColor = .backgroundColor
             endDateView.layer.borderColor = UIColor.silver.cgColor
@@ -281,10 +288,6 @@ class AddCourseViewController: PickerViewController {
             print("Error saving course to realm \(error.localizedDescription)")
         }
         dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func colorButtonPressed(button: UIButton) {
-        
     }
 }
 

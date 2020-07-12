@@ -101,6 +101,7 @@ class AddAssignmentViewController: UIViewController {
         
         datePicker.anchor(top: dateHeading.bottomAnchor)
         datePicker.centerX(in: view)
+        datePicker.minimumDate = Date()
         
         reminderHeading.anchor(top: datePicker.bottomAnchor,
                                left: view.leftAnchor,

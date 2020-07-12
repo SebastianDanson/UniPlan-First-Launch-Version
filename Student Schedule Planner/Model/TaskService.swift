@@ -53,7 +53,6 @@ class TaskService {
         tasks = realm.objects(Task.self).sorted(byKeyPath: "startDate", ascending: false)
     }
     
-    
     //MARK: - taskIndex
     func getTaskIndex() -> Int? {
         return taskIndex
@@ -317,6 +316,7 @@ class TaskService {
         taskToUpdate?.reminderTime[0] = quiz.reminderTime[0]
         taskToUpdate?.reminderTime[1] = quiz.reminderTime[1]
         taskToUpdate?.reminderDate = quiz.reminderDate
+        taskToUpdate?.isComplete = quiz.isComplete
         
         if let taskToUpdate = taskToUpdate {
             scheduleNotification(forTask: taskToUpdate)
@@ -333,7 +333,8 @@ class TaskService {
         taskToUpdate?.reminderTime[0] = assignment.reminderTime[0]
         taskToUpdate?.reminderTime[1] = assignment.reminderTime[1]
         taskToUpdate?.reminderDate = assignment.reminderDate
-        
+        taskToUpdate?.isComplete = assignment.isComplete
+
         if let taskToUpdate = taskToUpdate {
             scheduleNotification(forTask: taskToUpdate)
         }
@@ -349,7 +350,8 @@ class TaskService {
         taskToUpdate?.reminderTime[0] = exam.reminderTime[0]
         taskToUpdate?.reminderTime[1] = exam.reminderTime[1]
         taskToUpdate?.reminderDate = exam.reminderDate
-        
+        taskToUpdate?.isComplete = exam.isComplete
+
         if let taskToUpdate = taskToUpdate {
             scheduleNotification(forTask: taskToUpdate)
         }
@@ -395,6 +397,66 @@ class TaskService {
         }
     }
     
+    func deleteSummativeForTask(taskToDelete: Task, type: String) {
+        do {
+            try self.realm.write {
+                //Deletes task and the summative associated with that task if there is one
+                switch taskToDelete.type {
+                case "assignment":
+                    let assignmentToDelete = realm.objects(Assignment.self).filter("id == %@", taskToDelete.summativeId).first
+                    if let assignmentToDelete = assignmentToDelete {
+                        realm.delete(assignmentToDelete)
+                    }
+                case "quiz":
+                    let quizToDelete = realm.objects(Quiz.self).filter("id == %@", taskToDelete.summativeId).first
+                    if let quizToDelete = quizToDelete {
+                        realm.delete(quizToDelete)
+                    }
+                case "exam":
+                    let examToDelete = realm.objects(Exam.self).filter("id == %@", taskToDelete.summativeId).first
+                    if let examToDelete = examToDelete {
+                        realm.delete(examToDelete)
+                    }
+                default:
+                    break
+                }
+                deleteNotification(forTask: taskToDelete)
+                self.realm.delete(taskToDelete)
+            }
+            
+        } catch {
+            print("Error writing task to realm")
+        }
+    }
+    
+    func setSummativeIsComplete(task: Task, type: String) {
+        do{
+            try realm.write {
+                task.isComplete = true
+                switch task.type {
+                case "assignment":
+                    let assignmentToComplete = realm.objects(Assignment.self).filter("id == %@", task.summativeId).first
+                    if let assignmentToComplete = assignmentToComplete {
+                        assignmentToComplete.isComplete = true
+                    }
+                case "quiz":
+                    let quizToComplete = realm.objects(Quiz.self).filter("id == %@", task.summativeId).first
+                    if let quizToComplete = quizToComplete {
+                        quizToComplete.isComplete = true
+                    }
+                case "exam":
+                    let examToComplete = realm.objects(Exam.self).filter("id == %@", task.summativeId).first
+                    if let examToComplete = examToComplete {
+                        examToComplete.isComplete = true
+                    }
+                default:
+                    break
+                }
+            }
+        }catch{
+            print("Error setting isComplete to tru \(error.localizedDescription)")
+        }
+    }
     //MARK: - Push notification methods
     @objc func askToSendNotifications() {
         let center = UNUserNotificationCenter.current()

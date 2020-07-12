@@ -14,7 +14,7 @@ import SwipeCellKit
  * This VC displays all of the users courses
  */
 
-class CoursesViewController: SwipeViewController {
+class CoursesViewController: SwipeNoCompleteViewController {
     
     let realm = try! Realm()
     //MARK: - lifecycle
@@ -133,6 +133,13 @@ class CoursesViewController: SwipeViewController {
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
     }
+    
+    @objc func sectionHeaderPressed() {
+        AllCoursesService.shared.setSelectedCourse(course: nil)
+        let vc = AddNotesViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
+    }
 }
 
 //MARK: - Tableview Delegate and Datasource
@@ -149,25 +156,71 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
             noCoursesLabel.textAlignment = .center
             tableView.tableHeaderView = noCoursesLabel
             tableView.separatorStyle = .none
-            return 0
+            return 1
         }
         tableView.tableHeaderView = nil
+        if AllCoursesService.shared.getAddNote() {
+            return 2
+        }
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if AllCoursesService.shared.getAddNote() {
+            if AllCoursesService.shared.getCourses()?.count == 0 {
+                return 0
+            }
+            switch section {
+            case 0:
+                return 0
+            default:
+                return AllCoursesService.shared.getCourses()?.count ?? 0
+            }
+        }
         return AllCoursesService.shared.getCourses()?.count ?? 0
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if AllCoursesService.shared.getAddNote() {
+            if section == 0 {
+                return 50
+            }
+        }
+        return 0
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if AllCoursesService.shared.getAddNote() {
+            if section == 0 {
+                let view = UIView()
+                let subView = UIView()
+                let label = makeHeading(withText: "Not for a course")
+                
+                view.backgroundColor = .backgroundColor
+                view.setDimensions(width: UIScreen.main.bounds.width, height: 50)
+                
+                let gesture = UITapGestureRecognizer(target: self, action: #selector(sectionHeaderPressed))
+                view.addGestureRecognizer(gesture)
+                
+                view.addSubview(subView)
+                subView.addSubview(label)
+                
+                subView.backgroundColor = .silver
+                subView.setDimensions(width: UIScreen.main.bounds.width - 20, height: 50)
+                subView.centerX(in: view)
+                subView.centerY(in: view)
+                subView.layer.cornerRadius = 10
+                
+                label.textColor = .white
+                label.centerY(in: view)
+                label.anchor(left: view.leftAnchor, paddingLeft: 20)
+                
+                return view
+            }
+        }
+        return nil
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: courseReuseIdentifer) as! CourseCell
-        if AllCoursesService.shared.getCourses()?.count == 0 {
-            cell.taskLabel.text = "No Courses Added"
-            cell.taskLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-            cell.textLabel?.textColor = .darkBlue
-            
-            return cell
-        }
         if let course = AllCoursesService.shared.getCourse(atIndex: indexPath.row) {
             cell.update(course: course)
             if !AllCoursesService.shared.getAddSummative() {
@@ -185,6 +238,11 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
         
         TaskService.shared.setColor(color: color)
         if AllCoursesService.shared.getAddSummative() {
+            if AllCoursesService.shared.getAddNote(){
+                let vc = AddNotesViewController()
+                vc.modalPresentationStyle = .fullScreen
+                present(vc, animated: true, completion: nil)
+            }
             let vc = SelectSummativeTypeViewController()
             vc.modalPresentationStyle = .fullScreen
             present(vc, animated: true, completion: nil)

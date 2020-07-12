@@ -22,7 +22,10 @@ class TabBarController: UITabBarController {
         let assignmentImage = UIImage(named: "assignments")
         let summativesNav = makeNavController(vc: SummativesViewController(), title: "Summatives", image: assignmentImage)
         
-        let tabBarList = [scheduleNav, coursesNav, summativesNav]
+        let notesImage = UIImage(named: "notes")
+        let notesNav = makeNavController(vc: NotesViewController(), title: "Notes", image: notesImage)
+        
+        let tabBarList = [scheduleNav, coursesNav, summativesNav, notesNav]
         tabBar.tintColor = .mainBlue
         viewControllers = tabBarList
         
@@ -39,6 +42,7 @@ class TabBarController: UITabBarController {
     
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         AllCoursesService.shared.setAddSummative(bool: false)
+        AllCoursesService.shared.setAddNote(bool: false)
     }
 }
 

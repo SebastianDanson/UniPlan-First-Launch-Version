@@ -13,7 +13,7 @@ import RealmSwift
  * This VC displays and allows the user to edit all of the Exams, Quizzes, and Assignments from all courses.
  * It then categorizes these summatives into pastDue and upcoming based on their specified dates.
  */
-class SummativesViewController: SwipeViewController {
+class SummativesViewController: SwipeCompleteViewController {
     
     let realm = try! Realm()
     
@@ -119,50 +119,31 @@ class SummativesViewController: SwipeViewController {
     }
     //What happens when you swipe on a cell
     override func updateModel(index: Int, section: Int) {
-        do {
-            try realm.write {
-                var summative = Task()
-                
-                switch section {
-                case 0:
-                    summative = upcomingSummatives[index]
-                default:
-                    summative = pastDueSummatives[index]
-                }
-                
-                //Deletes the summative and the task associated with that summative
-                switch summative.type {
-                case "assignment":
-                    let assignmentToDelete = realm.objects(Assignment.self).filter("id == %@ ", summative.summativeId).first
-                    if let assignmentToDelete = assignmentToDelete {
-                        realm.delete(assignmentToDelete)
-                    }
-                case "quiz":
-                    let quizToDelete = realm.objects(Quiz.self).filter("id == %@ ", summative.summativeId).first
-                    if let quizToDelete = quizToDelete {
-                        realm.delete(quizToDelete)
-                    }
-                case "exam":
-                    let examToDelete = realm.objects(Exam.self).filter("id == %@ ", summative.summativeId).first
-                    if let examToDelete = examToDelete {
-                        realm.delete(examToDelete)
-                    }
-                default:
-                    break
-                }
-                let taskToDelete = realm.objects(Task.self).filter("id == %@", summative.id)
-                realm.delete(taskToDelete)
-            }
-        } catch {
-            print("Error writing to Realm \(error.localizedDescription)")
+        var summative = Task()
+        
+        switch section {
+        case 0:
+            summative = upcomingSummatives[index]
+        default:
+            summative = pastDueSummatives[index]
         }
+        
+        TaskService.shared.deleteSummativeForTask(taskToDelete: summative, type: summative.type)
         upcomingSummatives = [Task]()
         pastDueSummatives = [Task]()
         
         filterSummatives()
         tableView.reloadData()
     }
+    
+    override func complete(index: Int, section: Int) {
+        if let taskToComplete = TaskService.shared.getTask(atIndex: index) {
+            TaskService.shared.setSummativeIsComplete(task: taskToComplete, type: taskToComplete.type)
+            tableView.reloadData()
+        }
+    }
 }
+
 //MARK: - Tableview Delegate and Datasource
 extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {

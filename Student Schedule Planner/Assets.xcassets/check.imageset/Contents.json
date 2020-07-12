@@ -1,11 +1,11 @@
 {
   "images" : [
     {
+      "filename" : "icons8-checked_radio_button.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icons8-more_than.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
