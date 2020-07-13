@@ -11,7 +11,7 @@ import RealmSwift
 import UserNotifications
 
 /*
- * This VC allows the user to add, edit, or delete a class
+ * This VC allows the user to add, edit, or delete a class or routine
  */
 class AddClassViewController: UIViewController {
     
@@ -25,7 +25,7 @@ class AddClassViewController: UIViewController {
         TaskService.shared.setReminderDate(date: Date())
         SingleClassService.shared.setReminder(false)
         SingleClassService.shared.setRepeats(every: "Week")
-        SingleClassService.shared.resetClassDays()
+        SingleClassService.shared.resetDays()
         
         self.dismissKey()
         setupViews()
@@ -36,15 +36,17 @@ class AddClassViewController: UIViewController {
         classTypeButton.setTitle(SingleClassService.shared.getType().description, for: .normal)
         reminderButton.setTitle(TaskService.shared.setupReminderString(), for: .normal)
         repeatsButton.setTitle("Every \(SingleClassService.shared.getRepeats())", for: .normal)
+        colorRectangle.backgroundColor = TaskService.shared.getColor()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        reminderButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: reminderButton.frame.width-30, bottom: 0, right: 0)
-        if SingleClassService.shared.getReminder(), !reminderSwitch.isOn {
-            reminderSwitch.isOn = true
-            reminderSwitchToggled()
-        }
+            reminderButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: reminderButton.frame.width-30, bottom: 0, right: 0)
+            if SingleClassService.shared.getReminder(), !reminderSwitch.isOn {
+                reminderSwitch.isOn = true
+                reminderSwitchToggled()
+            }
+      
     }
     
     //MARK: - Properties
@@ -52,8 +54,9 @@ class AddClassViewController: UIViewController {
     let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
     let titleLabel = makeTitleLabel(withText: "Add Class")
     let backButton = makeBackButton()
-    let deleteButton = makeDeleteButton()
-    
+    let saveButton = makeSaveLabelButton()
+    let saveLabelButton = makeSaveLabelButton()
+
     //Stack Views
     let classDayStackView = makeStackView(withOrientation: .horizontal, spacing: 5)
     let stackView = makeStackView(withOrientation: .vertical, spacing: 3)
@@ -71,9 +74,9 @@ class AddClassViewController: UIViewController {
     //Others
     let reminderHeading = makeHeading(withText: "Reminder:")
     
-    let saveButton = makeSaveButton()
     let classTypeButton = setValueButton(withPlaceholder: "Class", height: 50)
     let repeatsButton = makeButtonWithImage(withPlaceholder: "Every Week", imageName: "repeat")
+    let titleTextField = makeTextField(withPlaceholder: "Title", height: 50)
     
     let reminderButton = setValueButton(withPlaceholder: "When Class Starts", height: 45)
     let reminderSwitch = UISwitch()
@@ -104,6 +107,9 @@ class AddClassViewController: UIViewController {
     let calendarIcon = UIImage(systemName: "calendar")
     var calendarImage = UIImageView(image: nil)
     
+    let colorHeading = makeHeading(withText: "Color:")
+    let colorRectangle = UIView()
+    
     //Spacers and sperators
     let spacerView1 = makeSpacerView(height: UIScreen.main.bounds.height/180)
     let spacerView2 = makeSpacerView(height: UIScreen.main.bounds.height/180)
@@ -124,6 +130,11 @@ class AddClassViewController: UIViewController {
     
     //MARK: - setup UI
     func setupViews() {
+        if RoutineService.shared.getIsRoutine() {
+            titleLabel.text = "Add Routine"
+        }
+        
+        reminderButton.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 249), for: .horizontal)
         let nextImage = UIImageView(image: nextIcon!)
         
         clockImage = UIImageView(image: clockIcon!)
@@ -139,11 +150,11 @@ class AddClassViewController: UIViewController {
         view.addSubview(classDayStackView)
         view.addSubview(stackViewContainer)
         view.addSubview(classTypeButton)
+        view.addSubview(titleTextField)
         view.addSubview(endTimeView)
         view.addSubview(startTimeView)
         view.addSubview(clockImage)
         view.addSubview(hideReminderView)
-        view.addSubview(saveButton)
         
         repeatsButton.addSubview(nextImage)
         locationView.addSubview(locationTextField)
@@ -151,6 +162,9 @@ class AddClassViewController: UIViewController {
         locationView.addSubview(reminderHeading)
         locationView.addSubview(reminderButton)
         locationView.addSubview(reminderView)
+        locationView.addSubview(colorHeading)
+        locationView.addSubview(colorRectangle)
+
         reminderView.addSubview(hideReminderView)
         
         startTimeView.addSubview(startTime)
@@ -162,7 +176,7 @@ class AddClassViewController: UIViewController {
         
         topView.addSubview(titleLabel)
         topView.addSubview(backButton)
-        topView.addSubview(deleteButton)
+        topView.addSubview(saveButton)
         
         stackViewContainer.addSubview(stackView)
         stackViewContainer.addSubview(datePicker)
@@ -200,11 +214,18 @@ class AddClassViewController: UIViewController {
         backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
-        deleteButton.anchor(right: topView.rightAnchor, paddingRight: 20)
-        deleteButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
-        deleteButton.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
+        saveButton.anchor(right: topView.rightAnchor, paddingRight: 25)
+        saveButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        saveButton.addTarget(self, action: #selector(saveClass), for: .touchUpInside)
         
         //Not topView
+        titleTextField.anchor(top: topView.bottomAnchor, paddingTop: UIScreen.main.bounds.height/50)
+        titleTextField.centerX(in: view)
+        titleTextField.font = UIFont.systemFont(ofSize: 24)
+        titleTextField.layer.borderWidth = 4
+        titleTextField.isHidden = true
+        titleTextField.delegate = self
+        
         classTypeButton.anchor(top: topView.bottomAnchor, paddingTop: UIScreen.main.bounds.height/50)
         classTypeButton.centerX(in: view)
         let startTap = UITapGestureRecognizer(target: self, action: #selector(startTimeViewTapped))
@@ -250,7 +271,7 @@ class AddClassViewController: UIViewController {
         startDateView.anchor(top: spacerView5.bottomAnchor,
                              left: classTypeButton.leftAnchor,
                              paddingTop: 0)
-        calendarImage.anchor(left: startDateView.leftAnchor, paddingLeft: 18)
+        calendarImage.anchor(left: startDateView.leftAnchor, paddingLeft: 10)
         calendarImage.centerY(in: startDateView)
         calendarImage.tintColor = .darkGray
         
@@ -267,10 +288,10 @@ class AddClassViewController: UIViewController {
                            paddingTop: 0,
                            paddingRight: 20)
         
-        startDate.centerX(in: startDateView)
+        startDate.centerXAnchor.constraint(equalTo: startDateView.centerXAnchor, constant: 5).isActive = true
         startDate.centerY(in: startDateView)
         
-        endDate.centerXAnchor.constraint(equalTo: endDateView.centerXAnchor, constant: 10).isActive = true
+        endDate.centerXAnchor.constraint(equalTo: endDateView.centerXAnchor, constant: 12).isActive = true
         endDate.centerY(in: endDateView)
         
         let course = AllCoursesService.shared.getSelectedCourse()
@@ -308,12 +329,27 @@ class AddClassViewController: UIViewController {
         locationViewOtherAnchorConstaint = locationView.topAnchor.constraint(equalTo: datePicker.bottomAnchor)
         locationViewTopAnchorConstaint.isActive = true
         
-        reminderHeading.anchor(top: locationView.topAnchor, left: locationView.leftAnchor, paddingTop: 10)
+        reminderHeading.anchor(top: colorRectangle.bottomAnchor, left: locationView.leftAnchor, paddingTop: 12)
         reminderSwitch.centerYAnchor.constraint(equalTo: reminderHeading.centerYAnchor).isActive = true
         reminderSwitch.anchor(left: reminderHeading.rightAnchor, paddingLeft: 10)
         reminderSwitch.addTarget(self, action: #selector(reminderSwitchToggled), for: .touchUpInside)
         
-        reminderButton.anchor(top: reminderSwitch.bottomAnchor, left: locationView.leftAnchor, right: locationView.rightAnchor, paddingTop: 5)
+        reminderButton.anchor(top: reminderSwitch.bottomAnchor,
+                              left: locationView.leftAnchor,
+                              paddingTop: 5)
+        
+        colorHeading.anchor(top: locationView.topAnchor, left: locationView.leftAnchor, paddingTop: 10)
+        colorRectangle.anchor(top: colorHeading.bottomAnchor,
+                              left: locationView.leftAnchor,
+                              right: locationView.rightAnchor,
+                              paddingTop: 2)
+        colorRectangle.backgroundColor = TaskService.shared.getColor()
+        colorRectangle.setDimensions(height: UIScreen.main.bounds.height/19)
+        colorRectangle.layer.cornerRadius = 5
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(colorRectanglePressed))
+        colorRectangle.addGestureRecognizer(tap)
+
         
         reminderView.anchor(top: reminderSwitch.bottomAnchor)
         reminderView.centerX(in: view)
@@ -326,10 +362,6 @@ class AddClassViewController: UIViewController {
         
         classTypeButton.layer.borderWidth = 5
         classTypeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        
-        saveButton.centerX(in: view)
-        saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: UIScreen.main.bounds.height/28)
-        saveButton.addTarget(self, action: #selector(saveClass), for: .touchUpInside)
         
         //Setting button tags
         sunday.tag = 0
@@ -355,61 +387,128 @@ class AddClassViewController: UIViewController {
         reminderButton.addTarget(self, action: #selector(reminderButtonPressed), for: .touchUpInside)
         
         //If a class was selected
-        if let classIndex = SingleClassService.shared.getClassIndex() {
-            if let theClass = CourseService.shared.getClass(atIndex: classIndex) {
-                TaskService.shared.setReminderTime([theClass.reminderTime[0],theClass.reminderTime[1]])
+        if !RoutineService.shared.getIsRoutine() {
+            if let classIndex = SingleClassService.shared.getClassIndex() {
+                if let theClass = CourseService.shared.getClass(atIndex: classIndex) {
+                    TaskService.shared.setReminderTime([theClass.reminderTime[0],theClass.reminderTime[1]])
+                    
+                    SingleClassService.shared.setStartTime(time: theClass.startTime)
+                    SingleClassService.shared.setEndTime(time: theClass.endTime)
+                    
+                    startTime.text = formatTime(from: theClass.startTime)
+                    endTime.text = formatTime(from: theClass.endTime)
+                    
+                    SingleClassService.shared.setStartDate(date: theClass.startDate)
+                    SingleClassService.shared.setEndDate(date: theClass.endDate)
+                    
+                    startDate.text = formatDateNoDay(from: theClass.startDate)
+                    endDate.text = formatDateNoDay(from: theClass.endDate)
+                    
+                    SingleClassService.shared.setTypeAsString(classTypeString: theClass.subType)
+                    
+                    SingleClassService.shared.setRepeats(every: theClass.repeats)
+                    
+                    //Highlights the days of the class
+                    for (index, day) in theClass.classDays.enumerated() {
+                        if day == 1 {
+                            switch index {
+                            case 0:
+                                sunday.highlight()
+                                SingleClassService.shared.setDay(day: 0)
+                            case 1:
+                                monday.highlight()
+                                SingleClassService.shared.setDay(day: 1)
+                            case 2:
+                                tuesday.highlight()
+                                SingleClassService.shared.setDay(day: 2)
+                            case 3:
+                                wednesday.highlight()
+                                SingleClassService.shared.setDay(day: 3)
+                            case 4:
+                                thursday.highlight()
+                                SingleClassService.shared.setDay(day: 4)
+                            case 5:
+                                friday.highlight()
+                                SingleClassService.shared.setDay(day: 5)
+                            case 6:
+                                saturday.highlight()
+                                SingleClassService.shared.setDay(day: 6)
+                            default:
+                                break
+                            }
+                        }
+                    }
+                    
+                    locationTextField.text = theClass.location
+                    
+                    if theClass.reminder {
+                        reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [theClass.reminderTime[0], theClass.reminderTime[1]], reminderDate: Date()), for: .normal)
+                        SingleClassService.shared.setReminder(true)
+                    }
+                }
+            }
+        } else {
+            classTypeButton.isHidden = true
+            titleTextField.isHidden = false
+            var dateComponent = DateComponents()
+            dateComponent.month = 3
+            let threeMonthsFromToday = Calendar.current.date(byAdding: dateComponent, to: Date())
+            endDate.text = formatDateNoDay(from: threeMonthsFromToday ?? Date())
+            SingleClassService.shared.setEndDate(date: threeMonthsFromToday ?? Date())
+            
+            if let routine = RoutineService.shared.getSelectedRoutine() {
+                TaskService.shared.setReminderTime([routine.reminderTime[0],routine.reminderTime[1]])
                 
-                SingleClassService.shared.setStartTime(time: theClass.startTime)
-                SingleClassService.shared.setEndTime(time: theClass.endTime)
+                SingleClassService.shared.setStartTime(time: routine.startTime)
+                SingleClassService.shared.setEndTime(time: routine.endTime)
                 
-                startTime.text = formatTime(from: theClass.startTime)
-                endTime.text = formatTime(from: theClass.endTime)
+                startTime.text = formatTime(from: routine.startTime)
+                endTime.text = formatTime(from: routine.endTime)
                 
-                SingleClassService.shared.setStartDate(date: theClass.startDate)
-                SingleClassService.shared.setEndDate(date: theClass.endDate)
+                SingleClassService.shared.setStartDate(date: routine.startDate)
+                SingleClassService.shared.setEndDate(date: routine.endDate)
                 
-                startDate.text = formatDateNoDay(from: theClass.startDate)
-                endDate.text = formatDateNoDay(from: theClass.endDate)
+                startDate.text = formatDateNoDay(from: routine.startDate)
+                endDate.text = formatDateNoDay(from: routine.endDate)
                 
-                SingleClassService.shared.setTypeAsString(classTypeString: theClass.subType)
-                
-                SingleClassService.shared.setRepeats(every: theClass.repeats)
+                SingleClassService.shared.setRepeats(every: routine.repeats)
+                titleTextField.text = routine.title
                 
                 //Highlights the days of the class
-                for (index, day) in theClass.classDays.enumerated() {
+                for (index, day) in routine.days.enumerated() {
                     if day == 1 {
                         switch index {
                         case 0:
                             sunday.highlight()
-                            SingleClassService.shared.setClassDay(day: 0)
+                            SingleClassService.shared.setDay(day: 0)
                         case 1:
                             monday.highlight()
-                            SingleClassService.shared.setClassDay(day: 1)
+                            SingleClassService.shared.setDay(day: 1)
                         case 2:
                             tuesday.highlight()
-                            SingleClassService.shared.setClassDay(day: 2)
+                            SingleClassService.shared.setDay(day: 2)
                         case 3:
                             wednesday.highlight()
-                            SingleClassService.shared.setClassDay(day: 3)
+                            SingleClassService.shared.setDay(day: 3)
                         case 4:
                             thursday.highlight()
-                            SingleClassService.shared.setClassDay(day: 4)
+                            SingleClassService.shared.setDay(day: 4)
                         case 5:
                             friday.highlight()
-                            SingleClassService.shared.setClassDay(day: 5)
+                            SingleClassService.shared.setDay(day: 5)
                         case 6:
                             saturday.highlight()
-                            SingleClassService.shared.setClassDay(day: 6)
+                            SingleClassService.shared.setDay(day: 6)
                         default:
                             break
                         }
                     }
                 }
                 
-                locationTextField.text = theClass.location
+                locationTextField.text = routine.location
                 
-                if theClass.reminder {
-                    reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [theClass.reminderTime[0], theClass.reminderTime[1]], reminderDate: Date()), for: .normal)
+                if routine.reminder {
+                    reminderButton.setTitle(TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [routine.reminderTime[0], routine.reminderTime[1]], reminderDate: Date()), for: .normal)
                     SingleClassService.shared.setReminder(true)
                 }
             }
@@ -422,10 +521,15 @@ class AddClassViewController: UIViewController {
         timePicker.setDimensions(width: UIScreen.main.bounds.width - 100)
         timePicker.backgroundColor = .backgroundColor
         timePicker.addTarget(self, action: #selector(timePickerDateChanged), for: .valueChanged)
-        timePicker.minimumDate = Date()
     }
     
     //MARK: - Actions
+    @objc func colorRectanglePressed() {
+        let vc = ColorsViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
+    }
+    
     @objc func reminderSwitchToggled() {
         if reminderSwitch.isOn {
             resetDateViews()
@@ -488,7 +592,6 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.stackViewContainer.frame.origin.y = self.timePicker.frame.maxY
             })
-            timePicker.minimumDate = Date()
         } else {
             startTimeView.color = .clouds
             startTimeView.borderColor = .silver
@@ -517,7 +620,6 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.stackViewContainer.frame.origin.y = self.timePicker.frame.maxY
             })
-            timePicker.minimumDate = SingleClassService.shared.getStartTime()
         } else {
             endTimeView.backgroundColor = .backgroundColor
             endTimeView.layer.borderColor = UIColor.silver.cgColor
@@ -580,7 +682,7 @@ class AddClassViewController: UIViewController {
             locationViewTopAnchorConstaint.isActive = false
             locationViewOtherAnchorConstaint.isActive = true
             datePicker.minimumDate = SingleClassService.shared.getStartDate()
-
+            
         } else {
             endDateView.backgroundColor = .backgroundColor
             endDateView.layer.borderColor = UIColor.silver.cgColor
@@ -605,12 +707,12 @@ class AddClassViewController: UIViewController {
             stackViewContainerOtherAnchorConstaint.isActive = false
         }
         
-        if SingleClassService.shared.getClassDays()[button.tag] == 0 {
+        if SingleClassService.shared.getDays()[button.tag] == 0 {
             button.highlight()
         } else {
             button.unhighlight()
         }
-        SingleClassService.shared.setClassDay(day: button.tag)
+        SingleClassService.shared.setDay(day: button.tag)
     }
     
     @objc func presentClassTypeAndRepeatsVC(button: UIButton) {
@@ -632,53 +734,102 @@ class AddClassViewController: UIViewController {
     }
     
     @objc func saveClass() {
-        let theClass = SingleClass()
-        theClass.classDays = configureClassDays()
-        theClass.startTime = SingleClassService.shared.getStartTime()
-        theClass.endTime = SingleClassService.shared.getEndTime()
-        theClass.repeats = SingleClassService.shared.getRepeats()
-        theClass.location = locationTextField.text ?? "Not Set"
-        theClass.type = "Class"
-        theClass.subType = SingleClassService.shared.getType().description
-        theClass.reminderTime[0] = TaskService.shared.getReminderTime()[0]
-        theClass.reminderTime[1] = TaskService.shared.getReminderTime()[1]
-        theClass.reminder = SingleClassService.shared.getReminder()
-        theClass.courseId = AllCoursesService.shared.getSelectedCourse()?.id ?? ""
-        theClass.startDate = SingleClassService.shared.getStartDate()
-        theClass.endDate = SingleClassService.shared.getEndDate()
-        TaskService.shared.setReminderTime([theClass.reminderTime[0], theClass.reminderTime[1]])
         
         do {
             try realm.write {
                 //If a previous class was selcted
-                if let classIndex = SingleClassService.shared.getClassIndex() {
-                    let classToUpdate = CourseService.shared.getClass(atIndex: classIndex)
+                if !RoutineService.shared.getIsRoutine() {
+                    let theClass = SingleClass()
+                    theClass.classDays = configureDays()
+                    theClass.startTime = SingleClassService.shared.getStartTime()
+                    theClass.endTime = SingleClassService.shared.getEndTime()
+                    theClass.repeats = SingleClassService.shared.getRepeats()
+                    theClass.location = locationTextField.text ?? "Not Set"
+                    theClass.type = "Class"
+                    theClass.subType = SingleClassService.shared.getType().description
+                    theClass.reminderTime[0] = TaskService.shared.getReminderTime()[0]
+                    theClass.reminderTime[1] = TaskService.shared.getReminderTime()[1]
+                    theClass.reminder = SingleClassService.shared.getReminder()
+                    theClass.courseId = AllCoursesService.shared.getSelectedCourse()?.id ?? ""
+                    theClass.startDate = SingleClassService.shared.getStartDate()
+                    theClass.endDate = SingleClassService.shared.getEndDate()
+                    TaskService.shared.setReminderTime([theClass.reminderTime[0], theClass.reminderTime[1]])
                     
-                    for index in 0..<theClass.classDays.count{
-                        classToUpdate?.classDays[index] = theClass.classDays[index]
-                    }
-                    classToUpdate?.startTime = theClass.startTime
-                    classToUpdate?.endTime = theClass.endTime
-                    classToUpdate?.startDate = theClass.startDate
-                    classToUpdate?.endDate = theClass.endDate
-                    classToUpdate?.repeats = theClass.repeats
-                    classToUpdate?.location = theClass.location
-                    classToUpdate?.type = theClass.type
-                    classToUpdate?.reminderTime[0] = theClass.reminderTime[0]
-                    classToUpdate?.reminderTime[1] = theClass.reminderTime[1]
-                    classToUpdate?.reminder = theClass.reminder
-                    classToUpdate?.subType = theClass.subType
-                    
-                    if let theClassToUpdate = classToUpdate {
-                        TaskService.shared.updateTasks(forClass: theClassToUpdate)
+                    if let classIndex = SingleClassService.shared.getClassIndex() {
+                        let classToUpdate = CourseService.shared.getClass(atIndex: classIndex)
+                        
+                        for index in 0..<theClass.classDays.count{
+                            classToUpdate?.classDays[index] = theClass.classDays[index]
+                        }
+                        classToUpdate?.startTime = theClass.startTime
+                        classToUpdate?.endTime = theClass.endTime
+                        classToUpdate?.startDate = theClass.startDate
+                        classToUpdate?.endDate = theClass.endDate
+                        classToUpdate?.repeats = theClass.repeats
+                        classToUpdate?.location = theClass.location
+                        classToUpdate?.type = theClass.type
+                        classToUpdate?.reminderTime[0] = theClass.reminderTime[0]
+                        classToUpdate?.reminderTime[1] = theClass.reminderTime[1]
+                        classToUpdate?.reminder = theClass.reminder
+                        classToUpdate?.subType = theClass.subType
+                        
+                        if let theClassToUpdate = classToUpdate {
+                            TaskService.shared.updateTasks(forClass: theClassToUpdate)
+                        }
+                    } else {
+                        realm.add(theClass, update: .modified)
+                        let course = AllCoursesService.shared.getSelectedCourse()
+                        course?.classes.append(theClass)
+                        TaskService.shared.makeTasks(forClass: theClass)
                     }
                 } else {
-                    realm.add(theClass, update: .modified)
-                    let course = AllCoursesService.shared.getSelectedCourse()
-                    course?.classes.append(theClass)
-                    TaskService.shared.makeTasks(forClass: theClass)
+                    let routine = Routine()
+                    routine.days = configureDays()
+                    routine.startTime = SingleClassService.shared.getStartTime()
+                    routine.endTime = SingleClassService.shared.getEndTime()
+                    routine.repeats = SingleClassService.shared.getRepeats()
+                    routine.location = locationTextField.text ?? "Not Set"
+                    routine.reminderTime[0] = TaskService.shared.getReminderTime()[0]
+                    routine.reminderTime[1] = TaskService.shared.getReminderTime()[1]
+                    routine.reminder = SingleClassService.shared.getReminder()
+                    routine.title = titleTextField.text ?? "Untitled"
+                    routine.startDate = SingleClassService.shared.getStartDate()
+                    routine.endDate = SingleClassService.shared.getEndDate()
+                    
+                    let rgb = TaskService.shared.getColor().components
+                       
+                    routine.color[0] = Double(rgb.red)
+                    routine.color[1] = Double(rgb.green)
+                    routine.color[2] = Double(rgb.blue)
+
+                    TaskService.shared.setReminderTime([routine.reminderTime[0], routine.reminderTime[1]])
+                    
+                    if let routineToUpdate = RoutineService.shared.getSelectedRoutine() {
+                        for index in 0..<routineToUpdate.days.count{
+                            routineToUpdate.days[index] = routine.days[index]
+                        }
+                        routineToUpdate.startTime = routine.startTime
+                        routineToUpdate.endTime = routine.endTime
+                        routineToUpdate.repeats = routine.repeats
+                        routineToUpdate.location = routine.location
+                        routineToUpdate.reminderTime[0] = routine.reminderTime[0]
+                        routineToUpdate.reminderTime[1] = routine.reminderTime[1]
+                        routineToUpdate.reminder = routine.reminder
+                        routineToUpdate.title = routine.title
+                        routineToUpdate.startDate = routine.startDate
+                        routineToUpdate.endDate = routine.endDate
+                        routineToUpdate.color[0] = routine.color[0]
+                        routineToUpdate.color[1] = routine.color[1]
+                        routineToUpdate.color[2] = routine.color[2]
+
+                        TaskService.shared.updateTasks(forRoutine: routineToUpdate)
+                    } else {
+                        realm.add(routine, update: .modified)
+                        TaskService.shared.makeTasks(forRoutine: routine)
+                    }
                 }
             }
+            
         } catch {
             print("Error writing Class to realm \(error.localizedDescription)")
         }
@@ -707,9 +858,9 @@ class AddClassViewController: UIViewController {
         backButtonPressed()
     }
     //MARK: - Helper methods
-    func configureClassDays() -> List<Int> {
+    func configureDays() -> List<Int> {
         let days = List<Int>()
-        days.append(objectsIn: SingleClassService.shared.getClassDays())
+        days.append(objectsIn: SingleClassService.shared.getDays())
         return days
     }
     
@@ -736,7 +887,7 @@ class AddClassViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.stackViewContainer.frame.origin.y = self.startTimeView.frame.maxY
             })
-           
+            
             startTimeView.color = .clouds
             endTimeView.backgroundColor = .backgroundColor
             startTime.textColor = .darkBlue

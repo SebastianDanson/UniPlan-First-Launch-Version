@@ -10,9 +10,12 @@
 		383879C0AE500539D45E3F18 /* Pods_Student_Schedule_Planner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */; };
 		3F0AEB1624BA8284001501F3 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1524BA8284001501F3 /* Note.swift */; };
 		3F0AEB1824BA83C7001501F3 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1724BA83C7001501F3 /* NoteCell.swift */; };
-		3F0AEB1A24BA8593001501F3 /* AddNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1924BA8593001501F3 /* AddNotesViewController.swift */; };
 		3F0AEB1C24BB617D001501F3 /* SwipeNoCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1B24BB617D001501F3 /* SwipeNoCompleteViewController.swift */; };
 		3F0AEB1E24BB79A0001501F3 /* NotesViewControlelr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1D24BB79A0001501F3 /* NotesViewControlelr.swift */; };
+		3F0AEB2224BBB9C3001501F3 /* RoutinesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB2124BBB9C3001501F3 /* RoutinesViewController.swift */; };
+		3F0AEB2424BBBBC7001501F3 /* Routine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB2324BBBBC7001501F3 /* Routine.swift */; };
+		3F0AEB2924BBC295001501F3 /* RoutineService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB2824BBC295001501F3 /* RoutineService.swift */; };
+		3F0AEB2B24BCD0AB001501F3 /* AddNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB2A24BCD0AB001501F3 /* AddNotesViewController.swift */; };
 		3F383E5C2486B25E00D2A5D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E5B2486B25E00D2A5D1 /* AppDelegate.swift */; };
 		3F383E5E2486B25E00D2A5D1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F383E5D2486B25E00D2A5D1 /* SceneDelegate.swift */; };
 		3F383E652486B26100D2A5D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F383E642486B26100D2A5D1 /* Assets.xcassets */; };
@@ -55,9 +58,12 @@
 /* Begin PBXFileReference section */
 		3F0AEB1524BA8284001501F3 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		3F0AEB1724BA83C7001501F3 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
-		3F0AEB1924BA8593001501F3 /* AddNotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNotesViewController.swift; sourceTree = "<group>"; };
 		3F0AEB1B24BB617D001501F3 /* SwipeNoCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeNoCompleteViewController.swift; sourceTree = "<group>"; };
 		3F0AEB1D24BB79A0001501F3 /* NotesViewControlelr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewControlelr.swift; sourceTree = "<group>"; };
+		3F0AEB2124BBB9C3001501F3 /* RoutinesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutinesViewController.swift; sourceTree = "<group>"; };
+		3F0AEB2324BBBBC7001501F3 /* Routine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routine.swift; sourceTree = "<group>"; };
+		3F0AEB2824BBC295001501F3 /* RoutineService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineService.swift; sourceTree = "<group>"; };
+		3F0AEB2A24BCD0AB001501F3 /* AddNotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNotesViewController.swift; sourceTree = "<group>"; };
 		3F383E582486B25E00D2A5D1 /* UniPlan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UniPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F383E5B2486B25E00D2A5D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F383E5D2486B25E00D2A5D1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -159,6 +165,8 @@
 				3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */,
 				3F67BBFB24893AF100BFD6E5 /* Task.swift */,
 				3F67BC04248C7B9E00BFD6E5 /* TaskService.swift */,
+				3F0AEB2324BBBBC7001501F3 /* Routine.swift */,
+				3F0AEB2824BBC295001501F3 /* RoutineService.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -203,8 +211,9 @@
 			children = (
 				3F94E2CA24929E4200B0F958 /* CoursesViewController.swift */,
 				3F0AEB1D24BB79A0001501F3 /* NotesViewControlelr.swift */,
-				3F383E722486B2EE00D2A5D1 /* TimelineViewController.swift */,
+				3F0AEB2124BBB9C3001501F3 /* RoutinesViewController.swift */,
 				3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */,
+				3F383E722486B2EE00D2A5D1 /* TimelineViewController.swift */,
 				3F63BF9424B7CB0B00404806 /* ColorsViewController.swift */,
 				3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */,
 				3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */,
@@ -215,7 +224,7 @@
 				3FAEC83F24992C2A000ADD9D /* AddQuizAndExamViewController.swift */,
 				3FAEC849249BF859000ADD9D /* AddCourseViewController.swift */,
 				3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */,
-				3F0AEB1924BA8593001501F3 /* AddNotesViewController.swift */,
+				3F0AEB2A24BCD0AB001501F3 /* AddNotesViewController.swift */,
 			);
 			path = Course;
 			sourceTree = "<group>";
@@ -368,10 +377,10 @@
 			files = (
 				3F94E32724968FED00B0F958 /* QuizAndExamCell.swift in Sources */,
 				3F0AEB1624BA8284001501F3 /* Note.swift in Sources */,
-				3F0AEB1A24BA8593001501F3 /* AddNotesViewController.swift in Sources */,
 				3F94E2C72492963400B0F958 /* Course.swift in Sources */,
 				3F67BC27248EDE4200BFD6E5 /* SetReminderViewController.swift in Sources */,
 				3F94E2C924929CF600B0F958 /* AllCoursesService.swift in Sources */,
+				3F0AEB2424BBBBC7001501F3 /* Routine.swift in Sources */,
 				3F94E2D12492CD0100B0F958 /* CourseDetailsViewController.swift in Sources */,
 				3F0AEB1C24BB617D001501F3 /* SwipeNoCompleteViewController.swift in Sources */,
 				3F94E3292496A90500B0F958 /* AddClassViewController.swift in Sources */,
@@ -386,9 +395,11 @@
 				3F0AEB1824BA83C7001501F3 /* NoteCell.swift in Sources */,
 				3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */,
 				3FAEC83C2499242C000ADD9D /* AddAssignmentViewController.swift in Sources */,
+				3F0AEB2B24BCD0AB001501F3 /* AddNotesViewController.swift in Sources */,
 				3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */,
 				3F383E732486B2EE00D2A5D1 /* TimelineViewController.swift in Sources */,
 				3F94E2D72492FDD100B0F958 /* TabBarController.swift in Sources */,
+				3F0AEB2924BBC295001501F3 /* RoutineService.swift in Sources */,
 				3F0AEB1E24BB79A0001501F3 /* NotesViewControlelr.swift in Sources */,
 				3FAEC83A2497FD1A000ADD9D /* CourseService.swift in Sources */,
 				3FAEC84A249BF85A000ADD9D /* AddCourseViewController.swift in Sources */,
@@ -405,6 +416,7 @@
 				3F383E5E2486B25E00D2A5D1 /* SceneDelegate.swift in Sources */,
 				3F67BBF124872A4C00BFD6E5 /* AddTaskViewController.swift in Sources */,
 				3F94E2CB24929E4200B0F958 /* CoursesViewController.swift in Sources */,
+				3F0AEB2224BBB9C3001501F3 /* RoutinesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,15 +20,17 @@ class TabBarController: UITabBarController {
         let coursesNav = makeNavController(vc: CoursesViewController(), title: "Courses", image: coursesImage)
         
         let assignmentImage = UIImage(named: "assignments")
-        let summativesNav = makeNavController(vc: SummativesViewController(), title: "Summatives", image: assignmentImage)
+        let summativesNav = makeNavController(vc: SummativesViewController(), title: "Assessments", image: assignmentImage)
         
         let notesImage = UIImage(named: "notes")
         let notesNav = makeNavController(vc: NotesViewController(), title: "Notes", image: notesImage)
         
-        let tabBarList = [scheduleNav, coursesNav, summativesNav, notesNav]
+        let repeatsImage = UIImage(systemName: "repeat")
+        let routinesNav = makeNavController(vc: RoutinesViewController(), title: "Routines", image: repeatsImage)
+        
+        let tabBarList = [scheduleNav, coursesNav, summativesNav, routinesNav, notesNav]
         tabBar.tintColor = .mainBlue
         viewControllers = tabBarList
-        
     }
     
     func makeNavController(vc: UIViewController, title: String, image: UIImage?) -> UINavigationController{

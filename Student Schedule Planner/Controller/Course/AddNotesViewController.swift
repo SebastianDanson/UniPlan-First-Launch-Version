@@ -1,4 +1,3 @@
-//
 //  AddNotes.swift
 //  UniPlan
 //
@@ -36,8 +35,7 @@ class AddNotesViewController: UIViewController {
     //not topView
     let titleTextField = makeTextField(withPlaceholder: "Title", height: 50)
     let textView = UITextView()
-    let saveLabel = UIButton()
-    let colorHeading = makeHeading(withText: "Color")
+    let saveLabelButton = makeSaveLabelButton()
     let colorRectangle = UIButton()
     
     //MARK: - UI Setup
@@ -46,13 +44,12 @@ class AddNotesViewController: UIViewController {
         view.addSubview(topView)
         view.addSubview(titleTextField)
         view.addSubview(textView)
-        view.addSubview(colorHeading)
         view.addSubview(colorRectangle)
         
         //topView
         topView.addSubview(titleLabel)
         topView.addSubview(backButton)
-        topView.addSubview(saveLabel)
+        topView.addSubview(saveLabelButton)
         
         topView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
         
@@ -63,24 +60,21 @@ class AddNotesViewController: UIViewController {
         backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
-        saveLabel.anchor(right: topView.rightAnchor, paddingRight: 25)
-        saveLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
-        saveLabel.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
-        saveLabel.setTitle("Save", for: .normal)
-        saveLabel.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        saveLabel.setTitleColor(.white, for: .normal)
+        saveLabelButton.anchor(right: topView.rightAnchor, paddingRight: 25)
+        saveLabelButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        saveLabelButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         
         //Not topView
         titleTextField.layer.borderWidth = 5
         titleTextField.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        titleTextField.anchor(top: topView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        titleTextField.anchor(left: view.leftAnchor, paddingLeft: 20)
         titleTextField.delegate = self
         
-        textView.anchor(top: titleTextField.bottomAnchor, paddingTop: 10)
+        textView.anchor(top: titleTextField.bottomAnchor, bottom: view.bottomAnchor, paddingTop: 10, paddingBottom: UIScreen.main.bounds.height/18)
         
-        let textViewTopAnchor: NSLayoutConstraint = textView.bottomAnchor.constraint(equalTo: colorHeading.topAnchor, constant: -10)
-        let textViewOtherAnchor: NSLayoutConstraint = textView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIScreen.main.bounds.height/20)
-        textViewTopAnchor.isActive = true
+        let titleTextFieldTopAnchor: NSLayoutConstraint = titleTextField.topAnchor.constraint(equalTo: colorRectangle.bottomAnchor, constant: 10)
+        let titleTextFieldOtherAnchor: NSLayoutConstraint = titleTextField.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: 20)
+        titleTextFieldTopAnchor.isActive = true
         
         textView.layer.borderColor = UIColor.mainBlue.cgColor
         textView.layer.borderWidth = 2
@@ -95,22 +89,19 @@ class AddNotesViewController: UIViewController {
             textView.text = note.notes
         }
         
-        colorHeading.anchor(left:  textView.leftAnchor, bottom: colorRectangle.topAnchor, paddingBottom: 2)
         colorRectangle.backgroundColor = TaskService.shared.getColor()
         colorRectangle.setDimensions(width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.height/18)
         colorRectangle.layer.cornerRadius = 6
-        colorRectangle.anchor(left: colorHeading.leftAnchor, bottom: view.bottomAnchor, paddingBottom: UIScreen.main.bounds.height/20)
+        colorRectangle.anchor(top: topView.bottomAnchor, left:  textView.leftAnchor, paddingTop: 20)
         colorRectangle.addTarget(self, action: #selector(colorRectanglePressed), for: .touchUpInside)
         
         colorRectangle.isHidden = false
-        colorHeading.isHidden = false
         
         if AllCoursesService.shared.getSelectedCourse() != nil {
             colorRectangle.isHidden = true
-            colorHeading.isHidden = true
             
-            textViewTopAnchor.isActive = false
-            textViewOtherAnchor.isActive = true
+            titleTextFieldTopAnchor.isActive = false
+            titleTextFieldOtherAnchor.isActive = true
         }
     }
     
@@ -118,7 +109,7 @@ class AddNotesViewController: UIViewController {
     @objc func backButtonPressed() {
         if AllCoursesService.shared.getAddNote() {
             let vc = TabBarController()
-            vc.selectedIndex = 3
+            vc.selectedIndex = 4
             vc.modalPresentationStyle = .fullScreen
             present(vc, animated: true, completion: nil)
         } else {

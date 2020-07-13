@@ -106,6 +106,7 @@ class CourseDetailsViewController: SwipeCompleteViewController {
     
     //MARK: - Actions
     @objc func AddClassButtonPressed() {
+        RoutineService.shared.setIsRoutine(bool: false)
         let vc = AddClassViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
@@ -247,7 +248,6 @@ class CourseDetailsViewController: SwipeCompleteViewController {
         } catch {
             print("Error updating isComplete in CourseDetailsView, \(error.localizedDescription)")
         }
-        
         tableView.reloadData()
     }
     
@@ -313,7 +313,7 @@ class CourseDetailsViewController: SwipeCompleteViewController {
         func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
             let view = UIView()
             let sectionName = makeHeading(withText: "")
-            let addButton = makeAddButtonWithFill()
+            let addButton = makeCornerAddButton(withDiameter: 35)
             let seperator = makeSpacerView(height: 2)
             
             view.backgroundColor = .backgroundColor
@@ -327,7 +327,7 @@ class CourseDetailsViewController: SwipeCompleteViewController {
             
             let course = AllCoursesService.shared.getSelectedCourse()
             let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
-            addButton.backgroundColor = color
+            addButton.tintColor = color
             
             seperator.backgroundColor = .silver
             seperator.anchor(top: view.topAnchor, paddingTop: 5)

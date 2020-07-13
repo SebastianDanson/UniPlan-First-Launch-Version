@@ -10,7 +10,7 @@ import Foundation
 
 class SingleClassService {
     
-    private var classDays: Array<Int> = [0, 0, 0, 0, 0, 0, 0]
+    private var days: Array<Int> = [0, 0, 0, 0, 0, 0, 0]
     
     private var startTime = Date() //Date of first cass
     private var endTime = Date() //Date of last cass
@@ -27,16 +27,16 @@ class SingleClassService {
     private init(){}
     
     //MARK: - Class Days
-    func getClassDays() -> Array<Int> {
-        return classDays
+    func getDays() -> Array<Int> {
+        return days
     }
     
-    func setClassDay(day: Int) {
-        classDays[day] = classDays[day] == 0 ? 1:0
+    func setDay(day: Int) {
+        days[day] = days[day] == 0 ? 1:0
     }
     
-    func resetClassDays() {
-        classDays = [0, 0, 0, 0, 0, 0, 0]
+    func resetDays() {
+        days = [0, 0, 0, 0, 0, 0, 0]
     }
     
     //MARK: - Repeats

@@ -30,8 +30,8 @@ class CoursesViewController: SwipeNoCompleteViewController {
     //MARK: - Properties
     let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
     let titleLabel = makeTitleLabel(withText: "Courses")
-    let addButton = makeAddButton()
     let tableView = UITableView()
+    let addButton = makeCornerAddButton()
     
     //MARK: - UI setup
     func setupViews() {
@@ -44,18 +44,14 @@ class CoursesViewController: SwipeNoCompleteViewController {
         view.backgroundColor = .backgroundColor
         view.addSubview(topView)
         view.addSubview(tableView)
+        view.addSubview(addButton)
         
         topView.addSubview(titleLabel)
-        topView.addSubview(addButton)
         
         topView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
         
         titleLabel.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
         titleLabel.centerX(in: topView)
-        
-        addButton.anchor(right: topView.rightAnchor, paddingRight: 20)
-        addButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
-        addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         
         tableView.centerX(in: view)
         tableView.anchor(top: topView.bottomAnchor, paddingTop: 5)
@@ -64,6 +60,12 @@ class CoursesViewController: SwipeNoCompleteViewController {
         tableView.register(CourseCell.self, forCellReuseIdentifier: courseReuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
+        
+        addButton.anchor(right: view.rightAnchor,
+                                    bottom: view.bottomAnchor,
+                                    paddingRight: 10,
+                                    paddingBottom: self.tabBarHeight + 10)
+        addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         
         if AllCoursesService.shared.getAddSummative() {
             titleLabel.text = "Select Course"
@@ -149,7 +151,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
         if AllCoursesService.shared.getCourses()?.count == 0 {
             
             //If the user has not added any courses it tells that user so
-            let noCoursesLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 100))
+            let noCoursesLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 150))
             noCoursesLabel.text = "No Courses Added"
             noCoursesLabel.textColor = UIColor.darkBlue
             noCoursesLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
@@ -194,7 +196,9 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
                 let view = UIView()
                 let subView = UIView()
                 let label = makeHeading(withText: "Not for a course")
-                
+                let nextImage = UIImage(named: "nextMenuButton")
+                let nextImageView = UIImageView(image: nextImage)
+
                 view.backgroundColor = .backgroundColor
                 view.setDimensions(width: UIScreen.main.bounds.width, height: 50)
                 
@@ -203,6 +207,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
                 
                 view.addSubview(subView)
                 subView.addSubview(label)
+                subView.addSubview(nextImageView)
                 
                 subView.backgroundColor = .silver
                 subView.setDimensions(width: UIScreen.main.bounds.width - 20, height: 50)
@@ -210,6 +215,9 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
                 subView.centerY(in: view)
                 subView.layer.cornerRadius = 10
                 
+                nextImageView.centerY(in: subView)
+                nextImageView.anchor(right: subView.rightAnchor, paddingRight:  20)
+
                 label.textColor = .white
                 label.centerY(in: view)
                 label.anchor(left: view.leftAnchor, paddingLeft: 20)
@@ -251,7 +259,6 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
         let vc = CourseDetailsViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
-        
     }
 }
 

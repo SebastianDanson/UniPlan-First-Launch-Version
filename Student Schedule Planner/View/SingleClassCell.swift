@@ -99,11 +99,6 @@ class SingleClassCell: SwipeTableViewCell {
         nextImage.centerY(in: taskView)
         nextImage.anchor(right: taskView.rightAnchor, paddingRight:  UIScreen.main.bounds.height/45)
         
-        classTypeLabel.anchor(top: taskView.topAnchor,
-                              left: taskView.leftAnchor,
-                              paddingTop: 5,
-                              paddingLeft: 20)
-        
         locationImage.setDimensions(width: 15, height: 15)
         locationImage.anchor(top: classDayStackView.bottomAnchor,
                              left: taskView.leftAnchor,
@@ -116,17 +111,17 @@ class SingleClassCell: SwipeTableViewCell {
                              paddingTop: 7,
                              paddingLeft: 4)
         
-        
-        startTimeLabel.anchor(top: taskView.topAnchor,
+        classTypeLabel.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width - 50).isActive = true
+        startTimeLabel.anchor(top: classDayStackView.topAnchor,
                               right: nextImage.leftAnchor,
-                              paddingTop: 16,
+                              paddingTop: -5,
                               paddingRight: UIScreen.main.bounds.height/36)
         
         endTimeLabel.anchor(top: startTimeLabel.bottomAnchor, left: startTimeLabel.leftAnchor)
         
-        classFrequencyLabel.anchor(top: endTimeLabel.bottomAnchor,
-                                   left: endTimeLabel.leftAnchor,
-                                   paddingTop: 5)
+        classFrequencyLabel.anchor(left: endTimeLabel.leftAnchor,
+                                   bottom: taskView.bottomAnchor,
+                                   paddingBottom: 10)
         
         reminderImage.setDimensions(width: 14, height: 14)
         reminderImage.anchor(left: taskView.leftAnchor,
@@ -150,71 +145,154 @@ class SingleClassCell: SwipeTableViewCell {
     }
     
     //MARK: - Actions
-    func update(theClass: SingleClass) {
-        let course = AllCoursesService.shared.getSelectedCourse()
-        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
-        
-        let tintedLocationIcon = locationIcon?.withRenderingMode(.alwaysTemplate)
-        locationImage.image = tintedLocationIcon
-        locationImage.tintColor = color
-        
-        classTypeLabel.text = theClass.subType.description
-        
-        taskView.layer.borderColor = color.cgColor
-        
-        reminderImage.tintColor = color
-        
-        locationLabel.text = theClass.location == "" ? "Not set": theClass.location
-        
-        startTimeLabel.text = "\(formatTime(from: theClass.startTime))-"
-        endTimeLabel.text = formatTime(from: theClass.endTime)
-        
-        monday.unhighlight(courseColor: color)
-        tuesday.unhighlight(courseColor: color)
-        wednesday.unhighlight(courseColor: color)
-        thursday.unhighlight(courseColor: color)
-        friday.unhighlight(courseColor: color)
-        saturday.unhighlight(courseColor: color)
-        sunday.unhighlight(courseColor: color)
-        
-        //Highlights the days of the class
-        for (index, day) in theClass.classDays.enumerated() {
-            if day == 1 {
-                switch index {
-                case 0:
-                    sunday.highlight(courseColor: color)
-                    SingleClassService.shared.setClassDay(day: 0)
-                case 1:
-                    monday.highlight(courseColor: color)
-                    SingleClassService.shared.setClassDay(day: 1)
-                case 2:
-                    tuesday.highlight(courseColor: color)
-                    SingleClassService.shared.setClassDay(day: 2)
-                case 3:
-                    wednesday.highlight(courseColor: color)
-                    SingleClassService.shared.setClassDay(day: 3)
-                case 4:
-                    thursday.highlight(courseColor: color)
-                    SingleClassService.shared.setClassDay(day: 4)
-                case 5:
-                    friday.highlight(courseColor: color)
-                    SingleClassService.shared.setClassDay(day: 5)
-                case 6:
-                    saturday.highlight(courseColor: color)
-                    SingleClassService.shared.setClassDay(day: 6)
-                default:
-                    break
+    func update(theClass: SingleClass? = nil, routine: Routine? = nil) {
+        if let theClass = theClass {
+            
+               classTypeLabel.anchor(top: taskView.topAnchor,
+                                     left: taskView.leftAnchor,
+                                     paddingTop: 5,
+                                     paddingLeft: 20)
+            
+            let course = AllCoursesService.shared.getSelectedCourse()
+            let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+            
+            let tintedLocationIcon = locationIcon?.withRenderingMode(.alwaysTemplate)
+            locationImage.image = tintedLocationIcon
+            locationImage.tintColor = color
+            
+            classTypeLabel.text = theClass.subType.description
+            
+            taskView.layer.borderColor = color.cgColor
+            
+            reminderImage.tintColor = color
+            
+            locationLabel.text = theClass.location == "" ? "Not set": theClass.location
+            
+            startTimeLabel.text = "\(formatTime(from: theClass.startTime))-"
+            endTimeLabel.text = formatTime(from: theClass.endTime)
+            
+            monday.unhighlight(courseColor: color)
+            tuesday.unhighlight(courseColor: color)
+            wednesday.unhighlight(courseColor: color)
+            thursday.unhighlight(courseColor: color)
+            friday.unhighlight(courseColor: color)
+            saturday.unhighlight(courseColor: color)
+            sunday.unhighlight(courseColor: color)
+            
+            //Highlights the days of the class
+            for (index, day) in theClass.classDays.enumerated() {
+                if day == 1 {
+                    switch index {
+                    case 0:
+                        sunday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 0)
+                    case 1:
+                        monday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 1)
+                    case 2:
+                        tuesday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 2)
+                    case 3:
+                        wednesday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 3)
+                    case 4:
+                        thursday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 4)
+                    case 5:
+                        friday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 5)
+                    case 6:
+                        saturday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 6)
+                    default:
+                        break
+                    }
                 }
             }
+            let repeats = theClass.repeats
+            classFrequencyLabel.text = repeats == "Never Repeats" ? repeats : "Every \(repeats)"
+            
+            if theClass.reminder {
+                reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [theClass.reminderTime[0], theClass.reminderTime[1]], reminderDate: Date())
+            } else {
+                reminderLabel.text = "None"
+            }
         }
-        let repeats = theClass.repeats
-        classFrequencyLabel.text = repeats == "Never Repeats" ? repeats : "Every \(repeats)"
         
-        if theClass.reminder {
-            reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [theClass.reminderTime[0], theClass.reminderTime[1]], reminderDate: Date())
-        } else {
-            reminderLabel.text = "None"
+        if let routine = routine {
+            let color = UIColor.init(red: CGFloat(routine.color[0]), green: CGFloat(routine.color[1]), blue: CGFloat(routine.color[2]), alpha: 1)
+            
+            let tintedLocationIcon = locationIcon?.withRenderingMode(.alwaysTemplate)
+            locationImage.image = tintedLocationIcon
+            locationImage.tintColor = color
+            
+            classTypeLabel.text = routine.title == "" ? "Untitled": routine.title
+            classTypeLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+            
+            taskView.layer.borderColor = color.cgColor
+            
+            reminderImage.tintColor = color
+            
+            locationLabel.text = routine.location == "" ? "Not set": routine.location
+            
+            startTimeLabel.text = "\(formatTime(from: routine.startTime))-"
+            endTimeLabel.text = formatTime(from: routine.endTime)
+            
+            taskView.layer.borderColor = color.cgColor
+            monday.unhighlight(courseColor: color)
+            tuesday.unhighlight(courseColor: color)
+            wednesday.unhighlight(courseColor: color)
+            thursday.unhighlight(courseColor: color)
+            friday.unhighlight(courseColor: color)
+            saturday.unhighlight(courseColor: color)
+            sunday.unhighlight(courseColor: color)
+            
+            
+            classTypeLabel.anchor(top: taskView.topAnchor,
+                                  left: classDayStackView.leftAnchor,
+                                  paddingTop: 10,
+                                  paddingLeft: 5)
+            
+            //Highlights the days of the class
+            for (index, day) in routine.days.enumerated() {
+                if day == 1 {
+                    switch index {
+                    case 0:
+                        sunday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 0)
+                    case 1:
+                        monday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 1)
+                    case 2:
+                        tuesday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 2)
+                    case 3:
+                        wednesday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 3)
+                    case 4:
+                        thursday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 4)
+                    case 5:
+                        friday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 5)
+                    case 6:
+                        saturday.highlight(courseColor: color)
+                        SingleClassService.shared.setDay(day: 6)
+                    default:
+                        break
+                    }
+                }
+            }
+            let repeats = routine.repeats
+            classFrequencyLabel.text = repeats == "Never Repeats" ? repeats : "Every \(repeats)"
+            
+            if routine.reminder {
+                reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [routine.reminderTime[0], routine.reminderTime[1]], reminderDate: Date())
+            } else {
+                reminderLabel.text = "None"
+            }
         }
     }
 }
+
 

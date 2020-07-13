@@ -26,9 +26,9 @@ class TimelineViewController: SwipeCompleteViewController  {
     //MARK: - Properties
     var tableView = makeTableView(withRowHeight: 80)
     let topView = UIView()
-    let addButton = makeAddButton()
     let calendar = makeCalendar()
     let pullDownView = UIView()
+    let addButton = makeCornerAddButton()
     
     var topViewWeekHeightAnchor = NSLayoutConstraint()
     var topViewMonthHeightAnchor = NSLayoutConstraint()
@@ -62,8 +62,9 @@ class TimelineViewController: SwipeCompleteViewController  {
         
         view.addSubview(topView)
         view.addSubview(tableView)
+        view.addSubview(addButton)
+        
         topView.addSubview(calendar)
-        topView.addSubview(addButton)
         topView.addSubview(pullDownView)
         
         pullDownView.anchor(bottom: topView.bottomAnchor, paddingBottom: 3)
@@ -94,9 +95,11 @@ class TimelineViewController: SwipeCompleteViewController  {
         topView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         topView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         topView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        
-        addButton.anchor(right: topView.rightAnchor, paddingRight: 20)
-        addButton.centerYAnchor.constraint(equalTo: calendar.calendarHeaderView.centerYAnchor).isActive = true
+
+        addButton.anchor(right: view.rightAnchor,
+                       bottom: view.bottomAnchor,
+                       paddingRight: 10,
+                       paddingBottom: self.tabBarHeight + 10)
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         tableView.centerX(in: view)

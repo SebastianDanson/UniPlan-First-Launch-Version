@@ -228,6 +228,62 @@ class TaskService {
         }
     }
     
+    func makeTasks(forRoutine routine: Routine) {
+        let startDate = Calendar.current.startOfDay(for: routine.startDate)
+        var dayIncrementor = startDate
+        let endDate = Calendar.current.startOfDay(for: routine.endDate.addingTimeInterval(86400))
+        var skipDates = 0
+        let color = UIColor.init(red: CGFloat(routine.color[0]), green: CGFloat(routine.color[1]), blue: CGFloat(routine.color[2]), alpha: 1)
+        
+        var numDays: Int = {
+            return (Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: startDate).day ?? 0)
+        }()
+        
+        while dayIncrementor < endDate {
+            if routine.days[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
+                let task = Task()
+                task.title = routine.title
+                task.dateOrTime = 0
+                task.startDate = routine.startTime.addingTimeInterval(TimeInterval(86400*numDays))
+                task.endDate = routine.endTime.addingTimeInterval(TimeInterval(86400*numDays))
+                task.reminder = routine.reminder
+                task.reminderTime = routine.reminderTime
+                task.location = routine.location
+                task.summativeId = routine.id
+                
+                let rgb = color.components
+                task.color[0] = Double(rgb.red)
+                task.color[1] = Double(rgb.green)
+                task.color[2] = Double(rgb.blue)
+                
+                switch routine.repeats {
+                case "2 Weeks":
+                    if skipDates == 0 {
+                        realm.add(task, update: .modified)
+                        scheduleNotification(forTask: task)
+                        skipDates = 1
+                    } else {
+                        skipDates = 0
+                    }
+                case "4 Weeks":
+                    if skipDates == 0 {
+                        realm.add(task, update: .modified)
+                        scheduleNotification(forTask: task)
+                        skipDates = 1
+                    } else if skipDates < 3{
+                        skipDates += 1
+                    } else {
+                        skipDates = 0
+                    }
+                default:
+                    realm.add(task, update: .modified)
+                    scheduleNotification(forTask: task)
+                }
+            }
+            numDays+=1
+            dayIncrementor.addTimeInterval(86400)
+        }
+    }
     func makeTask(forQuiz quiz: Quiz) {
         let course = AllCoursesService.shared.getSelectedCourse()
         let task = Task()
@@ -305,6 +361,11 @@ class TaskService {
         makeTasks(forClass: theClass)
     }
     
+    func updateTasks(forRoutine routine: Routine) {
+           deleteTasks(forRoutine: routine)
+           makeTasks(forRoutine: routine)
+    }
+    
     func updateTasks(forQuiz quiz: Quiz) {
         
         let taskToUpdate = realm.objects(Task.self).filter("summativeId == %@", quiz.id).first
@@ -359,6 +420,16 @@ class TaskService {
     
     func deleteTasks(forClass theClass: SingleClass) {
         let tasksToDelete = realm.objects(Task.self).filter("summativeId == %@", theClass.id)
+        let center = UNUserNotificationCenter.current()
+        
+        for task in tasksToDelete {
+            center.removePendingNotificationRequests(withIdentifiers: [task.id])
+            realm.delete(task)
+        }
+    }
+    
+    func deleteTasks(forRoutine routine: Routine) {
+        let tasksToDelete = realm.objects(Task.self).filter("summativeId == %@", routine.id)
         let center = UNUserNotificationCenter.current()
         
         for task in tasksToDelete {

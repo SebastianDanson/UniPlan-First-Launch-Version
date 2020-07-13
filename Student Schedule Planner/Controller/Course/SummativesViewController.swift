@@ -20,8 +20,8 @@ class SummativesViewController: SwipeCompleteViewController {
     //MARK: - Properties
     var tableView = makeTableView(withRowHeight: 80)
     let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
-    let titleLabel = makeTitleLabel(withText: "Summatives")
-    let addButton = makeAddButton()
+    let titleLabel = makeTitleLabel(withText: "Assesments")
+    let addButton = makeCornerAddButton()
     
     var pastDueSummatives = [Task]()
     var upcomingSummatives = [Task]()
@@ -56,14 +56,10 @@ class SummativesViewController: SwipeCompleteViewController {
         
         view.addSubview(topView)
         view.addSubview(tableView)
+        view.addSubview(addButton)
         
         topView.addSubview(titleLabel)
-        topView.addSubview(addButton)
         topView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
-        
-        addButton.anchor(right: topView.rightAnchor, paddingRight: 20)
-        addButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
-        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         titleLabel.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
         titleLabel.centerX(in: topView)
@@ -75,6 +71,12 @@ class SummativesViewController: SwipeCompleteViewController {
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
+        
+        addButton.anchor(right: view.rightAnchor,
+                             bottom: view.bottomAnchor,
+                             paddingRight: 10,
+                             paddingBottom: self.tabBarHeight + 10)
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
     }
     
     //MARK: - Actions
@@ -182,7 +184,7 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
             if upcomingSummatives.count == 0 {
                 let noUpcomingAssignments = makeLabel(ofSize: 20, weight: .semibold)
                 view.addSubview(noUpcomingAssignments)
-                noUpcomingAssignments.text = "No Upcoming Assignments"
+                noUpcomingAssignments.text = "No Upcoming Assessments"
                 noUpcomingAssignments.anchor(top: sectionName.bottomAnchor, paddingTop: 20)
                 noUpcomingAssignments.centerX(in: view)
             }
@@ -191,7 +193,7 @@ extension SummativesViewController: UITableViewDelegate, UITableViewDataSource {
             if pastDueSummatives.count == 0 {
                 let pastDueSummatives = makeLabel(ofSize: 20, weight: .semibold)
                 view.addSubview(pastDueSummatives)
-                pastDueSummatives.text = "No Past Due Summatives"
+                pastDueSummatives.text = "No Past Due Assessments"
                 pastDueSummatives.anchor(top: sectionName.bottomAnchor, paddingTop: 20)
                 pastDueSummatives.centerX(in: view)
             }

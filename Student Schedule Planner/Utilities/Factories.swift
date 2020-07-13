@@ -53,19 +53,9 @@ func makeTitleLabel(withText text: String) -> UILabel{
     return label
 }
 
-func makeAddButton() -> UIButton {
-    let addButton = UIButton()
-    addButton.setTitle("+", for: .normal)
-    addButton.setDimensions(width: 30, height: 30)
-    addButton.tintColor = .backgroundColor
-    addButton.titleLabel?.font = UIFont.systemFont(ofSize: 40)
-    
-    return addButton
-}
-
 func makeBackButton() -> UIButton {
     let addButton = UIButton()
-    addButton.setDimensions(width: 30, height: 30)
+    addButton.setDimensions(width: 40, height: 40)
     addButton.setImage(UIImage(named: "backbutton"), for: .normal)
     
     return addButton
@@ -128,6 +118,15 @@ func makeSaveButton() -> UIButton{
     return saveButton
 }
 
+func makeSaveLabelButton() -> UIButton {
+    let button = UIButton()
+    button.setTitle("Save", for: .normal)
+    button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+    button.setTitleColor(.white, for: .normal)
+    button.setDimensions(width: 50, height: 50)
+    
+    return button
+}
 //Trash Button
 func makeDeleteButton() -> UIButton {
     let deleteButton = UIButton()
@@ -139,14 +138,14 @@ func makeDeleteButton() -> UIButton {
 }
 
 //Buttons that take you to AnotherVC where you set some value such as a reminder
-func setValueButton(withPlaceholder text: String, height: CGFloat) -> UIButton {
+func setValueButton(withPlaceholder text: String, height: CGFloat, width: CGFloat? = nil) -> UIButton {
     let button = UIButton()
     button.setTitle(text, for: .normal)
     button.setTitleColor(.darkBlue, for: .normal)
     button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
     button.imageEdgeInsets = UIEdgeInsets(top: 0, left: UIScreen.main.bounds.width - 65, bottom: 0, right: 0)
-    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: height)
+    button.setDimensions(width: width ?? UIScreen.main.bounds.width - 40, height: height)
     button.backgroundColor = .clear
     button.layer.borderColor = UIColor.mainBlue.cgColor
     button.layer.borderWidth = 2
@@ -228,15 +227,18 @@ func makeStackView(withOrientation axis: NSLayoutConstraint.Axis, spacing: CGFlo
     return stackView
 }
 
-func makeAddButtonWithFill() -> UIButton {
-    let makeAddButtonWithFill = UIButton()
-    makeAddButtonWithFill.setTitle("+", for: .normal)
-    makeAddButtonWithFill.titleLabel?.font = UIFont.boldSystemFont(ofSize: 19)
-    makeAddButtonWithFill.backgroundColor = .mainBlue
-    makeAddButtonWithFill.setDimensions(width: 28,height: 28)
-    makeAddButtonWithFill.layer.cornerRadius = 14
+func makeCornerAddButton(withDiameter diameter: CGFloat? = nil) -> UIButton {
+    let addButton = UIButton()
+    let addButtonImage = UIImage(systemName: "plus.circle.fill")
+    let addButtonView = UIImageView(image: addButtonImage!)
     
-    return makeAddButtonWithFill
+    addButton.addSubview(addButtonView)
+    
+    addButtonView.setDimensions(width: diameter ?? 70, height: diameter ?? 70)
+    addButton.setDimensions(width: diameter ?? 70, height: diameter ?? 70)
+    addButton.tintColor = .lightMidnightBlue
+    
+    return addButton
 }
 
 //MARK: - Add Class
