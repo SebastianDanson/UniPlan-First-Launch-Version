@@ -19,7 +19,7 @@ let courseReuseIdentifer = "CourseCell"
  * The user can also add, edit, and delete each of the events
  */
 
-class TimelineViewController: SwipeCompleteViewController  {
+class TimelineViewController: SwipeCompleteViewController {
     
     let realm = try! Realm()
     
@@ -29,6 +29,7 @@ class TimelineViewController: SwipeCompleteViewController  {
     let calendar = makeCalendar()
     let pullDownView = UIView()
     let addButton = makeCornerAddButton()
+    let weekButton = UIButton()
     
     var topViewWeekHeightAnchor = NSLayoutConstraint()
     var topViewMonthHeightAnchor = NSLayoutConstraint()
@@ -66,6 +67,7 @@ class TimelineViewController: SwipeCompleteViewController  {
         
         topView.addSubview(calendar)
         topView.addSubview(pullDownView)
+        topView.addSubview(weekButton)
         
         pullDownView.anchor(bottom: topView.bottomAnchor, paddingBottom: 3)
         pullDownView.centerX(in: topView)
@@ -95,6 +97,22 @@ class TimelineViewController: SwipeCompleteViewController  {
         topView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         topView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         topView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        
+        let weekLabel = makeLabel(ofSize: 15, weight: .bold)
+        weekLabel.text = "Week View"
+        weekLabel.textColor = .mainBlue
+        weekButton.addSubview(weekLabel)
+        weekButton.backgroundColor = .white
+        weekButton.setDimensions(width: 105, height: 35)
+        weekButton.layer.cornerRadius = 17.5
+        weekButton.layer.borderColor = UIColor.silver.cgColor
+        weekButton.layer.borderWidth = 2
+        weekButton.anchor(left: topView.leftAnchor, paddingLeft: 15)
+        weekButton.centerY(in: calendar.calendarHeaderView)
+        weekButton.addTarget(self, action: #selector(weekButtonTapped), for: .touchUpInside)
+        
+        weekLabel.centerX(in: weekButton)
+        weekLabel.centerY(in: weekButton)
 
         addButton.anchor(right: view.rightAnchor,
                        bottom: view.bottomAnchor,
@@ -127,6 +145,13 @@ class TimelineViewController: SwipeCompleteViewController  {
     }
     
     //MARK: - Actions
+    @objc func weekButtonTapped() {
+        let vc = WeekViewController()
+        vc.modalPresentationStyle = .fullScreen
+        if let nav = navigationController{
+            nav.pushViewController(vc, animated: true)
+        }
+    }
     @objc func calendarSwipeDown() {
         view.layoutIfNeeded()
         UIView.animate(withDuration: 0.5, animations: {
@@ -135,7 +160,6 @@ class TimelineViewController: SwipeCompleteViewController  {
             self.view.layoutIfNeeded()
         })
         calendar.scope = .month
-        
     }
     
     @objc func calendarSwipeUp() {
@@ -149,7 +173,6 @@ class TimelineViewController: SwipeCompleteViewController  {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: {
             self.calendar.scope = .week
         })
-        
     }
     
     @objc func addButtonTapped() {
@@ -239,6 +262,9 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
     }
+    func addWeek() {
+        calendar.currentPage = calendar.currentPage.addingTimeInterval(86400*7)
+    }
 }
 
 //MARK: - FSCalendar Delegate and Datasource
@@ -247,5 +273,11 @@ extension TimelineViewController: FSCalendarDelegate, FSCalendarDataSource {
         TaskService.shared.setDateSelected(date: date)
         TaskService.shared.loadTasks()
         tableView.reloadData()
+        //addWeek()
     }
+  
+    func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
+        print(calendar.currentPage)
+    }
+    
 }

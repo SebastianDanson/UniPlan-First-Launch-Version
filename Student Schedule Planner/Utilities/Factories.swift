@@ -54,11 +54,11 @@ func makeTitleLabel(withText text: String) -> UILabel{
 }
 
 func makeBackButton() -> UIButton {
-    let addButton = UIButton()
-    addButton.setDimensions(width: 40, height: 40)
-    addButton.setImage(UIImage(named: "backbutton"), for: .normal)
+    let backButton = UIButton()
+    backButton.setDimensions(width: 40, height: 40)
+    backButton.setImage(UIImage(named: "backbutton"), for: .normal)
     
-    return addButton
+    return backButton
 }
 
 func makeTableView(withRowHeight height: CGFloat) -> UITableView {
@@ -304,6 +304,20 @@ func formatDateNoDay(from date: Date) -> String {
 func formatDateNoYear(from date: Date) -> String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "E, MMM d"
+    let date = dateFormatter.string(from: date)
+    return date
+}
+
+func formatDateNoTime(from date: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "E d"
+    let date = dateFormatter.string(from: date)
+    return date
+}
+
+func formatDateMonthDay(from date: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MMM d"
     let date = dateFormatter.string(from: date)
     return date
 }

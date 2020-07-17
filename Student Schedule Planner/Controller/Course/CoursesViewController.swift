@@ -258,7 +258,9 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
         
         let vc = CourseDetailsViewController()
         vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: nil)
+        if let nav = navigationController{
+            nav.pushViewController(vc, animated: true)
+        }
     }
 }
 

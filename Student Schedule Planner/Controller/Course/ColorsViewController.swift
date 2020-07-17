@@ -75,7 +75,10 @@ class ColorsViewController: PickerViewController {
         colorStackView.anchor(top: scrollView.topAnchor, paddingTop: 20)
         colorStackView.centerX(in: scrollView)
         
-        scrollView.anchor(top: topView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+        scrollView.anchor(top: topView.bottomAnchor,
+                          left: view.leftAnchor,
+                          right: view.rightAnchor,
+                          bottom: view.bottomAnchor)
         let size = CGSize(width: view.bounds.width, height: view.bounds.height*1.2)
         self.scrollView.contentSize = size
         scrollView.isScrollEnabled = true

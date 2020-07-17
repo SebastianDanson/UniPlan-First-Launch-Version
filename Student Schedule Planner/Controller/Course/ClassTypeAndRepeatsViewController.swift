@@ -39,22 +39,6 @@ enum ClassType: Int, CustomStringConvertible, CaseIterable{
     }
 }
 
-enum RepeatOptions: Int, CustomStringConvertible, CaseIterable{
-    case Week
-    case twoWeeks
-    case fourWeeks
-    
-    var description: String {
-        switch self {
-        case .Week:
-            return "Week"
-        case .twoWeeks:
-            return "2 Weeks"
-        case .fourWeeks:
-            return "4 Weeks"
-        }
-    }
-}
 
 /*
  * This VC is responsible for Displaying the classType options as well as the class frequency options

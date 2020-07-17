@@ -23,6 +23,7 @@ class TaskService {
     private var endTime = Date().addingTimeInterval(3600)
     private var isClass = false //If the task is associated with a class
     private var color = UIColor.alizarin
+    private var firstDayOfWeek = Date()
     
     let realm =  try! Realm()
     init() {
@@ -157,7 +158,7 @@ class TaskService {
         if reminderTime == [0,0] {
             return "When It Starts"
         } else {
-            return "\(reminderTime[0])h, \(reminderTime[1])m before"
+            return "\(reminderTime[0])h: \(reminderTime[1])m before"
         }
     }
     
@@ -603,6 +604,16 @@ class TaskService {
     
     func setColor(color: UIColor) {
         self.color = color
+    }
+    
+    //MARK: - firstDayOfWeek
+    func getfirstDayOfWeek() -> Date {
+        return firstDayOfWeek
+    }
+    
+    func setfirstDayOfWeek(date: Date) {
+        print(date)
+        firstDayOfWeek = date
     }
 }
 

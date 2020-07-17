@@ -149,7 +149,9 @@ class CourseDetailsViewController: SwipeCompleteViewController {
     }
     
     @objc func backButtonPressed() {
-        dismiss(animated: true, completion: nil)
+        if let nav = navigationController {
+            nav.popViewController(animated: true)
+        }
     }
     
     @objc func deleteCourse() {
@@ -168,7 +170,7 @@ class CourseDetailsViewController: SwipeCompleteViewController {
             } catch {
                 print("Error writing task to realm \(error.localizedDescription)")
             }
-            self.dismiss(animated: true, completion: nil)
+            self.backButtonPressed()
         }
         
         let actionCancel = UIAlertAction(title: "Cancel", style: .default) { (alert) in }
