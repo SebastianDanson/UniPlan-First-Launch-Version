@@ -716,18 +716,12 @@ class AddClassViewController: UIViewController {
     }
     
     @objc func presentClassTypeAndRepeatsVC(button: UIButton) {
-        if button == classTypeButton {
-            TaskService.shared.setIsClass(bool: true)
-        } else {
-            TaskService.shared.setIsClass(bool: false)
-        }
-        let vc = ClassTypeAndRepeatsViewController()
+        let vc = ClassTypeViewController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
     }
     
     @objc func reminderButtonPressed() {
-        TaskService.shared.setIsClass(bool: true)
         let vc = SetReminderViewController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)

@@ -21,9 +21,11 @@ class TaskService {
     private var checkForTimeConflict = true //If the user does cares about time conflicts between tasks
     private var startTime = Date()
     private var endTime = Date().addingTimeInterval(3600)
-    private var isClass = false //If the task is associated with a class
     private var color = UIColor.alizarin
     private var firstDayOfWeek = Date()
+    private var isClass = false //If the task is associated with a class
+    private var frequencyNum = 0 //Number or days, weeks, or week days
+    private var frequencyLength = 0 //0 -> weeks, 1 -> days, 2-> weekdays
     
     let realm =  try! Realm()
     init() {
@@ -597,6 +599,7 @@ class TaskService {
     func setIsClass(bool: Bool) {
         isClass = bool
     }
+    
     //MARK: - color
     func getColor() -> UIColor {
         return color
@@ -614,6 +617,24 @@ class TaskService {
     func setfirstDayOfWeek(date: Date) {
         print(date)
         firstDayOfWeek = date
+    }
+    
+    //MARK: - frequencyNum
+       func getFrequencyNum() -> Int {
+           return frequencyNum
+       }
+       
+       func setFrequencyNum(frequency: Int) {
+        frequencyNum = frequency
+    }
+    
+    //MARK: - frequencyNum
+       func getFrequencyLength() -> Int {
+           return frequencyLength
+       }
+       
+       func setFrequencyLenth(length: Int) {
+        frequencyLength = length
     }
 }
 

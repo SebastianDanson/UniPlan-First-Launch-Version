@@ -46,9 +46,11 @@
 		3F94E3252496895900B0F958 /* AssignmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3242496895900B0F958 /* AssignmentCell.swift */; };
 		3F94E32724968FED00B0F958 /* QuizAndExamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */; };
 		3F94E3292496A90500B0F958 /* AddClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3282496A90500B0F958 /* AddClassViewController.swift */; };
-		3F94E32D2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */; };
+		3F94E32D2496E15E00B0F958 /* ClassTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */; };
 		3FA87E3A24BFA09200FEC176 /* WeekViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA87E3924BFA09200FEC176 /* WeekViewController.swift */; };
 		3FA87E3C24BFA53800FEC176 /* WeekCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA87E3B24BFA53800FEC176 /* WeekCell.swift */; };
+		3FA87E3E24C1272E00FEC176 /* SetFrequencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA87E3D24C1272E00FEC176 /* SetFrequencyViewController.swift */; };
+		3FA87E4024C12B6A00FEC176 /* FrequencyPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA87E3F24C12B6A00FEC176 /* FrequencyPickerViewController.swift */; };
 		3FAEC8262496F816000ADD9D /* SingleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC8252496F816000ADD9D /* SingleClass.swift */; };
 		3FAEC82E2496FCC1000ADD9D /* SingleClassService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */; };
 		3FAEC83A2497FD1A000ADD9D /* CourseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAEC8392497FD1A000ADD9D /* CourseService.swift */; };
@@ -97,9 +99,11 @@
 		3F94E3242496895900B0F958 /* AssignmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentCell.swift; sourceTree = "<group>"; };
 		3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizAndExamCell.swift; sourceTree = "<group>"; };
 		3F94E3282496A90500B0F958 /* AddClassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClassViewController.swift; sourceTree = "<group>"; };
-		3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassTypeAndRepeatsViewController.swift; sourceTree = "<group>"; };
+		3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassTypeViewController.swift; sourceTree = "<group>"; };
 		3FA87E3924BFA09200FEC176 /* WeekViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewController.swift; sourceTree = "<group>"; };
 		3FA87E3B24BFA53800FEC176 /* WeekCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekCell.swift; sourceTree = "<group>"; };
+		3FA87E3D24C1272E00FEC176 /* SetFrequencyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetFrequencyViewController.swift; sourceTree = "<group>"; };
+		3FA87E3F24C12B6A00FEC176 /* FrequencyPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyPickerViewController.swift; sourceTree = "<group>"; };
 		3FAEC8252496F816000ADD9D /* SingleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleClass.swift; sourceTree = "<group>"; };
 		3FAEC82D2496FCC1000ADD9D /* SingleClassService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleClassService.swift; sourceTree = "<group>"; };
 		3FAEC8392497FD1A000ADD9D /* CourseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseService.swift; sourceTree = "<group>"; };
@@ -194,6 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				3F94E2D62492FDD100B0F958 /* TabBarController.swift */,
+				3FA87E3F24C12B6A00FEC176 /* FrequencyPickerViewController.swift */,
 				3F67BC28248EE6AA00BFD6E5 /* PickerViewController.swift */,
 				3F94E2D42492E3B700B0F958 /* SwipeCompleteViewController.swift */,
 				3F0AEB1B24BB617D001501F3 /* SwipeNoCompleteViewController.swift */,
@@ -222,7 +227,8 @@
 				3F383E722486B2EE00D2A5D1 /* TimelineViewController.swift */,
 				3F63BF9424B7CB0B00404806 /* ColorsViewController.swift */,
 				3F94E2D02492CD0100B0F958 /* CourseDetailsViewController.swift */,
-				3F94E32C2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift */,
+				3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */,
+				3FA87E3D24C1272E00FEC176 /* SetFrequencyViewController.swift */,
 				3F5923C324AC0C13008F45D6 /* SelectSummativeTypeViewController.swift */,
 				3F67BC26248EDE4100BFD6E5 /* SetReminderViewController.swift */,
 				3F94E3282496A90500B0F958 /* AddClassViewController.swift */,
@@ -396,6 +402,7 @@
 				3F94E2D52492E3B700B0F958 /* SwipeCompleteViewController.swift in Sources */,
 				3F59234624A13798008F45D6 /* Assignment.swift in Sources */,
 				3FAEC84024992C2A000ADD9D /* AddQuizAndExamViewController.swift in Sources */,
+				3FA87E4024C12B6A00FEC176 /* FrequencyPickerViewController.swift in Sources */,
 				3F5923C424AC0C13008F45D6 /* SelectSummativeTypeViewController.swift in Sources */,
 				3F67BC05248C7B9E00BFD6E5 /* TaskService.swift in Sources */,
 				3F59239C24A17677008F45D6 /* PentagonView.swift in Sources */,
@@ -403,6 +410,7 @@
 				3F0AEB1824BA83C7001501F3 /* NoteCell.swift in Sources */,
 				3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */,
 				3FAEC83C2499242C000ADD9D /* AddAssignmentViewController.swift in Sources */,
+				3FA87E3E24C1272E00FEC176 /* SetFrequencyViewController.swift in Sources */,
 				3F0AEB2B24BCD0AB001501F3 /* AddNotesViewController.swift in Sources */,
 				3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */,
 				3F383E732486B2EE00D2A5D1 /* TimelineViewController.swift in Sources */,
@@ -418,7 +426,7 @@
 				3F383E5C2486B25E00D2A5D1 /* AppDelegate.swift in Sources */,
 				3F5923BE24AA9FCC008F45D6 /* SummativesViewController.swift in Sources */,
 				3F94E2CD2492A68B00B0F958 /* CourseCell.swift in Sources */,
-				3F94E32D2496E15E00B0F958 /* ClassTypeAndRepeatsViewController.swift in Sources */,
+				3F94E32D2496E15E00B0F958 /* ClassTypeViewController.swift in Sources */,
 				3FAEC82E2496FCC1000ADD9D /* SingleClassService.swift in Sources */,
 				3FAEC8262496F816000ADD9D /* SingleClass.swift in Sources */,
 				3F383E5E2486B25E00D2A5D1 /* SceneDelegate.swift in Sources */,
