@@ -169,10 +169,10 @@ extension UIViewController {
 extension UITextField {
     func setIcon(_ image: UIImage) {
         let iconView = UIImageView(frame:
-            CGRect(x: 10, y: 0, width: 30, height: 28))
+            CGRect(x: 10, y: 0, width: 28, height: 26))
         iconView.image = image
         let iconContainerView: UIView = UIView(frame:
-            CGRect(x: 30, y: 0, width: 40, height: 30))
+            CGRect(x: 30, y: 0, width: 40, height: 28))
         iconContainerView.addSubview(iconView)
         leftView = iconContainerView
         leftViewMode = .always

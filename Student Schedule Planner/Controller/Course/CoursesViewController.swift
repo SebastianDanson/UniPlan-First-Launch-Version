@@ -28,7 +28,7 @@ class CoursesViewController: SwipeNoCompleteViewController {
     }
     
     //MARK: - Properties
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Courses")
     let tableView = UITableView()
     let addButton = makeCornerAddButton()
@@ -62,9 +62,9 @@ class CoursesViewController: SwipeNoCompleteViewController {
         tableView.dataSource = self
         
         addButton.anchor(right: view.rightAnchor,
-                                    bottom: view.bottomAnchor,
-                                    paddingRight: 10,
-                                    paddingBottom: self.tabBarHeight + 10)
+                         bottom: view.bottomAnchor,
+                         paddingRight: 10,
+                         paddingBottom: self.tabBarHeight + 10)
         addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         
         if AllCoursesService.shared.getAddSummative() {
@@ -198,7 +198,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
                 let label = makeHeading(withText: "Not for a course")
                 let nextImage = UIImage(named: "nextMenuButton")
                 let nextImageView = UIImageView(image: nextImage)
-
+                
                 view.backgroundColor = .backgroundColor
                 view.setDimensions(width: UIScreen.main.bounds.width, height: 50)
                 
@@ -217,7 +217,7 @@ extension CoursesViewController: UITableViewDelegate, UITableViewDataSource {
                 
                 nextImageView.centerY(in: subView)
                 nextImageView.anchor(right: subView.rightAnchor, paddingRight:  20)
-
+                
                 label.textColor = .white
                 label.centerY(in: view)
                 label.anchor(left: view.leftAnchor, paddingLeft: 20)

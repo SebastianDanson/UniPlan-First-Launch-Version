@@ -44,7 +44,7 @@ class TimelineViewController: SwipeCompleteViewController {
         super.viewWillAppear(animated)
         TaskService.shared.loadTasks()
         tableView.reloadData()
-        TaskService.shared.setDateSelected(date: Date())
+        calendar.select(TaskService.shared.getDateSelected())
         TaskService.shared.setTaskIndex(index: nil)
         TaskService.shared.setReminderTime([0, 0]) //First index is hours, second is minutes
         TaskService.shared.setReminderDate(date: Date())
@@ -107,17 +107,17 @@ class TimelineViewController: SwipeCompleteViewController {
         weekButton.layer.cornerRadius = 17.5
         weekButton.layer.borderColor = UIColor.silver.cgColor
         weekButton.layer.borderWidth = 2
-        weekButton.anchor(left: topView.leftAnchor, paddingLeft: 15)
+        weekButton.anchor(left: topView.leftAnchor, paddingLeft: 10)
         weekButton.centerY(in: calendar.calendarHeaderView)
         weekButton.addTarget(self, action: #selector(weekButtonTapped), for: .touchUpInside)
         
         weekLabel.centerX(in: weekButton)
         weekLabel.centerY(in: weekButton)
-
+        
         addButton.anchor(right: view.rightAnchor,
-                       bottom: view.bottomAnchor,
-                       paddingRight: 10,
-                       paddingBottom: self.tabBarHeight + 10)
+                         bottom: view.bottomAnchor,
+                         paddingRight: 10,
+                         paddingBottom: self.tabBarHeight + 10)
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         tableView.centerX(in: view)
@@ -147,10 +147,8 @@ class TimelineViewController: SwipeCompleteViewController {
     //MARK: - Actions
     @objc func weekButtonTapped() {
         let vc = WeekViewController()
-        vc.modalPresentationStyle = .fullScreen
-        if let nav = navigationController{
-            nav.pushViewController(vc, animated: true)
-        }
+        //vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
     @objc func calendarSwipeDown() {
         view.layoutIfNeeded()
@@ -257,13 +255,9 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
             default:
                 vc = AddTaskViewController()
                 vc.modalPresentationStyle = .fullScreen
-                present(vc, animated: true, completion: nil)
-                
+                present(vc, animated: true, completion: nil)                
             }
         }
-    }
-    func addWeek() {
-        calendar.currentPage = calendar.currentPage.addingTimeInterval(86400*7)
     }
 }
 
@@ -273,11 +267,10 @@ extension TimelineViewController: FSCalendarDelegate, FSCalendarDataSource {
         TaskService.shared.setDateSelected(date: date)
         TaskService.shared.loadTasks()
         tableView.reloadData()
-        //addWeek()
     }
-  
+    
     func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
-        print(calendar.currentPage)
+        TaskService.shared.setfirstDayOfWeek(date: calendar.currentPage)
     }
     
 }

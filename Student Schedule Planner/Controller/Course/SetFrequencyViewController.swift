@@ -21,9 +21,15 @@ class SetFrequencyViewController: FrequencyPickerViewController {
         setupViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        frequencyLabel.text = SingleClassService.shared.getRepeats()
+        frequenyNum = TaskService.shared.getFrequencyNum()
+        frequencyLength = TaskService.shared.getFrequencyLength()
+    }
     //MARK: - properties
     //topView
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Set Frequency")
     let backButton = makeBackButton()
     
@@ -43,7 +49,7 @@ class SetFrequencyViewController: FrequencyPickerViewController {
         view.addSubview(frequencyView)
         
         frequencyView.addSubview(frequencyLabel)
-
+        
         //topView
         topView.addSubview(titleLabel)
         topView.addSubview(backButton)
@@ -86,7 +92,7 @@ class SetFrequencyViewController: FrequencyPickerViewController {
     }
     
     func setupInitialSelectedRows() {
-        frequencyPickerView.selectRow(TaskService.shared.getFrequencyNum(), inComponent:0, animated: false)
+        frequencyPickerView.selectRow(TaskService.shared.getFrequencyNum()-1, inComponent:0, animated: false)
         frequencyPickerView.selectRow(TaskService.shared.getFrequencyLength(), inComponent:1, animated: false)
     }
     
@@ -96,22 +102,37 @@ class SetFrequencyViewController: FrequencyPickerViewController {
     }
     
     @objc func saveButtonPressed() {
+        TaskService.shared.setFrequencyNum(frequency: frequenyNum)
+        TaskService.shared.setFrequencyLenth(length: frequencyLength)
+        SingleClassService.shared.setRepeats(num: frequenyNum, length: frequencyLength)
         dismiss(animated: true)
     }
     
     override func updateLabel() {
-        var length = ""
-        switch  TaskService.shared.getFrequencyLength(){
+     var lengthString = ""
+        switch frequencyLength{
         case 0:
-            length = "Weeks"
+            if frequenyNum == 1 {
+                lengthString = "Week"
+            } else {
+                lengthString = "Weeks"
+            }
         case 1:
-            length = "Days"
+            if frequenyNum == 1 {
+                lengthString = "Day"
+            } else {
+                lengthString = "Days"
+            }
         case 2:
-            length = "Weekdays"
+            if frequenyNum == 1 {
+                lengthString = "Weekday"
+            } else {
+                lengthString = "Weekdays"
+            }
         default:
             break
         }
-        frequencyLabel.text = "Every \(TaskService.shared.getFrequencyNum()) \(length)"
+        frequencyLabel.text = frequenyNum == 1 ? "Every \(lengthString)" : "Every \(frequenyNum) \(lengthString)"
     }
-
+    
 }

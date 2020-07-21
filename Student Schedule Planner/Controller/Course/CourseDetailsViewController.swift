@@ -47,7 +47,7 @@ class CourseDetailsViewController: SwipeCompleteViewController {
     //MARK: - Properties
     //table views
     let tableView = makeTableView(withRowHeight: 120)
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "")
     let backButton = makeBackButton()
     
@@ -255,197 +255,197 @@ class CourseDetailsViewController: SwipeCompleteViewController {
     
     //MARK: - SwipeCellDelegate
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-           if orientation == .right {
-               
-           let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-               self.updateModel(index: indexPath.row, section: indexPath.section)
-           }
-           deleteAction.image = UIImage(named: "Trash")
-           
-           return [deleteAction]
-           } else if orientation == .left {
-               if indexPath.section != 0, indexPath.section != 4 {
-               let completeAction = SwipeAction(style: .default, title: "Complete") { action, indexPath in
-                   self.complete(index: indexPath.row, section: indexPath.section)
-               }
-               completeAction.image = UIImage(systemName: "checkmark.circle.fill")
-               completeAction.backgroundColor = .emerald
-               return [completeAction]
-               }
-           }
-           return nil
-       }
-       
-    override func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
-           var options = SwipeOptions()
-           
-           if orientation == .right {
-           options.expansionStyle = .destructive(automaticallyDelete: false)
-           } else if orientation == .left {
-               options.expansionStyle = .selection
-           }
-           return options
-               
-       }
-}
+        if orientation == .right {
+            
+            let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+                self.updateModel(index: indexPath.row, section: indexPath.section)
+            }
+            deleteAction.image = UIImage(named: "Trash")
+            
+            return [deleteAction]
+        } else if orientation == .left {
+            if indexPath.section != 0, indexPath.section != 4 {
+                let completeAction = SwipeAction(style: .default, title: "Complete") { action, indexPath in
+                    self.complete(index: indexPath.row, section: indexPath.section)
+                }
+                completeAction.image = UIImage(systemName: "checkmark.circle.fill")
+                completeAction.backgroundColor = .emerald
+                return [completeAction]
+            }
+        }
+        return nil
+    }
     
-    //MARK: - Tableview Delegate and Datasource
-    extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSource {
-        func numberOfSections(in tableView: UITableView) -> Int {
-            return 5
+    override func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        
+        if orientation == .right {
+            options.expansionStyle = .destructive(automaticallyDelete: false)
+        } else if orientation == .left {
+            options.expansionStyle = .selection
+        }
+        return options
+        
+    }
+}
+
+//MARK: - Tableview Delegate and Datasource
+extension CourseDetailsViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 5
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return CourseService.shared.getClasses()?.count ?? 0
+        case 1:
+            return CourseService.shared.getAssignments()?.count ?? 0
+        case 2:
+            return CourseService.shared.getQuizzes()?.count ?? 0
+        case 3:
+            return CourseService.shared.getExams()?.count ?? 0
+        case 4:
+            return CourseService.shared.getNotes()?.count ?? 0
+        default:
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        let sectionName = makeHeading(withText: "")
+        let addButton = makeCornerAddButton(withDiameter: 35)
+        let seperator = makeSpacerView(height: 2)
+        
+        view.backgroundColor = .backgroundColor
+        view.addSubview(sectionName)
+        view.addSubview(addButton)
+        view.addSubview(seperator)
+        
+        sectionName.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, paddingLeft: 10, paddingBottom: 5)
+        addButton.anchor(left: sectionName.rightAnchor, paddingLeft: 5)
+        addButton.centerYAnchor.constraint(equalTo: sectionName.centerYAnchor).isActive = true
+        
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+        addButton.tintColor = color
+        
+        seperator.backgroundColor = .silver
+        seperator.anchor(top: view.topAnchor, paddingTop: 5)
+        seperator.setDimensions(width: UIScreen.main.bounds.width - 20)
+        seperator.centerX(in: view)
+        
+        switch section {
+        case 0:
+            seperator.alpha = 0
+            sectionName.text = "Classes"
+            addButton.addTarget(self, action: #selector(AddClassButtonPressed), for: .touchUpInside)
+        case 1:
+            sectionName.text = "Assignments"
+            addButton.addTarget(self, action: #selector(AddAssignmentButtonPressed), for: .touchUpInside)
+        case 2:
+            sectionName.text = "Quizzes"
+            CourseService.shared.setSelectedQuiz(quiz: nil)
+            addButton.addTarget(self, action: #selector(AddQuizButtonPressed), for: .touchUpInside)
+        case 3:
+            sectionName.text = "Exams"
+            CourseService.shared.setSelectedExam(exam: nil)
+            addButton.addTarget(self, action: #selector(AddExamButtonPressed), for: .touchUpInside)
+        case 4:
+            sectionName.text = "Notes"
+            CourseService.shared.setSelectedNote(note: nil)
+            addButton.addTarget(self, action: #selector(AddNoteButtonPressed), for: .touchUpInside)
+        default:
+            break
         }
         
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            switch section {
-            case 0:
-                return CourseService.shared.getClasses()?.count ?? 0
-            case 1:
-                return CourseService.shared.getAssignments()?.count ?? 0
-            case 2:
-                return CourseService.shared.getQuizzes()?.count ?? 0
-            case 3:
-                return CourseService.shared.getExams()?.count ?? 0
-            case 4:
-                return CourseService.shared.getNotes()?.count ?? 0
-            default:
-                return 0
+        return view
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case 0:
+            return 110
+        case 1:
+            tableView.estimatedRowHeight = 75
+            return UITableView.automaticDimension
+        case 2:
+            return 65
+        case 4:
+            tableView.estimatedRowHeight = 50
+            return UITableView.automaticDimension
+        default:
+            return 65
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Class", for: indexPath) as! SingleClassCell
+            if let theClass = CourseService.shared.getClass(atIndex: indexPath.row) {
+                cell.update(theClass: theClass)
+                cell.delegate = self
             }
-        }
-        
-        func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-            let view = UIView()
-            let sectionName = makeHeading(withText: "")
-            let addButton = makeCornerAddButton(withDiameter: 35)
-            let seperator = makeSpacerView(height: 2)
+            return cell
             
-            view.backgroundColor = .backgroundColor
-            view.addSubview(sectionName)
-            view.addSubview(addButton)
-            view.addSubview(seperator)
-            
-            sectionName.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, paddingLeft: 10, paddingBottom: 5)
-            addButton.anchor(left: sectionName.rightAnchor, paddingLeft: 5)
-            addButton.centerYAnchor.constraint(equalTo: sectionName.centerYAnchor).isActive = true
-            
-            let course = AllCoursesService.shared.getSelectedCourse()
-            let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
-            addButton.tintColor = color
-            
-            seperator.backgroundColor = .silver
-            seperator.anchor(top: view.topAnchor, paddingTop: 5)
-            seperator.setDimensions(width: UIScreen.main.bounds.width - 20)
-            seperator.centerX(in: view)
-            
-            switch section {
-            case 0:
-                seperator.alpha = 0
-                sectionName.text = "Classes"
-                addButton.addTarget(self, action: #selector(AddClassButtonPressed), for: .touchUpInside)
-            case 1:
-                sectionName.text = "Assignments"
-                addButton.addTarget(self, action: #selector(AddAssignmentButtonPressed), for: .touchUpInside)
-            case 2:
-                sectionName.text = "Quizzes"
-                CourseService.shared.setSelectedQuiz(quiz: nil)
-                addButton.addTarget(self, action: #selector(AddQuizButtonPressed), for: .touchUpInside)
-            case 3:
-                sectionName.text = "Exams"
-                CourseService.shared.setSelectedExam(exam: nil)
-                addButton.addTarget(self, action: #selector(AddExamButtonPressed), for: .touchUpInside)
-            case 4:
-                sectionName.text = "Notes"
-                CourseService.shared.setSelectedNote(note: nil)
-                addButton.addTarget(self, action: #selector(AddNoteButtonPressed), for: .touchUpInside)
-            default:
-                break
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Assignment", for: indexPath) as! AssignmentCell
+            if let assignment = CourseService.shared.getAssignment(atIndex: indexPath.row) {
+                cell.update(assignment: assignment)
+                cell.delegate = self
             }
+            return cell
             
-            return view
-        }
-        
-        func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-            return 50
-        }
-        
-        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            switch indexPath.section {
-            case 0:
-                return 110
-            case 1:
-                tableView.estimatedRowHeight = 75
-                return UITableView.automaticDimension
-            case 2:
-                return 65
-            case 4:
-                tableView.estimatedRowHeight = 50
-                return UITableView.automaticDimension
-            default:
-                return 65
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "QuizAndExam", for: indexPath) as! QuizAndExamCell
+            if let quiz = CourseService.shared.getQuiz(atIndex: indexPath.row) {
+                cell.update(quiz: quiz)
+                cell.delegate = self
             }
-        }
-        
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            switch indexPath.section {
-            case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Class", for: indexPath) as! SingleClassCell
-                if let theClass = CourseService.shared.getClass(atIndex: indexPath.row) {
-                    cell.update(theClass: theClass)
-                    cell.delegate = self
-                }
-                return cell
-                
-            case 1:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Assignment", for: indexPath) as! AssignmentCell
-                if let assignment = CourseService.shared.getAssignment(atIndex: indexPath.row) {
-                    cell.update(assignment: assignment)
-                    cell.delegate = self
-                }
-                return cell
-                
-            case 2:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "QuizAndExam", for: indexPath) as! QuizAndExamCell
-                if let quiz = CourseService.shared.getQuiz(atIndex: indexPath.row) {
-                    cell.update(quiz: quiz)
-                    cell.delegate = self
-                }
-                return cell
-                
-            case 4:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Note", for: indexPath) as! NoteCell
-                if let note = CourseService.shared.getNote(atIndex: indexPath.row) {
-                    cell.update(note: note)
-                    cell.delegate = self
-                }
-                return cell
-            default:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "QuizAndExam", for: indexPath) as! QuizAndExamCell
-                if let exam = CourseService.shared.getExam(atIndex: indexPath.row) {
-                    cell.update(exam: exam)
-                    cell.delegate = self
-                }
-                return cell
+            return cell
+            
+        case 4:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Note", for: indexPath) as! NoteCell
+            if let note = CourseService.shared.getNote(atIndex: indexPath.row) {
+                cell.update(note: note)
+                cell.delegate = self
             }
-        }
-        
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            switch indexPath.section {
-            case 0:
-                SingleClassService.shared.setClassIndex(index: indexPath.row)
-                AddClassButtonPressed()
-            case 1:
-                CourseService.shared.setAssignmentIndex(index: indexPath.row)
-                AddAssignmentButtonPressed()
-            case 2:
-                CourseService.shared.setQuizIndex(index: indexPath.row)
-                AddQuizButtonPressed()
-            case 3:
-                CourseService.shared.setExamIndex(index: indexPath.row)
-                AddExamButtonPressed()
-            case 4:
-                CourseService.shared.setNoteIndex(index: indexPath.row)
-                AddNoteButtonPressed()
-            default:
-                break
+            return cell
+        default:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "QuizAndExam", for: indexPath) as! QuizAndExamCell
+            if let exam = CourseService.shared.getExam(atIndex: indexPath.row) {
+                cell.update(exam: exam)
+                cell.delegate = self
             }
+            return cell
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            SingleClassService.shared.setClassIndex(index: indexPath.row)
+            AddClassButtonPressed()
+        case 1:
+            CourseService.shared.setAssignmentIndex(index: indexPath.row)
+            AddAssignmentButtonPressed()
+        case 2:
+            CourseService.shared.setQuizIndex(index: indexPath.row)
+            AddQuizButtonPressed()
+        case 3:
+            CourseService.shared.setExamIndex(index: indexPath.row)
+            AddExamButtonPressed()
+        case 4:
+            CourseService.shared.setNoteIndex(index: indexPath.row)
+            AddNoteButtonPressed()
+        default:
+            break
+        }
+    }
 }

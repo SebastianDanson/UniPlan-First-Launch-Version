@@ -44,8 +44,31 @@ class SingleClassService {
         return repeats
     }
     
-    func setRepeats(every: String) {
-        repeats = every
+    func setRepeats(num: Int, length: Int) {
+        var lengthString = ""
+        switch length{
+        case 0:
+            if num == 1 {
+                lengthString = "Week"
+            } else {
+                lengthString = "Weeks"
+            }
+        case 1:
+            if num == 1 {
+                lengthString = "Day"
+            } else {
+                lengthString = "Days"
+            }
+        case 2:
+            if num == 1 {
+                lengthString = "Weekday"
+            } else {
+                lengthString = "Weekdays"
+            }
+        default:
+            break
+        }
+        repeats = num == 1 ? "Every \(lengthString)" : "Every \(num) \(lengthString)"
     }
     
     //MARK: - Start Time

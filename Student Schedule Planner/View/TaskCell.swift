@@ -85,7 +85,7 @@ class TaskCell: SwipeTableViewCell {
         taskView.addSubview(dateLabel)
         taskView.addSubview(overlay)
         taskView.addSubview(checkImageView)
-
+        
         taskView.layer.borderWidth = 0
         taskView.backgroundColor = .backgroundColor
         
@@ -132,7 +132,7 @@ class TaskCell: SwipeTableViewCell {
         checkImageView.tintColor = .white
         checkImageView.centerY(in: taskView)
         checkImageView.anchor(right: taskView.rightAnchor, paddingRight: 20)
-
+        
         reminderLeftAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: locationLabel.rightAnchor, constant: 10)
         reminderOtherAnchorConstaint = reminderImage.leftAnchor.constraint(equalTo: locationImage.leftAnchor)
         reminderLeftAnchorConstaint.isActive = true

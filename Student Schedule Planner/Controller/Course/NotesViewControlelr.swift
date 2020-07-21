@@ -37,7 +37,7 @@ class NotesViewController: SwipeNoCompleteViewController {
     }
     
     //MARK: - Properties
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Notes")
     let tableView = UITableView()
     let addButton = makeCornerAddButton()

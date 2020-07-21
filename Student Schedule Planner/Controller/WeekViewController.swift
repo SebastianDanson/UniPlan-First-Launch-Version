@@ -27,7 +27,7 @@ class WeekViewController: UIViewController {
     }
     
     //MARK: - Properties
-    let topView = makeTopView(height: UIScreen.main.bounds.height/10)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/15)
     let titleLabel = makeLabel(ofSize: 24, weight: .bold)
     var tableView = UITableView()
     let addButton = UIButton()
@@ -37,7 +37,7 @@ class WeekViewController: UIViewController {
     //MARK: - UI setup
     func setupViews() {
         tableView.isScrollEnabled = true
-        tableView.rowHeight = UIScreen.main.bounds.height/8.7
+        tableView.rowHeight = UIScreen.main.bounds.height/9.55 + 13
         tableView.backgroundColor = .backgroundColor
         
         view.backgroundColor = .backgroundColor
@@ -54,7 +54,7 @@ class WeekViewController: UIViewController {
         
         titleLabel.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
         titleLabel.anchor(left: topView.leftAnchor, paddingLeft: 40)
-        titleLabel.text =  "\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek()))-\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(7*86400)))"
+        titleLabel.text =  "\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek())) - \(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(7*86400)))"
         titleLabel.textColor = .white
         
         addButton.centerYAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.centerYAnchor).isActive = true
@@ -73,22 +73,14 @@ class WeekViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(TableViewSwipeLeft))
-        swipeLeft.direction = .left
-        // topView.addGestureRecognizer(swipeLeft)
-        // tableView.addGestureRecognizer(swipeLeft)
-        
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(TableViewSwipeRight))
-        swipeRight.direction = .right
-        // topView.addGestureRecognizer(swipeRight)
-        //tableView.addGestureRecognizer(swipeRight)
         let panGesture = UIPanGestureRecognizer(target: self, action:(#selector(self.handleGesture)))
+        let topViewPanGesture = UIPanGestureRecognizer(target: self, action:(#selector(self.handleGesture)))
         tableView.addGestureRecognizer(panGesture)
         
         rightTableView.register(WeekCell.self, forCellReuseIdentifier: "Right")
         rightTableView.delegate = self
         rightTableView.dataSource = self
-        rightTableView.rowHeight = UIScreen.main.bounds.height/8.7
+        rightTableView.rowHeight = UIScreen.main.bounds.height/9.55 + 13
         rightTableView.anchor(top: tableView.topAnchor, left: tableView.rightAnchor)
         rightTableView.setDimensions(width: view.frame.width,
                                      height: view.frame.height - topView.frame.height)
@@ -96,11 +88,10 @@ class WeekViewController: UIViewController {
         leftTableView.register(WeekCell.self, forCellReuseIdentifier: "Left")
         leftTableView.delegate = self
         leftTableView.dataSource = self
-        leftTableView.rowHeight = UIScreen.main.bounds.height/8.7
+        leftTableView.rowHeight = UIScreen.main.bounds.height/9.55 + 13
         leftTableView.anchor(top: tableView.topAnchor, right: tableView.leftAnchor)
         leftTableView.setDimensions(width: view.frame.width,
                                     height: view.frame.height - topView.frame.height)
-        
     }
     
     //MARK: - Actions
@@ -122,7 +113,7 @@ class WeekViewController: UIViewController {
             leftTableView.transform = CGAffineTransform(translationX: translation.x, y: 0)
             rightTableView.transform = CGAffineTransform(translationX: translation.x, y: 0)
         case .ended:
-            if translation.x >= UIScreen.main.bounds.width/2.5 {
+            if translation.x >= UIScreen.main.bounds.width/2.25 {
                 
                 UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 2, options: .curveEaseIn, animations: {
                     self.tableView.transform = self.tableView.transform.translatedBy(x:  -(translation.x - UIScreen.main.bounds.width), y: 0)
@@ -142,7 +133,7 @@ class WeekViewController: UIViewController {
                 
                 
                 
-            } else if translation.x <= -UIScreen.main.bounds.width/2.5 {
+            } else if translation.x <= -UIScreen.main.bounds.width/2.25 {
                 
                 
                 UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 2, options: .curveEaseIn, animations: {
@@ -154,7 +145,6 @@ class WeekViewController: UIViewController {
                     
                 })
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: {
-                    
                     self.TableViewSwipeLeft()
                 })
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
@@ -163,7 +153,7 @@ class WeekViewController: UIViewController {
                     self.rightTableView.transform = .identity
                 })
                 
-                titleLabel.text = "\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek()))-\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(6*86400)))"
+                titleLabel.text = "\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek())) - \(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(6*86400)))"
             } else {
                 UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 2, options: .curveEaseIn, animations: {
                     self.leftTableView.transform = .identity
@@ -178,7 +168,7 @@ class WeekViewController: UIViewController {
     @objc func TableViewSwipeLeft() {
         TaskService.shared.setfirstDayOfWeek(date: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(7*86400))
         tableView.reloadData()
-        titleLabel.text = "\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek()))-\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(6*86400)))"
+        titleLabel.text = "\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek())) - \(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(6*86400)))"
     }
     
     @objc func LeftTableViewSwipe() {
@@ -194,7 +184,7 @@ class WeekViewController: UIViewController {
     @objc func TableViewSwipeRight() {
         TaskService.shared.setfirstDayOfWeek(date: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(-7*86400))
         tableView.reloadData()
-        titleLabel.text = "\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek()))-\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(6*86400)))"
+        titleLabel.text = "\(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek())) - \(formatDateMonthDay(from: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(6*86400)))"
     }
     
     @objc func addButtonPressed() {

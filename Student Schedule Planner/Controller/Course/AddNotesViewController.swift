@@ -28,12 +28,12 @@ class AddNotesViewController: UIViewController {
     
     //MARK: - Properties
     //topView
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9.5)
     let titleLabel = makeTitleLabel(withText: "Note")
     let backButton = makeBackButton()
     
     //not topView
-    let titleTextField = makeTextField(withPlaceholder: "Title", height: 50)
+    let titleTextField = makeTextField(withPlaceholder: "Title", height: UIScreen.main.bounds.height/44 + 28)
     let textView = UITextView()
     let saveLabelButton = makeSaveLabelButton()
     let colorRectangle = UIButton()
@@ -65,34 +65,39 @@ class AddNotesViewController: UIViewController {
         saveLabelButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         
         //Not topView
-        titleTextField.layer.borderWidth = 5
+        titleTextField.layer.borderWidth = 3
         titleTextField.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         titleTextField.anchor(left: view.leftAnchor, paddingLeft: 20)
         titleTextField.delegate = self
         
-        textView.anchor(top: titleTextField.bottomAnchor, bottom: view.bottomAnchor, paddingTop: 10, paddingBottom: UIScreen.main.bounds.height/18)
+        textView.anchor(top: titleTextField.bottomAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingTop: 5, paddingBottom: 5)
         
         let titleTextFieldTopAnchor: NSLayoutConstraint = titleTextField.topAnchor.constraint(equalTo: colorRectangle.bottomAnchor, constant: 10)
-        let titleTextFieldOtherAnchor: NSLayoutConstraint = titleTextField.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: 20)
+        let titleTextFieldOtherAnchor: NSLayoutConstraint = titleTextField.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: 10)
         titleTextFieldTopAnchor.isActive = true
         
         textView.layer.borderColor = UIColor.mainBlue.cgColor
         textView.layer.borderWidth = 2
         textView.backgroundColor = .backgroundColor
         textView.font = UIFont.systemFont(ofSize: 18)
+        textView.layer.cornerRadius = 5
         
         textView.centerX(in: view)
         textView.setDimensions(width: UIScreen.main.bounds.width - 40)
         
+        
         if let note = CourseService.shared.getSelectedNote() {
             titleTextField.text = note.title
             textView.text = note.notes
+            
+            TaskService.shared.setColor(color: UIColor(red: CGFloat(note.color[0]), green: CGFloat(note.color[1]), blue: CGFloat(note.color[2]), alpha: 1))
         }
         
         colorRectangle.backgroundColor = TaskService.shared.getColor()
+        
         colorRectangle.setDimensions(width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.height/18)
         colorRectangle.layer.cornerRadius = 6
-        colorRectangle.anchor(top: topView.bottomAnchor, left:  textView.leftAnchor, paddingTop: 20)
+        colorRectangle.anchor(top: topView.bottomAnchor, left:  textView.leftAnchor, paddingTop: 10)
         colorRectangle.addTarget(self, action: #selector(colorRectanglePressed), for: .touchUpInside)
         
         colorRectangle.isHidden = false
@@ -113,7 +118,7 @@ class AddNotesViewController: UIViewController {
             vc.modalPresentationStyle = .fullScreen
             present(vc, animated: true, completion: nil)
         } else {
-        dismiss(animated: true, completion: nil)
+            dismiss(animated: true, completion: nil)
         }
     }
     

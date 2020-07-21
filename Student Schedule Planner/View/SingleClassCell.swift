@@ -119,8 +119,9 @@ class SingleClassCell: SwipeTableViewCell {
         
         endTimeLabel.anchor(top: startTimeLabel.bottomAnchor, left: startTimeLabel.leftAnchor)
         
-        classFrequencyLabel.anchor(left: endTimeLabel.leftAnchor,
+        classFrequencyLabel.anchor(right: taskView.rightAnchor,
                                    bottom: taskView.bottomAnchor,
+                                   paddingRight: 16,
                                    paddingBottom: 10)
         
         reminderImage.setDimensions(width: 14, height: 14)
@@ -148,10 +149,10 @@ class SingleClassCell: SwipeTableViewCell {
     func update(theClass: SingleClass? = nil, routine: Routine? = nil) {
         if let theClass = theClass {
             
-               classTypeLabel.anchor(top: taskView.topAnchor,
-                                     left: taskView.leftAnchor,
-                                     paddingTop: 5,
-                                     paddingLeft: 20)
+            classTypeLabel.anchor(top: taskView.topAnchor,
+                                  left: taskView.leftAnchor,
+                                  paddingTop: 5,
+                                  paddingLeft: 20)
             
             let course = AllCoursesService.shared.getSelectedCourse()
             let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
@@ -170,6 +171,12 @@ class SingleClassCell: SwipeTableViewCell {
             
             startTimeLabel.text = "\(formatTime(from: theClass.startTime))-"
             endTimeLabel.text = formatTime(from: theClass.endTime)
+            
+            if theClass.repeats[1] != 0 {
+                classDayStackView.isHidden = true
+            } else {
+                classDayStackView.isHidden = false
+            }
             
             monday.unhighlight(courseColor: color)
             tuesday.unhighlight(courseColor: color)
@@ -209,8 +216,8 @@ class SingleClassCell: SwipeTableViewCell {
                     }
                 }
             }
-            let repeats = theClass.repeats
-            classFrequencyLabel.text = repeats == "Never Repeats" ? repeats : "Every \(repeats)"
+            SingleClassService.shared.setRepeats(num: theClass.repeats[0], length: theClass.repeats[1])
+            classFrequencyLabel.text = SingleClassService.shared.getRepeats()
             
             if theClass.reminder {
                 reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [theClass.reminderTime[0], theClass.reminderTime[1]], reminderDate: Date())
@@ -238,6 +245,12 @@ class SingleClassCell: SwipeTableViewCell {
             startTimeLabel.text = "\(formatTime(from: routine.startTime))-"
             endTimeLabel.text = formatTime(from: routine.endTime)
             
+            if routine.repeats[1] != 0 {
+                classDayStackView.isHidden = true
+            }  else {
+                classDayStackView.isHidden = false
+            }
+            
             taskView.layer.borderColor = color.cgColor
             monday.unhighlight(courseColor: color)
             tuesday.unhighlight(courseColor: color)
@@ -246,7 +259,6 @@ class SingleClassCell: SwipeTableViewCell {
             friday.unhighlight(courseColor: color)
             saturday.unhighlight(courseColor: color)
             sunday.unhighlight(courseColor: color)
-            
             
             classTypeLabel.anchor(top: taskView.topAnchor,
                                   left: classDayStackView.leftAnchor,
@@ -283,8 +295,8 @@ class SingleClassCell: SwipeTableViewCell {
                     }
                 }
             }
-            let repeats = routine.repeats
-            classFrequencyLabel.text = repeats == "Never Repeats" ? repeats : "Every \(repeats)"
+            SingleClassService.shared.setRepeats(num: routine.repeats[0], length:routine.repeats[1])
+            classFrequencyLabel.text = SingleClassService.shared.getRepeats()
             
             if routine.reminder {
                 reminderLabel.text = TaskService.shared.setupReminderString(dateOrTime: 0, reminderTime: [routine.reminderTime[0], routine.reminderTime[1]], reminderDate: Date())

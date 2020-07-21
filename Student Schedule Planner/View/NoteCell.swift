@@ -53,18 +53,18 @@ class NoteCell: SwipeTableViewCell {
         
         titleLabel.numberOfLines = 0
         titleLabel.lineBreakMode = .byWordWrapping
-        titleLabel.setDimensions(width: UIScreen.main.bounds.width * 0.9)
+        titleLabel.setDimensions(width: UIScreen.main.bounds.width * 0.875)
         titleLabel.anchor(top: marginGuide.topAnchor,
-                         left: marginGuide.leftAnchor,
-                         bottom: notes.topAnchor,
-                         paddingTop: 5,
-                         paddingLeft: 10)
-
-        notes.setDimensions(width: UIScreen.main.bounds.width * 0.9)
+                          left: marginGuide.leftAnchor,
+                          bottom: notes.topAnchor,
+                          paddingTop: 5,
+                          paddingLeft: 10)
+        
+        notes.setDimensions(width: UIScreen.main.bounds.width * 0.875)
         notes.anchor(top: titleLabel.bottomAnchor,
-                          left: titleLabel.leftAnchor,
-                          bottom: marginGuide.bottomAnchor,
-                          paddingBottom: 2)
+                     left: titleLabel.leftAnchor,
+                     bottom: marginGuide.bottomAnchor,
+                     paddingBottom: 2)
     }
     
     func update(note: Note) {
@@ -81,11 +81,11 @@ class NoteCell: SwipeTableViewCell {
         if let course = course {
             let color = UIColor.init(red: CGFloat(course.color[0]), green: CGFloat(course.color[1]), blue: CGFloat(course.color[2]), alpha: 1)
             taskView.layer.borderColor = color.cgColor
-
+            
         } else {
             let color = UIColor.init(red: CGFloat(note.color[0]), green: CGFloat(note.color[1]), blue: CGFloat(note.color[2]), alpha: 1)
             taskView.layer.borderColor = color.cgColor
-
+            
         }
     }
 }

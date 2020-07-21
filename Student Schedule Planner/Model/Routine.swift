@@ -17,7 +17,7 @@ class Routine: Object {
     @objc dynamic var endTime = Date()
     @objc dynamic var startDate = Date()
     @objc dynamic var endDate = Date() 
-    @objc dynamic var repeats = "Week" //How often the routine repeats
+    var repeats = List<Int>() //How often the routine repeats
     @objc dynamic var location = ""
     @objc dynamic var reminder = false
     @objc dynamic var id = UUID().uuidString //Unique id
@@ -31,6 +31,7 @@ class Routine: Object {
         days.append(objectsIn: [0,0,0,0,0,0,0])
         color.append(objectsIn: [0, 0, 0])
         reminderTime.append(objectsIn: [0, 0])
+        repeats.append(objectsIn: [1, 0])
     }
     
     override class func primaryKey() -> String? {

@@ -27,7 +27,7 @@ class AddCourseViewController: PickerViewController {
     
     //MARK: - properties
     //topView
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Add Course")
     let backButton = makeBackButton()
     
@@ -141,7 +141,7 @@ class AddCourseViewController: PickerViewController {
         datePickerView.centerX(in: view)
         datePickerView.addTarget(self, action: #selector(datePickerDateChanged), for: .valueChanged)
         datePickerView.minimumDate = Date()
-
+        
         colorTopAnchorConstaint = colorView.topAnchor.constraint(equalTo: startDateView.bottomAnchor)
         colorOtherAnchorConstaint = colorView.topAnchor.constraint(equalTo: datePickerView.bottomAnchor)
         colorTopAnchorConstaint.isActive = true

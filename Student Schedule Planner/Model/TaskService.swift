@@ -14,6 +14,7 @@ class TaskService {
     private var tasks: Results<Task>?
     private var dateSelected = Date()
     private var taskIndex: Int?
+    private var selectedTask: Task?
     private var reminderTime = [0, 0] //First index is hours, second is minutes
     private var reminderDate = Date()
     private var dateOrTime = 0 //0 means time was selected, non zero means date was selected for the reminder
@@ -24,7 +25,7 @@ class TaskService {
     private var color = UIColor.alizarin
     private var firstDayOfWeek = Date()
     private var isClass = false //If the task is associated with a class
-    private var frequencyNum = 0 //Number or days, weeks, or week days
+    private var frequencyNum = 1 //Number or days, weeks, or week days
     private var frequencyLength = 0 //0 -> weeks, 1 -> days, 2-> weekdays
     
     let realm =  try! Realm()
@@ -62,6 +63,19 @@ class TaskService {
     }
     func setTaskIndex(index: Int?) {
         taskIndex = index
+        if let index = index {
+            selectedTask = tasks?[index]
+        } else {
+            selectedTask = nil
+        }
+    }
+    
+    func getSelectedTask() -> Task? {
+        return selectedTask
+    }
+    
+    func setSelectedTask(task: Task?) {
+        selectedTask = task
     }
     
     //MARK: - dateSelected
@@ -176,54 +190,51 @@ class TaskService {
         let startDate = Calendar.current.startOfDay(for: theClass.startDate)
         var dayIncrementor = startDate
         let endDate = Calendar.current.startOfDay(for: theClass.endDate.addingTimeInterval(86400))
-        var skipDates = 0
-        let course = AllCoursesService.shared.getSelectedCourse()
-        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+        var daysPerWeek = 0 //The number of days a week the class repeats
+        var skipDays = 0
+        for day in theClass.classDays {
+            if day == 1 {daysPerWeek+=1}
+        }
+        
+        var sameWeekIterations = 0 //starts at 0 and goes up to days per week
         
         var numDays: Int = {
             return (Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: startDate).day ?? 0)
         }()
+        
         while dayIncrementor < endDate {
-            if theClass.classDays[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
-                let task = Task()
-                task.title = "\(course?.title ?? "") \(theClass.subType)"
-                task.dateOrTime = 0
-                task.startDate = theClass.startTime.addingTimeInterval(TimeInterval(86400*numDays))
-                task.endDate = theClass.endTime.addingTimeInterval(TimeInterval(86400*numDays))
-                task.reminder = theClass.reminder
-                task.reminderTime = theClass.reminderTime
-                task.location = theClass.location
-                task.courseId = course?.id ?? ""
-                task.type = theClass.type
-                task.summativeId = theClass.id
-                
-                let rgb = color.components
-                task.color[0] = Double(rgb.red)
-                task.color[1] = Double(rgb.green)
-                task.color[2] = Double(rgb.blue)
-                
-                switch theClass.repeats {
-                case "2 Weeks":
-                    if skipDates == 0 {
-                        realm.add(task, update: .modified)
-                        scheduleNotification(forTask: task)
-                        skipDates = 1
-                    } else {
-                        skipDates = 0
-                    }
-                case "4 Weeks":
-                    if skipDates == 0 {
-                        realm.add(task, update: .modified)
-                        scheduleNotification(forTask: task)
-                        skipDates = 1
-                    } else if skipDates < 3{
-                        skipDates += 1
-                    } else {
-                        skipDates = 0
-                    }
-                default:
+            if theClass.repeats[1] == 0 {
+                if theClass.classDays[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
+                    let task = makeTaskForAClass(theClass: theClass, numDays: numDays)
                     realm.add(task, update: .modified)
                     scheduleNotification(forTask: task)
+                    sameWeekIterations+=1
+                    if sameWeekIterations >= daysPerWeek {
+                        //the * routine.repeats[0]-1 * 7 multiplies by number of weeks
+                        dayIncrementor.addTimeInterval(TimeInterval(86400*7*(theClass.repeats[0]-1)))
+                        numDays+=(7*(theClass.repeats[0]-1))
+                        sameWeekIterations = 0
+                    }
+                }
+            } else if theClass.repeats[1] == 1 {
+                let task = makeTaskForAClass(theClass: theClass, numDays: numDays)
+                realm.add(task, update: .modified)
+                scheduleNotification(forTask: task)
+                dayIncrementor.addTimeInterval(TimeInterval(86400*(theClass.repeats[0]-1)))
+                numDays+=(theClass.repeats[0]-1)
+            } else {
+                if dayIncrementor.dayNumberOfWeek() != 7, dayIncrementor.dayNumberOfWeek() != 1 {
+                    if skipDays == 0 {
+                        let task = makeTaskForAClass(theClass: theClass, numDays: numDays)
+                        realm.add(task, update: .modified)
+                        scheduleNotification(forTask: task)
+                        skipDays = theClass.repeats[0] == 1 ? 0:1
+                    } else if skipDays < theClass.repeats[0]-1 {
+                        skipDays += 1
+                    } else {
+                        skipDays = 0
+                    }
+                    
                 }
             }
             numDays+=1
@@ -231,61 +242,105 @@ class TaskService {
         }
     }
     
+    func makeTaskForAClass(theClass: SingleClass, numDays: Int) -> Task{
+        let course = AllCoursesService.shared.getSelectedCourse()
+        let color = UIColor.init(red: CGFloat(course?.color[0] ?? 0), green: CGFloat(course?.color[1] ?? 0), blue: CGFloat(course?.color[2] ?? 0), alpha: 1)
+        
+        let task = Task()
+        task.title = "\(course?.title ?? "") \(theClass.subType)"
+        task.dateOrTime = 0
+        task.startDate = theClass.startTime.addingTimeInterval(TimeInterval(86400*numDays))
+        task.endDate = theClass.endTime.addingTimeInterval(TimeInterval(86400*numDays))
+        task.reminder = theClass.reminder
+        task.reminderTime = theClass.reminderTime
+        task.location = theClass.location
+        task.courseId = course?.id ?? ""
+        task.type = theClass.type
+        task.summativeId = theClass.id
+        
+        let rgb = color.components
+        task.color[0] = Double(rgb.red)
+        task.color[1] = Double(rgb.green)
+        task.color[2] = Double(rgb.blue)
+        
+        return task
+    }
+    
     func makeTasks(forRoutine routine: Routine) {
         let startDate = Calendar.current.startOfDay(for: routine.startDate)
         var dayIncrementor = startDate
         let endDate = Calendar.current.startOfDay(for: routine.endDate.addingTimeInterval(86400))
-        var skipDates = 0
-        let color = UIColor.init(red: CGFloat(routine.color[0]), green: CGFloat(routine.color[1]), blue: CGFloat(routine.color[2]), alpha: 1)
+        var daysPerWeek = 0 //The number of days a week the class repeats
+        var skipDays = 0
+        for day in routine.days {
+            if day == 1 {daysPerWeek+=1}
+        }
+        
+        var sameWeekIterations = 0 //starts at 0 and goes up to days per week
         
         var numDays: Int = {
             return (Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: startDate).day ?? 0)
         }()
         
         while dayIncrementor < endDate {
-            if routine.days[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
-                let task = Task()
-                task.title = routine.title
-                task.dateOrTime = 0
-                task.startDate = routine.startTime.addingTimeInterval(TimeInterval(86400*numDays))
-                task.endDate = routine.endTime.addingTimeInterval(TimeInterval(86400*numDays))
-                task.reminder = routine.reminder
-                task.reminderTime = routine.reminderTime
-                task.location = routine.location
-                task.summativeId = routine.id
-                
-                let rgb = color.components
-                task.color[0] = Double(rgb.red)
-                task.color[1] = Double(rgb.green)
-                task.color[2] = Double(rgb.blue)
-                
-                switch routine.repeats {
-                case "2 Weeks":
-                    if skipDates == 0 {
-                        realm.add(task, update: .modified)
-                        scheduleNotification(forTask: task)
-                        skipDates = 1
-                    } else {
-                        skipDates = 0
-                    }
-                case "4 Weeks":
-                    if skipDates == 0 {
-                        realm.add(task, update: .modified)
-                        scheduleNotification(forTask: task)
-                        skipDates = 1
-                    } else if skipDates < 3{
-                        skipDates += 1
-                    } else {
-                        skipDates = 0
-                    }
-                default:
+            if routine.repeats[1] == 0 {
+                if routine.days[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
+                    let task = makeTaskForARoutine(routine: routine, numDays: numDays)
                     realm.add(task, update: .modified)
                     scheduleNotification(forTask: task)
+                    sameWeekIterations+=1
+                    if sameWeekIterations >= daysPerWeek {
+                        //the * routine.repeats[0]-1 * 7 multiplies by number of weeks
+                        dayIncrementor.addTimeInterval(TimeInterval(86400*7*(routine.repeats[0]-1)))
+                        numDays+=(7*(routine.repeats[0]-1))
+                        sameWeekIterations = 0
+                    }
+                }
+            } else if routine.repeats[1] == 1 {
+                let task = makeTaskForARoutine(routine: routine, numDays: numDays)
+                realm.add(task, update: .modified)
+                scheduleNotification(forTask: task)
+                dayIncrementor.addTimeInterval(TimeInterval(86400*(routine.repeats[0]-1)))
+                numDays+=(routine.repeats[0]-1)
+            } else {
+                if dayIncrementor.dayNumberOfWeek() != 7, dayIncrementor.dayNumberOfWeek() != 1 {
+                    if skipDays == 0 {
+                        let task = makeTaskForARoutine(routine: routine, numDays: numDays)
+                        realm.add(task, update: .modified)
+                        scheduleNotification(forTask: task)
+                        skipDays = routine.repeats[0] == 1 ? 0:1
+                    } else if skipDays < routine.repeats[0]-1 {
+                        skipDays += 1
+                    } else {
+                        skipDays = 0
+                    }
+                    
                 }
             }
             numDays+=1
             dayIncrementor.addTimeInterval(86400)
         }
+    }
+    
+    func makeTaskForARoutine(routine: Routine, numDays: Int) -> Task{
+        let color = UIColor.init(red: CGFloat(routine.color[0]), green: CGFloat(routine.color[1]), blue: CGFloat(routine.color[2]), alpha: 1)
+        
+        let task = Task()
+        task.title = routine.title
+        task.dateOrTime = 0
+        task.startDate = routine.startTime.addingTimeInterval(TimeInterval(86400*numDays))
+        task.endDate = routine.endTime.addingTimeInterval(TimeInterval(86400*numDays))
+        task.reminder = routine.reminder
+        task.reminderTime = routine.reminderTime
+        task.location = routine.location
+        task.summativeId = routine.id
+        
+        let rgb = color.components
+        task.color[0] = Double(rgb.red)
+        task.color[1] = Double(rgb.green)
+        task.color[2] = Double(rgb.blue)
+        
+        return task
     }
     func makeTask(forQuiz quiz: Quiz) {
         let course = AllCoursesService.shared.getSelectedCourse()
@@ -365,8 +420,8 @@ class TaskService {
     }
     
     func updateTasks(forRoutine routine: Routine) {
-           deleteTasks(forRoutine: routine)
-           makeTasks(forRoutine: routine)
+        deleteTasks(forRoutine: routine)
+        makeTasks(forRoutine: routine)
     }
     
     func updateTasks(forQuiz quiz: Quiz) {
@@ -398,7 +453,7 @@ class TaskService {
         taskToUpdate?.reminderTime[1] = assignment.reminderTime[1]
         taskToUpdate?.reminderDate = assignment.reminderDate
         taskToUpdate?.isComplete = assignment.isComplete
-
+        
         if let taskToUpdate = taskToUpdate {
             scheduleNotification(forTask: taskToUpdate)
         }
@@ -415,7 +470,7 @@ class TaskService {
         taskToUpdate?.reminderTime[1] = exam.reminderTime[1]
         taskToUpdate?.reminderDate = exam.reminderDate
         taskToUpdate?.isComplete = exam.isComplete
-
+        
         if let taskToUpdate = taskToUpdate {
             scheduleNotification(forTask: taskToUpdate)
         }
@@ -615,25 +670,24 @@ class TaskService {
     }
     
     func setfirstDayOfWeek(date: Date) {
-        print(date)
         firstDayOfWeek = date
     }
     
     //MARK: - frequencyNum
-       func getFrequencyNum() -> Int {
-           return frequencyNum
-       }
-       
-       func setFrequencyNum(frequency: Int) {
+    func getFrequencyNum() -> Int {
+        return frequencyNum
+    }
+    
+    func setFrequencyNum(frequency: Int) {
         frequencyNum = frequency
     }
     
     //MARK: - frequencyNum
-       func getFrequencyLength() -> Int {
-           return frequencyLength
-       }
-       
-       func setFrequencyLenth(length: Int) {
+    func getFrequencyLength() -> Int {
+        return frequencyLength
+    }
+    
+    func setFrequencyLenth(length: Int) {
         frequencyLength = length
     }
 }

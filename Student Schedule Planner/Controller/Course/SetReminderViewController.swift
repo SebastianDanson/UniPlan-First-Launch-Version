@@ -24,7 +24,7 @@ class SetReminderViewController: PickerViewController {
     
     //MARK: - properties
     //topView
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Set Reminder")
     let backButton = makeBackButton()
     
@@ -125,7 +125,6 @@ class SetReminderViewController: PickerViewController {
     @objc func saveButtonPressed() {
         let time = [self.hour, self.minutes]
         let date = datePickerView.date
-        print(time)
         TaskService.shared.setReminderTime(time)
         TaskService.shared.setReminderDate(date: date)
         TaskService.shared.setDateOrTime(scIndex: pickerTypeSegmentedControl.selectedSegmentIndex)

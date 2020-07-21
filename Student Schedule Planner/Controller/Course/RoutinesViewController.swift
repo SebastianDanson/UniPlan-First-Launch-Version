@@ -24,11 +24,12 @@ class RoutinesViewController: SwipeNoCompleteViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         tableView.reloadData()
     }
     
     //MARK: - Properties
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Routines")
     let tableView = UITableView()
     let addButton = makeCornerAddButton()
@@ -53,9 +54,9 @@ class RoutinesViewController: SwipeNoCompleteViewController {
         titleLabel.centerX(in: topView)
         
         addButton.anchor(right: view.rightAnchor,
-                                    bottom: view.bottomAnchor,
-                                    paddingRight: 10,
-                                    paddingBottom: self.tabBarHeight + 10)
+                         bottom: view.bottomAnchor,
+                         paddingRight: 10,
+                         paddingBottom: self.tabBarHeight + 10)
         addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         
         tableView.centerX(in: view)
@@ -133,7 +134,6 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
         let vc = AddClassViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
-        
     }
 }
 

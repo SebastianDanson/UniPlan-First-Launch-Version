@@ -37,7 +37,7 @@ class SelectSummativeTypeViewController: SwipeCompleteViewController {
     
     //MARK: - Properties
     var tableView = makeTableView(withRowHeight: 50)
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Select Type")
     let backButton = makeBackButton()
     

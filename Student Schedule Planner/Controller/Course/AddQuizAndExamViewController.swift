@@ -41,7 +41,7 @@ class AddQuizAndExamViewController: UIViewController {
     
     //MARK: - Properties
     //topView
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Add Quiz")
     let backButton = makeBackButton()
     let deleteButton = makeDeleteButton()
@@ -269,6 +269,11 @@ class AddQuizAndExamViewController: UIViewController {
         timePickerView.setDimensions(width: UIScreen.main.bounds.width - 100)
         timePickerView.backgroundColor = .backgroundColor
         timePickerView.addTarget(self, action: #selector(timePickerDateChanged), for: .valueChanged)
+        if Calendar.current.startOfDay(for: datePickerView.date) == Calendar.current.startOfDay(for: Date()) {
+            timePickerView.minimumDate = Date()
+        } else {
+            timePickerView.minimumDate = nil
+        }
     }
     
     //MARK: - Actions
@@ -277,12 +282,14 @@ class AddQuizAndExamViewController: UIViewController {
         locationOtherAnchorConstaint.isActive = true
         
         if startTimeView.color == UIColor.mainBlue {
+            
+            let initialTime = TaskService.shared.getStartTime()
             TaskService.shared.setStartTime(time: timePickerView.date)
             startTime.text = "\(formatTime(from: timePickerView.date))"
-            if TaskService.shared.getStartTime() > TaskService.shared.getEndTime() {
-                TaskService.shared.setEndTime(time: timePickerView.date)
-                endTime.text = "\(formatTime(from: timePickerView.date))"
-            }
+            
+            let dif = initialTime.distance(to: TaskService.shared.getStartTime())
+            TaskService.shared.setEndTime(time: TaskService.shared.getEndTime().addingTimeInterval(dif))
+            endTime.text = "\(formatTime(from: TaskService.shared.getEndTime()))"
         } else {
             TaskService.shared.setEndTime(time: timePickerView.date)
             endTime.text  = "\(formatTime(from: timePickerView.date))"
@@ -290,6 +297,21 @@ class AddQuizAndExamViewController: UIViewController {
     }
     
     @objc func datePickerChanged() {
+        if Calendar.current.startOfDay(for: datePickerView.date) == Calendar.current.startOfDay(for: Date()) {
+            timePickerView.minimumDate = Date()
+            if TaskService.shared.getStartTime() < Date() {
+                TaskService.shared.setStartTime(time: Date())
+                startTime.text = "\(formatTime(from: TaskService.shared.getStartTime()))"
+            }
+            
+            if TaskService.shared.getEndTime() < Date() {
+                TaskService.shared.setEndTime(time: Date())
+                endTime.text = "\(formatTime(from: TaskService.shared.getEndTime()))"
+            }
+            
+        } else {
+            timePickerView.minimumDate = nil
+        }
         if Calendar.current.startOfDay(for: datePickerView.date) == Calendar.current.startOfDay(for: Date()) {
             dateButton.setTitle("Today", for: .normal)
         } else {
@@ -345,7 +367,12 @@ class AddQuizAndExamViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.timePickerView.frame.maxY
             })
-            timePickerView.minimumDate = Date()
+            if Calendar.current.startOfDay(for: datePickerView.date) == Calendar.current.startOfDay(for: Date()) {
+                timePickerView.minimumDate = Date()
+            } else {
+                timePickerView.minimumDate = nil
+            }
+            
         } else {
             startTimeView.color = .clouds
             startTimeView.borderColor = .silver

@@ -28,7 +28,7 @@ func makeTopView(height: CGFloat) -> UIView {
 func makeCalendar() -> FSCalendar{
     let calendar = FSCalendar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height/38, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height/2.5))
     calendar.scope = .week
-    calendar.appearance.headerDateFormat = "MMMM Y"
+    calendar.appearance.headerDateFormat = "MMM Y"
     calendar.appearance.weekdayTextColor = UIColor.backgroundColor
     calendar.appearance.headerTitleColor = UIColor.backgroundColor
     calendar.appearance.titleDefaultColor = UIColor.backgroundColor
@@ -157,14 +157,14 @@ func setValueButton(withPlaceholder text: String, height: CGFloat, width: CGFloa
 }
 
 //Buttons with an Image on its left side
-func makeButtonWithImage(withPlaceholder text: String, imageName: String) -> UIButton {
+func makeButtonWithImage(withPlaceholder text: String, imageName: String, height: CGFloat? = nil) -> UIButton {
     let button = UIButton()
     button.setTitle(text, for: .normal)
     button.setTitleColor(.darkBlue, for: .normal)
     button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
     button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 42, bottom: 0, right: 0)
-    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: 45)
+    button.setDimensions(width: UIScreen.main.bounds.width - 40, height: height ?? 45)
     button.backgroundColor = .clear
     button.layer.borderColor = UIColor.mainBlue.cgColor
     button.layer.borderWidth = 2
@@ -212,7 +212,7 @@ func makeDayCircleButton(withLetter day: String) -> UIButton {
     button.setDimensions(width: 26, height: 26)
     button.layer.cornerRadius = 13
     button.setTitle(day, for: .normal)
-
+    
     return button
 }
 
@@ -246,12 +246,12 @@ func makeCornerAddButton(withDiameter diameter: CGFloat? = nil) -> UIButton {
 func makeClassDaysCircleButton(withLetter day: String) -> UIButton {
     let button = UIButton()
     button.setTitle(day, for: .normal)
-    button.setDimensions(width: (UIScreen.main.bounds.width - 70)/7, height: (UIScreen.main.bounds.width - 70)/7)
-    button.layer.cornerRadius = (UIScreen.main.bounds.width - 70)/14
+    button.setDimensions(width: (UIScreen.main.bounds.width - 85)/7, height: (UIScreen.main.bounds.width - 85)/7)
+    button.layer.cornerRadius = (UIScreen.main.bounds.width - 85)/14
     button.clipsToBounds = true
     button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
     button.unhighlight()
-
+    
     return button
 }
 

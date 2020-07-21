@@ -44,7 +44,7 @@ class AddTaskViewController: PickerViewController {
     
     //MARK: - Properties
     //topView
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Add Task")
     let backButton = makeBackButton()
     let deleteButton = makeDeleteButton()
@@ -82,7 +82,7 @@ class AddTaskViewController: PickerViewController {
     //Top anchors for reminderView
     var locationTopAnchorConstaint = NSLayoutConstraint()
     var locationOtherAnchorConstaint = NSLayoutConstraint()
-        
+    
     //Top anchors for locationView
     var reminderTopAnchorConstaint = NSLayoutConstraint()
     var reminderOtherAnchorConstaint = NSLayoutConstraint()
@@ -233,8 +233,6 @@ class AddTaskViewController: PickerViewController {
         saveButton.anchor(bottom: view.bottomAnchor, paddingBottom: UIScreen.main.bounds.height/25)
         saveButton.addTarget(self, action: #selector(saveTask), for: .touchUpInside)
         
-        setupTimePickerView()
-        
         startTime.text = "\(formatTime(from: Date()))"
         endTime.text = "\(formatTime(from: Date().addingTimeInterval(3600)))"
         TaskService.shared.setStartTime(time: Date())
@@ -242,30 +240,32 @@ class AddTaskViewController: PickerViewController {
         
         let selectedDay = Calendar.current.dateComponents([.day], from: TaskService.shared.getDateSelected())
         let today = Calendar.current.dateComponents([.day], from: Date())
-        if selectedDay != today  {
-            dateButton.setTitle(formatDate(from: TaskService.shared.getDateSelected()), for: .normal)
+        
+        //If a previous task was selected
+        if let task = TaskService.shared.getSelectedTask() {
+            titleTextField.text = task.title
+            
+            TaskService.shared.setHideReminder(bool: !task.reminder)
+            TaskService.shared.setReminderDate(date: task.reminderDate)
+            TaskService.shared.setDateOrTime(scIndex: task.dateOrTime)
+            let reminderTime: [Int] = [task.reminderTime[0], task.reminderTime[1]]
+            TaskService.shared.setReminderTime(reminderTime)
+            locationTextField.text = task.location
+            startTime.text = formatTime(from: task.startDate)
+            endTime.text = formatTime(from: task.endDate)
+            TaskService.shared.setStartTime(time: task.startDate)
+            TaskService.shared.setEndTime(time: task.endDate)
+            TaskService.shared.setDateSelected(date: task.startDate)
+            titleLabel.text = "Edit Task"
+            let color = UIColor(red: CGFloat(task.color[0]), green: CGFloat(task.color[1]), blue: CGFloat(task.color[2]), alpha: 1)
+            TaskService.shared.setColor(color: color)
         }
         
         datePickerView.date = TaskService.shared.getDateSelected()
-        
-        //If a previous task was selected
-        if let taskIndex = TaskService.shared.getTaskIndex() {
-            if let task = TaskService.shared.getTask(atIndex: taskIndex) {
-                titleTextField.text = task.title
-                
-                TaskService.shared.setHideReminder(bool: !task.reminder)
-                TaskService.shared.setReminderDate(date: task.reminderDate)
-                TaskService.shared.setDateOrTime(scIndex: task.dateOrTime)
-                let reminderTime: [Int] = [task.reminderTime[0], task.reminderTime[1]]
-                TaskService.shared.setReminderTime(reminderTime)
-                locationTextField.text = task.location
-                startTime.text = formatTime(from: task.startDate)
-                endTime.text = formatTime(from: task.endDate)
-                TaskService.shared.setStartTime(time: task.startDate)
-                TaskService.shared.setEndTime(time: task.endDate)
-                titleLabel.text = "Edit Task"
-            }
+        if selectedDay != today  {
+            dateButton.setTitle(formatDate(from: TaskService.shared.getDateSelected()), for: .normal)
         }
+        setupTimePickerView()
     }
     
     func setupTimePickerView() {
@@ -274,7 +274,11 @@ class AddTaskViewController: PickerViewController {
         timePickerView.setDimensions(width: UIScreen.main.bounds.width - 100)
         timePickerView.backgroundColor = .backgroundColor
         timePickerView.addTarget(self, action: #selector(timePickerDateChanged), for: .valueChanged)
-        timePickerView.minimumDate = Date()
+        if Calendar.current.startOfDay(for: datePickerView.date) == Calendar.current.startOfDay(for: Date()) {
+            timePickerView.minimumDate = Date()
+        } else {
+            timePickerView.minimumDate = nil
+        }
     }
     
     func setupReminderTime() {
@@ -295,12 +299,13 @@ class AddTaskViewController: PickerViewController {
         locationOtherAnchorConstaint.isActive = true
         
         if startTimeView.color == UIColor.mainBlue {
+            let initialTime = TaskService.shared.getStartTime()
             TaskService.shared.setStartTime(time: timePickerView.date)
             startTime.text = "\(formatTime(from: timePickerView.date))"
-            if TaskService.shared.getStartTime() > TaskService.shared.getEndTime() {
-                TaskService.shared.setEndTime(time: timePickerView.date)
-                endTime.text = "\(formatTime(from: timePickerView.date))"
-            }
+            
+            let dif = initialTime.distance(to: TaskService.shared.getStartTime())
+            TaskService.shared.setEndTime(time: TaskService.shared.getEndTime().addingTimeInterval(dif))
+            endTime.text = "\(formatTime(from: TaskService.shared.getEndTime()))"
         } else {
             TaskService.shared.setEndTime(time: timePickerView.date)
             endTime.text  = "\(formatTime(from: timePickerView.date))"
@@ -311,10 +316,31 @@ class AddTaskViewController: PickerViewController {
         locationTopAnchorConstaint.isActive = true
         locationOtherAnchorConstaint.isActive = false
         dateButton.setTitle("\(formatDate(from: datePickerView.date))", for: .normal)
+        
+        if Calendar.current.startOfDay(for: datePickerView.date) == Calendar.current.startOfDay(for: Date()) {
+            timePickerView.minimumDate = Date()
+            if TaskService.shared.getStartTime() < Date() {
+                TaskService.shared.setStartTime(time: Date())
+                startTime.text = "\(formatTime(from: TaskService.shared.getStartTime()))"
+            }
+            
+            if TaskService.shared.getEndTime() < Date() {
+                TaskService.shared.setEndTime(time: Date())
+                endTime.text = "\(formatTime(from: TaskService.shared.getEndTime()))"
+            }
+            
+        } else {
+            timePickerView.minimumDate = nil
+        }
+        if Calendar.current.startOfDay(for: datePickerView.date) == Calendar.current.startOfDay(for: Date()) {
+            dateButton.setTitle("Today", for: .normal)
+        } else {
+            dateButton.setTitle("\(formatDate(from: datePickerView.date))", for: .normal)
+        }
     }
     
     @objc func dateButtonTapped() {
-       resetTimeViews()
+        resetTimeViews()
         
         //This asyncAfter fixed a bug where the animation would glitch
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.001){
@@ -331,7 +357,7 @@ class AddTaskViewController: PickerViewController {
                 UIView.animate(withDuration: 0.3, animations: {
                     self.reminderView.frame.origin.y = self.dateButton.frame.maxY
                 })
-              
+                
             }
         }
         self.locationTopAnchorConstaint.isActive = true
@@ -352,7 +378,11 @@ class AddTaskViewController: PickerViewController {
             clockImage.tintColor = .white
             startTime.textColor = .backgroundColor
             endTime.textColor = .darkBlue
-            timePickerView.minimumDate = Date()
+            if Calendar.current.startOfDay(for: datePickerView.date) == Calendar.current.startOfDay(for: Date()) {
+                timePickerView.minimumDate = Date()
+            } else {
+                timePickerView.minimumDate = nil
+            }
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.timePickerView.frame.maxY
             })
@@ -388,7 +418,9 @@ class AddTaskViewController: PickerViewController {
             endTimeView.layer.borderColor = UIColor.clear.cgColor
             endTime.textColor = .backgroundColor
             startTime.textColor = .darkBlue
+            
             timePickerView.minimumDate = TaskService.shared.getStartTime()
+            
             UIView.animate(withDuration: 0.3, animations: {
                 self.locationView.frame.origin.y = self.timePickerView.frame.maxY
             })
@@ -460,26 +492,25 @@ class AddTaskViewController: PickerViewController {
         if !checkForTimeConflict(startTime: task.startDate, endDateTime: task.endDate, check: TaskService.shared.getCheckForTimeConflict()) {
             do {
                 try realm.write {
-                    if let taskIndex = TaskService.shared.getTaskIndex() {
-                        //Updates previous task
-                        let taskToUpdate = TaskService.shared.getTask(atIndex: taskIndex)
-                        taskToUpdate?.title = task.title
-                        taskToUpdate?.startDate = task.startDate
-                        taskToUpdate?.endDate = task.endDate
-                        taskToUpdate?.dateOrTime = task.dateOrTime
-                        taskToUpdate?.reminderDate = task.reminderDate
-                        taskToUpdate?.reminder = task.reminder
-                        taskToUpdate?.reminderTime[0] = task.reminderTime[0]
-                        taskToUpdate?.reminderTime[1] = task.reminderTime[1]
+                    //Updates previous task
+                    if let taskToUpdate = TaskService.shared.getSelectedTask() {
+                        taskToUpdate.title = task.title
+                        taskToUpdate.startDate = task.startDate
+                        taskToUpdate.endDate = task.endDate
+                        taskToUpdate.dateOrTime = task.dateOrTime
+                        taskToUpdate.reminderDate = task.reminderDate
+                        taskToUpdate.reminder = task.reminder
+                        taskToUpdate.reminderTime[0] = task.reminderTime[0]
+                        taskToUpdate.reminderTime[1] = task.reminderTime[1]
                         
-                        taskToUpdate?.color[0] = task.color[0]
-                        taskToUpdate?.color[1] = task.color[1]
-                        taskToUpdate?.color[2] = task.color[2]
+                        taskToUpdate.color[0] = task.color[0]
+                        taskToUpdate.color[1] = task.color[1]
+                        taskToUpdate.color[2] = task.color[2]
                         
-                        taskToUpdate?.location = task.location
-                        if task.reminder, let taskToUpdate = taskToUpdate {
+                        taskToUpdate.location = task.location
+                        if task.reminder {
                             TaskService.shared.scheduleNotification(forTask: taskToUpdate)
-                        } else if let taskToUpdate = taskToUpdate {
+                        } else {
                             TaskService.shared.deleteNotification(forTask: taskToUpdate)
                         }
                     } else {
@@ -500,32 +531,30 @@ class AddTaskViewController: PickerViewController {
     @objc func deleteTask() {
         do {
             try realm.write {
-                if let taskIndex = TaskService.shared.getTaskIndex() {
-                    if let taskToDelete = TaskService.shared.getTask(atIndex: taskIndex) {
-                        
-                        switch taskToDelete.type {
-                        case "assignment":
-                            let assignmentToDelete = realm.objects(Assignment.self).filter("id == %@", taskToDelete.summativeId).first
-                            if let assignmentToDelete = assignmentToDelete {
-                                realm.delete(assignmentToDelete)
-                            }
-                        case "quiz":
-                            let quizToDelete = realm.objects(Quiz.self).filter("id == %@", taskToDelete.summativeId).first
-                            if let quizToDelete = quizToDelete {
-                                realm.delete(quizToDelete)
-                            }
-                        case "exam":
-                            let examToDelete = realm.objects(Exam.self).filter("id == %@", taskToDelete.summativeId).first
-                            if let examToDelete = examToDelete {
-                                realm.delete(examToDelete)
-                            }
-                        default:
-                            break
+                if let taskToDelete = TaskService.shared.getSelectedTask() {
+                    
+                    switch taskToDelete.type {
+                    case "assignment":
+                        let assignmentToDelete = realm.objects(Assignment.self).filter("id == %@", taskToDelete.summativeId).first
+                        if let assignmentToDelete = assignmentToDelete {
+                            realm.delete(assignmentToDelete)
                         }
-                        TaskService.shared.deleteNotification(forTask: taskToDelete)
-                        self.realm.delete(taskToDelete)
-                        TaskService.shared.updateTasks()
+                    case "quiz":
+                        let quizToDelete = realm.objects(Quiz.self).filter("id == %@", taskToDelete.summativeId).first
+                        if let quizToDelete = quizToDelete {
+                            realm.delete(quizToDelete)
+                        }
+                    case "exam":
+                        let examToDelete = realm.objects(Exam.self).filter("id == %@", taskToDelete.summativeId).first
+                        if let examToDelete = examToDelete {
+                            realm.delete(examToDelete)
+                        }
+                    default:
+                        break
                     }
+                    TaskService.shared.deleteNotification(forTask: taskToDelete)
+                    self.realm.delete(taskToDelete)
+                    TaskService.shared.updateTasks()
                 }
             }
         } catch {

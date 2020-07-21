@@ -14,6 +14,9 @@ import UIKit
 
 class FrequencyPickerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
+    var frequenyNum = 0
+    var frequencyLength = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -41,7 +44,7 @@ class FrequencyPickerViewController: UIViewController, UIPickerViewDelegate, UIP
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if component == 0 {
-            return "\(row)"
+            return "\(row+1)"
         }else {
             switch row {
             case 0:
@@ -57,9 +60,9 @@ class FrequencyPickerViewController: UIViewController, UIPickerViewDelegate, UIP
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
         if component == 0 {
-            TaskService.shared.setFrequencyNum(frequency: row)
+            frequenyNum = row+1
         } else if component == 1 {
-            TaskService.shared.setFrequencyLenth(length: row)
+            frequencyLength = row
         }
         updateLabel()
     }

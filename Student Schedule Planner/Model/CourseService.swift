@@ -184,7 +184,7 @@ class CourseService {
     }
     
     func updateAllNotes() {
-       allNotes = realm.objects(Note.self).sorted(byKeyPath: "dateCreated", ascending: false)
+        allNotes = realm.objects(Note.self).sorted(byKeyPath: "dateCreated", ascending: false)
     }
     
     func setNoteIndex(index: Int?) {

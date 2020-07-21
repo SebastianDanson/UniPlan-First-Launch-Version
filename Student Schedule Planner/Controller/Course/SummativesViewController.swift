@@ -19,7 +19,7 @@ class SummativesViewController: SwipeCompleteViewController {
     
     //MARK: - Properties
     var tableView = makeTableView(withRowHeight: 80)
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let titleLabel = makeTitleLabel(withText: "Assesments")
     let addButton = makeCornerAddButton()
     
@@ -73,9 +73,9 @@ class SummativesViewController: SwipeCompleteViewController {
         tableView.dataSource = self
         
         addButton.anchor(right: view.rightAnchor,
-                             bottom: view.bottomAnchor,
-                             paddingRight: 10,
-                             paddingBottom: self.tabBarHeight + 10)
+                         bottom: view.bottomAnchor,
+                         paddingRight: 10,
+                         paddingBottom: self.tabBarHeight + 10)
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
     }
     

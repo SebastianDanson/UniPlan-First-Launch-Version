@@ -39,7 +39,6 @@ enum ClassType: Int, CustomStringConvertible, CaseIterable{
     }
 }
 
-
 /*
  * This VC is responsible for Displaying the classType options as well as the class frequency options
  * depending on which button was clicked
@@ -50,7 +49,7 @@ class ClassTypeViewController: UIViewController {
     
     //MARK: - Properties
     var tableView = makeTableView(withRowHeight: 50)
-    let topView = makeTopView(height: UIScreen.main.bounds.height/8.5)
+    let topView = makeTopView(height: UIScreen.main.bounds.height/9)
     let backButton = makeBackButton()
     let titleLabel = makeTitleLabel(withText: "Select Class Type")
     
@@ -107,20 +106,20 @@ class ClassTypeViewController: UIViewController {
 extension ClassTypeViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return ClassType.allCases.count
-        }
+        return ClassType.allCases.count
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath)
         cell.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-            guard let classType = ClassType(rawValue: indexPath.row) else {return cell}
-            cell.textLabel?.text = classType.description
+        guard let classType = ClassType(rawValue: indexPath.row) else {return cell}
+        cell.textLabel?.text = classType.description
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            SingleClassService.shared.setType(classType: ClassType(rawValue: indexPath.row) ?? .Class)
+        SingleClassService.shared.setType(classType: ClassType(rawValue: indexPath.row) ?? .Class)
         
         dismissVC()
     }

@@ -18,7 +18,7 @@ class SingleClass: Object {
     @objc dynamic var startTime = Date() //Start time of each class
     @objc dynamic var endTime = Date() //End time of each class
     
-    @objc dynamic var repeats = "Never" //If the clas repeats or not
+    var repeats = List<Int>() //How frequent the class repeats
     @objc dynamic var location = ""
     
     @objc dynamic var reminder = false
@@ -32,6 +32,7 @@ class SingleClass: Object {
     required init() {
         classDays.append(objectsIn: [0,0,0,0,0,0,0])
         reminderTime.append(objectsIn: [0, 0])
+        repeats.append(objectsIn: [1, 0])
     }
     
     override class func primaryKey() -> String? {
