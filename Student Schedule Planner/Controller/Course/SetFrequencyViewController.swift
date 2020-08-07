@@ -73,7 +73,6 @@ class SetFrequencyViewController: FrequencyPickerViewController {
         
         frequencyPickerView.anchor(top: frequencyView.bottomAnchor, left: frequencyView.leftAnchor)
         
-        
         //Not topView
         setupTimeBeforePickerView()
         saveButton.centerX(in: view)

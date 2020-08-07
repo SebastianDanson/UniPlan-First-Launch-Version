@@ -28,8 +28,7 @@ class ColorsViewController: PickerViewController {
     
     //Color Views
     
-    let colorStackView = makeStackView(withOrientation: .vertical, spacing: 20)
-    
+    let colorStackView = makeStackView(withOrientation: .vertical, spacing: 20)    
     let scrollView = UIScrollView()
     
     //MARK: - setup UI
