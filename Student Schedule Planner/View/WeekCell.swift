@@ -71,7 +71,8 @@ class WeekCell: UITableViewCell {
     }
     
     func update(date: Date) {
-        for view in scrollView.subviews {
+        
+        for view in self.scrollView.subviews {
             view.removeFromSuperview()
         }
         
@@ -79,8 +80,8 @@ class WeekCell: UITableViewCell {
         let day = theDate.substring(to: theDate.firstIndex(of: " ")!)
         let num = theDate.substring(from: theDate.firstIndex(of: " ")!)
         
-        dayLabel.text = day
-        numLabel.text = num
+        self.dayLabel.text = day
+        self.numLabel.text = num
         
         let startDate = Calendar.current.startOfDay(for: date)
         let endDate = Calendar.current.startOfDay(for: date.addingTimeInterval(86400))
@@ -96,7 +97,7 @@ class WeekCell: UITableViewCell {
             let overlay = taskButton()
             let checkImageView = UIImageView(image: UIImage(named: "check"))
             
-            scrollView.addSubview(taskView)
+            self.scrollView.addSubview(taskView)
             taskView.addSubview(title)
             taskView.addSubview(timeLabel)
             taskView.addSubview(overlay)
@@ -104,9 +105,9 @@ class WeekCell: UITableViewCell {
             
             taskView.setDimensions(width: 70, height: UIScreen.main.bounds.height/9.55 + 13)
             taskView.backgroundColor = UIColor(red: CGFloat(task.color[0]), green: CGFloat(task.color[1]), blue: CGFloat(task.color[2]), alpha: 0.8)
-            taskView.anchor(left: scrollView.leftAnchor, paddingLeft: CGFloat(index*70))
-            taskView.centerY(in: scrollView)
-            taskView.addTarget(self, action: #selector(taskPressed(sender:)), for: .touchUpInside)
+            taskView.anchor(left: self.scrollView.leftAnchor, paddingLeft: CGFloat(index*70))
+            taskView.centerY(in: self.scrollView)
+            taskView.addTarget(self, action: #selector(self.taskPressed(sender:)), for: .touchUpInside)
             
             title.text = task.title == "" ? "Untitled":task.title
             title.anchor(top: taskView.topAnchor,
@@ -130,7 +131,7 @@ class WeekCell: UITableViewCell {
             overlay.backgroundColor = UIColor(red: 11/255, green: 232/255, blue: 129/255, alpha: 0.3)
             overlay.centerX(in: taskView)
             overlay.id = task.id
-            overlay.addTarget(self, action: #selector(taskPressed(sender:)), for: .touchUpInside)
+            overlay.addTarget(self, action: #selector(self.taskPressed(sender:)), for: .touchUpInside)
             
             checkImageView.centerX(in: overlay)
             checkImageView.centerY(in: overlay)

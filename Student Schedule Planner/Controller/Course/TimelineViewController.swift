@@ -146,8 +146,7 @@ class TimelineViewController: SwipeCompleteViewController {
     
     //MARK: - Actions
     @objc func weekButtonTapped() {
-        let vc = WeekViewController()
-        //vc.modalPresentationStyle = .fullScreen
+        let vc = WeekViewController2()
         present(vc, animated: true, completion: nil)
     }
     @objc func calendarSwipeDown() {
