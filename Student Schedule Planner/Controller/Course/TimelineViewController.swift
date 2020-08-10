@@ -55,7 +55,8 @@ class TimelineViewController: SwipeCompleteViewController {
     
     //MARK: - setup UI
     func setupViews() {
-        
+        definesPresentationContext = true
+
         tableView.isScrollEnabled = true
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -146,9 +147,12 @@ class TimelineViewController: SwipeCompleteViewController {
     
     //MARK: - Actions
     @objc func weekButtonTapped() {
-        let vc = WeekViewController2()
-        present(vc, animated: true, completion: nil)
+        
+        if let nav = navigationController {
+            nav.pushViewController(WeekPageViewController(), animated: true)
+        }
     }
+    
     @objc func calendarSwipeDown() {
         view.layoutIfNeeded()
         UIView.animate(withDuration: 0.5, animations: {

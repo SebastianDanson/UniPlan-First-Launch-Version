@@ -148,7 +148,7 @@ class WeekCell: UITableViewCell {
             index += 1
         }
         
-        let size = CGSize(width: CGFloat(index*70), height: UIScreen.main.bounds.height/9.55 + 13)
+        let size = CGSize(width: CGFloat(index*70), height:UIScreen.main.bounds.height/9.5 + 10)
         
         self.scrollView.contentSize = size
     }

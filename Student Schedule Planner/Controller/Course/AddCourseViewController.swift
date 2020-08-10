@@ -106,7 +106,7 @@ class AddCourseViewController: PickerViewController {
                              left: titleTextField.leftAnchor,
                              paddingTop: UIScreen.main.bounds.height/50)
         
-        calendarImage.anchor(left: startDateView.leftAnchor, paddingLeft: 15)
+        calendarImage.anchor(left: startDateView.leftAnchor, paddingLeft: 5)
         calendarImage.centerY(in: startDateView)
         calendarImage.tintColor = .darkGray
         

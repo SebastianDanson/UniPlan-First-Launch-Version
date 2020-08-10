@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		383879C0AE500539D45E3F18 /* Pods_Student_Schedule_Planner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A54780895BEFCEF2A178C71 /* Pods_Student_Schedule_Planner.framework */; };
+		3F095C0124E181E4000E2473 /* BeforeWeekTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F095C0024E181E4000E2473 /* BeforeWeekTableViewController.swift */; };
 		3F0AEB1624BA8284001501F3 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1524BA8284001501F3 /* Note.swift */; };
 		3F0AEB1824BA83C7001501F3 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1724BA83C7001501F3 /* NoteCell.swift */; };
 		3F0AEB1C24BB617D001501F3 /* SwipeNoCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEB1B24BB617D001501F3 /* SwipeNoCompleteViewController.swift */; };
@@ -48,7 +49,6 @@
 		3F94E3292496A90500B0F958 /* AddClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3282496A90500B0F958 /* AddClassViewController.swift */; };
 		3F94E32D2496E15E00B0F958 /* ClassTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */; };
 		3F9AF36F24DD921500457A74 /* WeekTableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9AF36E24DD921500457A74 /* WeekTableTableViewController.swift */; };
-		3F9AF37124DD954700457A74 /* WeekViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9AF37024DD954700457A74 /* WeekViewController2.swift */; };
 		3F9AF37324DDCEF100457A74 /* WeekPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9AF37224DDCEF100457A74 /* WeekPageViewController.swift */; };
 		3FA87E3A24BFA09200FEC176 /* WeekViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA87E3924BFA09200FEC176 /* WeekViewController.swift */; };
 		3FA87E3C24BFA53800FEC176 /* WeekCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA87E3B24BFA53800FEC176 /* WeekCell.swift */; };
@@ -63,6 +63,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3F095C0024E181E4000E2473 /* BeforeWeekTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeforeWeekTableViewController.swift; sourceTree = "<group>"; };
 		3F0AEB1524BA8284001501F3 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		3F0AEB1724BA83C7001501F3 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		3F0AEB1B24BB617D001501F3 /* SwipeNoCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeNoCompleteViewController.swift; sourceTree = "<group>"; };
@@ -104,7 +105,6 @@
 		3F94E3282496A90500B0F958 /* AddClassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClassViewController.swift; sourceTree = "<group>"; };
 		3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassTypeViewController.swift; sourceTree = "<group>"; };
 		3F9AF36E24DD921500457A74 /* WeekTableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekTableTableViewController.swift; sourceTree = "<group>"; };
-		3F9AF37024DD954700457A74 /* WeekViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewController2.swift; sourceTree = "<group>"; };
 		3F9AF37224DDCEF100457A74 /* WeekPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekPageViewController.swift; sourceTree = "<group>"; };
 		3FA87E3924BFA09200FEC176 /* WeekViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewController.swift; sourceTree = "<group>"; };
 		3FA87E3B24BFA53800FEC176 /* WeekCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekCell.swift; sourceTree = "<group>"; };
@@ -205,8 +205,8 @@
 			children = (
 				3F94E2D62492FDD100B0F958 /* TabBarController.swift */,
 				3FA87E3F24C12B6A00FEC176 /* FrequencyPickerViewController.swift */,
-				3F9AF37024DD954700457A74 /* WeekViewController2.swift */,
 				3F9AF36E24DD921500457A74 /* WeekTableTableViewController.swift */,
+				3F095C0024E181E4000E2473 /* BeforeWeekTableViewController.swift */,
 				3F9AF37224DDCEF100457A74 /* WeekPageViewController.swift */,
 				3F67BC28248EE6AA00BFD6E5 /* PickerViewController.swift */,
 				3F94E2D42492E3B700B0F958 /* SwipeCompleteViewController.swift */,
@@ -397,7 +397,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F94E32724968FED00B0F958 /* QuizAndExamCell.swift in Sources */,
-				3F9AF37124DD954700457A74 /* WeekViewController2.swift in Sources */,
 				3F0AEB1624BA8284001501F3 /* Note.swift in Sources */,
 				3FA87E3A24BFA09200FEC176 /* WeekViewController.swift in Sources */,
 				3F94E2C72492963400B0F958 /* Course.swift in Sources */,
@@ -426,6 +425,7 @@
 				3F0AEB2B24BCD0AB001501F3 /* AddNotesViewController.swift in Sources */,
 				3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */,
 				3F383E732486B2EE00D2A5D1 /* TimelineViewController.swift in Sources */,
+				3F095C0124E181E4000E2473 /* BeforeWeekTableViewController.swift in Sources */,
 				3F94E2D72492FDD100B0F958 /* TabBarController.swift in Sources */,
 				3F0AEB2924BBC295001501F3 /* RoutineService.swift in Sources */,
 				3F0AEB1E24BB79A0001501F3 /* NotesViewControlelr.swift in Sources */,

@@ -27,6 +27,7 @@ class TaskService {
     private var isClass = false //If the task is associated with a class
     private var frequencyNum = 1 //Number or days, weeks, or week days
     private var frequencyLength = 0 //0 -> weeks, 1 -> days, 2-> weekdays
+    private var pageController = 1 //0 -> before, 1->current, 2->After
     
     let realm =  try! Realm()
     init() {
@@ -207,7 +208,6 @@ class TaskService {
                 if theClass.classDays[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
                     let task = makeTaskForAClass(theClass: theClass, numDays: numDays)
                     realm.add(task, update: .modified)
-                    scheduleNotification(forTask: task)
                     sameWeekIterations+=1
                     if sameWeekIterations >= daysPerWeek {
                         //the * routine.repeats[0]-1 * 7 multiplies by number of weeks
@@ -219,7 +219,6 @@ class TaskService {
             } else if theClass.repeats[1] == 1 {
                 let task = makeTaskForAClass(theClass: theClass, numDays: numDays)
                 realm.add(task, update: .modified)
-                scheduleNotification(forTask: task)
                 dayIncrementor.addTimeInterval(TimeInterval(86400*(theClass.repeats[0]-1)))
                 numDays+=(theClass.repeats[0]-1)
             } else {
@@ -227,7 +226,7 @@ class TaskService {
                     if skipDays == 0 {
                         let task = makeTaskForAClass(theClass: theClass, numDays: numDays)
                         realm.add(task, update: .modified)
-                        scheduleNotification(forTask: task)
+                        scheduleNotification(forTask: task, type: "class")
                         skipDays = theClass.repeats[0] == 1 ? 0:1
                     } else if skipDays < theClass.repeats[0]-1 {
                         skipDays += 1
@@ -263,6 +262,8 @@ class TaskService {
         task.color[1] = Double(rgb.green)
         task.color[2] = Double(rgb.blue)
         
+        scheduleNotification(forTask: task, type: "Class")
+        
         return task
     }
     
@@ -287,7 +288,7 @@ class TaskService {
                 if routine.days[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
                     let task = makeTaskForARoutine(routine: routine, numDays: numDays)
                     realm.add(task, update: .modified)
-                    scheduleNotification(forTask: task)
+                    scheduleNotification(forTask: task, type: "routine")
                     sameWeekIterations+=1
                     if sameWeekIterations >= daysPerWeek {
                         //the * routine.repeats[0]-1 * 7 multiplies by number of weeks
@@ -299,7 +300,6 @@ class TaskService {
             } else if routine.repeats[1] == 1 {
                 let task = makeTaskForARoutine(routine: routine, numDays: numDays)
                 realm.add(task, update: .modified)
-                scheduleNotification(forTask: task)
                 dayIncrementor.addTimeInterval(TimeInterval(86400*(routine.repeats[0]-1)))
                 numDays+=(routine.repeats[0]-1)
             } else {
@@ -307,7 +307,6 @@ class TaskService {
                     if skipDays == 0 {
                         let task = makeTaskForARoutine(routine: routine, numDays: numDays)
                         realm.add(task, update: .modified)
-                        scheduleNotification(forTask: task)
                         skipDays = routine.repeats[0] == 1 ? 0:1
                     } else if skipDays < routine.repeats[0]-1 {
                         skipDays += 1
@@ -340,6 +339,8 @@ class TaskService {
         task.color[1] = Double(rgb.green)
         task.color[2] = Double(rgb.blue)
         
+        scheduleNotification(forTask: task, type: "routine")
+        
         return task
     }
     func makeTask(forQuiz quiz: Quiz) {
@@ -363,7 +364,7 @@ class TaskService {
         
         task.summativeId = quiz.id
         
-        scheduleNotification(forTask: task)
+        scheduleNotification(forTask: task, type: "quiz")
         realm.add(task, update: .modified)
     }
     
@@ -387,7 +388,7 @@ class TaskService {
         task.color[2] = course?.color[2] ?? 0
         
         
-        scheduleNotification(forTask: task)
+        scheduleNotification(forTask: task, type: "assignment")
         realm.add(task, update: .modified)
     }
     
@@ -410,7 +411,7 @@ class TaskService {
         task.color[2] = course?.color[2] ?? 0
         task.summativeId = exam.id
         
-        scheduleNotification(forTask: task)
+        scheduleNotification(forTask: task, type: "exam")
         realm.add(task, update: .modified)
     }
     
@@ -438,7 +439,7 @@ class TaskService {
         taskToUpdate?.isComplete = quiz.isComplete
         
         if let taskToUpdate = taskToUpdate {
-            scheduleNotification(forTask: taskToUpdate)
+            scheduleNotification(forTask: taskToUpdate, type: "quiz")
         }
     }
     
@@ -455,7 +456,7 @@ class TaskService {
         taskToUpdate?.isComplete = assignment.isComplete
         
         if let taskToUpdate = taskToUpdate {
-            scheduleNotification(forTask: taskToUpdate)
+            scheduleNotification(forTask: taskToUpdate, type: "assignment")
         }
     }
     
@@ -472,7 +473,7 @@ class TaskService {
         taskToUpdate?.isComplete = exam.isComplete
         
         if let taskToUpdate = taskToUpdate {
-            scheduleNotification(forTask: taskToUpdate)
+            scheduleNotification(forTask: taskToUpdate, type: "exam")
         }
     }
     
@@ -597,14 +598,14 @@ class TaskService {
         center.removePendingNotificationRequests(withIdentifiers: [task.id])
     }
     
-    @objc func scheduleNotification(forTask task: Task) {
+    @objc func scheduleNotification(forTask task: Task, type: String) {
         let center = UNUserNotificationCenter.current()
         
         let content = UNMutableNotificationContent()
         center.removePendingNotificationRequests(withIdentifiers: [task.id])
         
         var dateComponents = DateComponents()
-        let units: Set<Calendar.Component> = [.nanosecond, .second,.minute, .hour, .day, .month, .year]
+        let units: Set<Calendar.Component> = [.nanosecond, .second, .minute, .hour, .day, .month, .year]
         
         //If user specified 'time before' the date for the reminder
         if task.dateOrTime == 0 {
@@ -617,9 +618,17 @@ class TaskService {
                 dateComponents.minute = minutes - reminderTime[1]
                 
                 if reminderTime[0] == 0, reminderTime[1] == 0 {
-                    content.body = "Your task starts now"
+                    if type == "assignment" {
+                        content.body = "Your assignment is due now"
+                    } else {
+                        content.body = "Your \(type) starts now"
+                    }
                 } else  {
-                    content.body = "Your task will start in \(reminderTime[0]) hour(s) and \(reminderTime[1]) minutes"
+                    if type == "assignment" {
+                        content.body = "Your assignment is due in \(reminderTime[0]) hour(s) and \(reminderTime[1]) minutes"
+                    } else {
+                        content.body = "Your \(type) starts in \(reminderTime[0]) hour(s) and \(reminderTime[1]) minutes"
+                    }
                 }
             }
         } else {
@@ -628,7 +637,12 @@ class TaskService {
             comps.second = 0
             dateComponents = comps
             let date = formatDate(from: task.startDate)
-            content.body = "Your task will start on \(date)"
+            
+            if type == "assignment" {
+                content.body = "Your assignment is due on \(date)"
+            } else {
+                content.body = "Your \(type) will start on \(date)"
+            }
         }
         
         if task.title != "" {
@@ -680,6 +694,15 @@ class TaskService {
     
     func setFrequencyNum(frequency: Int) {
         frequencyNum = frequency
+    }
+    
+    //MARK: - pageController
+    func getPageController() -> Int {
+        return pageController
+    }
+    
+    func setPageController(Int: Int) {
+        pageController = Int
     }
     
     //MARK: - frequencyNum

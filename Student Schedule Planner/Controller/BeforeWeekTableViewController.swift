@@ -1,21 +1,22 @@
 //
-//  WeekTableTableViewController.swift
+//  BeforeWeekTableViewController.swift
 //  UniPlan
 //
-//  Created by Student on 2020-08-07.
+//  Created by Student on 2020-08-10.
 //  Copyright © 2020 Sebastian Danson. All rights reserved.
 //
 
 import UIKit
 
-class WeekTableTableViewController: UITableViewController {
+class BeforeWeekViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
        self.tableView.register(WeekCell.self, forCellReuseIdentifier: "Week")
 
         self.tableView.frame = CGRect(x:0, y: UIScreen.main.bounds.height/10, width: view.frame.width, height: view.frame.height - UIScreen.main.bounds.height/15)
-        self.tableView.rowHeight = UIScreen.main.bounds.height/9.5 + 10
+        self.tableView.rowHeight = UIScreen.main.bounds.height/9.52 + 10
+
     }
     
     

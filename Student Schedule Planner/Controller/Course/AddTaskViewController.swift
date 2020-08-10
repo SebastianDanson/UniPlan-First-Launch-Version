@@ -90,7 +90,8 @@ class AddTaskViewController: PickerViewController {
     //MARK: - setup UI
     func setupViews() {
         clockImage = UIImageView(image: clockIcon!)
-        
+        definesPresentationContext = true
+
         view.backgroundColor = .backgroundColor
         view.addSubview(topView)
         view.addSubview(titleTextField)
@@ -509,14 +510,14 @@ class AddTaskViewController: PickerViewController {
                         
                         taskToUpdate.location = task.location
                         if task.reminder {
-                            TaskService.shared.scheduleNotification(forTask: taskToUpdate)
+                            TaskService.shared.scheduleNotification(forTask: taskToUpdate, type: "task")
                         } else {
                             TaskService.shared.deleteNotification(forTask: taskToUpdate)
                         }
                     } else {
                         realm.add(task, update: .modified)
                         if task.reminder {
-                            TaskService.shared.scheduleNotification(forTask: task)
+                            TaskService.shared.scheduleNotification(forTask: task, type: "task")
                         }
                     }
                 }
