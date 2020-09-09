@@ -107,7 +107,7 @@ class CoursesViewController: SwipeNoCompleteViewController {
                         }
                         
                         for task in tasksToUpDelete {
-                            TaskService.shared.deleteNotification(forTask: task)
+                            TaskService.shared.deleteNotification(forTask: task, update: false)
                             self.realm.delete(task)
                         }
                         
@@ -115,6 +115,7 @@ class CoursesViewController: SwipeNoCompleteViewController {
                         AllCoursesService.shared.updateCourses()
                         self.tableView.reloadData()
                     }
+                    TaskService.shared.setNotifications()
                 }
             } catch {
                 print("Error writing task to realm \(error.localizedDescription)")

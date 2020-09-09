@@ -494,10 +494,12 @@ class AddQuizAndExamViewController: UIViewController {
                         quizToUpdate.reminderTime[1] = quiz.reminderTime[1]
                         quizToUpdate.reminder = quiz.reminder
                         quizToUpdate.dateOrTime = quiz.dateOrTime
+                        presentNextVC()
                         TaskService.shared.updateTasks(forQuiz: quizToUpdate)
                         
                     } else {
                         realm.add(quiz, update: .modified)
+                        presentNextVC()
                         TaskService.shared.makeTask(forQuiz: quiz)
                         if let course = AllCoursesService.shared.getSelectedCourse() {
                             course.quizzes.append(quiz)
@@ -531,11 +533,12 @@ class AddQuizAndExamViewController: UIViewController {
                         examToUpdate.reminderTime[0] = exam.reminderTime[0]
                         examToUpdate.reminderTime[1] = exam.reminderTime[1]
                         examToUpdate.reminder = exam.reminder
-                        
+                        presentNextVC()
                         TaskService.shared.updateTasks(forExam: examToUpdate)
                         
                     } else {
                         realm.add(exam, update: .modified)
+                        presentNextVC()
                         TaskService.shared.makeTask(forExam: exam)
                         if let course = AllCoursesService.shared.getSelectedCourse() {
                             course.exams.append(exam)
@@ -547,17 +550,20 @@ class AddQuizAndExamViewController: UIViewController {
             print("Error writing Class to realm \(error.localizedDescription)")
         }
         
-        if AllCoursesService.shared.getAddSummative() {
-            AllCoursesService.shared.setAddSummative(bool: false)
-            let vc = TabBarController()
-            vc.selectedIndex = 2
-            vc.modalPresentationStyle = .fullScreen
-            present(vc, animated: true, completion: nil)
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
+  presentNextVC()
     }
     
+    func presentNextVC() {
+        if AllCoursesService.shared.getAddSummative() {
+              AllCoursesService.shared.setAddSummative(bool: false)
+              let vc = TabBarController()
+              vc.selectedIndex = 2
+              vc.modalPresentationStyle = .fullScreen
+              present(vc, animated: true, completion: nil)
+          } else {
+              dismiss(animated: true, completion: nil)
+          }
+    }
     @objc func reminderButtonPressed() {
         if CourseService.shared.getQuizOrExam() == 0 {
             TaskService.shared.setReminderDate(date: CourseService.shared.getSelectedQuiz()?.reminderDate ?? Date())

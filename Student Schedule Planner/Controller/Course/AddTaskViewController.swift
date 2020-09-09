@@ -507,17 +507,22 @@ class AddTaskViewController: PickerViewController {
                         taskToUpdate.color[0] = task.color[0]
                         taskToUpdate.color[1] = task.color[1]
                         taskToUpdate.color[2] = task.color[2]
-                        
+              
                         taskToUpdate.location = task.location
                         if task.reminder {
-                            TaskService.shared.scheduleNotification(forTask: taskToUpdate, type: "task")
+                            dismiss(animated: true)
+                            TaskService.shared.addNotification(task: taskToUpdate, type: "task")
+                            TaskService.shared.setNotifications()
                         } else {
-                            TaskService.shared.deleteNotification(forTask: taskToUpdate)
+                            TaskService.shared.deleteNotification(forTask: taskToUpdate, update: true)
+                            print("update in ADDTASKVC")
                         }
                     } else {
+                        dismiss(animated: true)
                         realm.add(task, update: .modified)
                         if task.reminder {
-                            TaskService.shared.scheduleNotification(forTask: task, type: "task")
+                            TaskService.shared.addNotification(task: task, type: "task")
+                            TaskService.shared.setNotifications()
                         }
                     }
                 }
@@ -553,7 +558,8 @@ class AddTaskViewController: PickerViewController {
                     default:
                         break
                     }
-                    TaskService.shared.deleteNotification(forTask: taskToDelete)
+                    TaskService.shared.deleteNotification(forTask: taskToDelete, update: true)
+                    print("UPDATE IN ADDTASKVC")
                     self.realm.delete(taskToDelete)
                     TaskService.shared.updateTasks()
                 }

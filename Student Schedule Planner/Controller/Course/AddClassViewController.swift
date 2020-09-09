@@ -822,12 +822,15 @@ class AddClassViewController: UIViewController {
                         classToUpdate?.subType = theClass.subType
                         
                         if let theClassToUpdate = classToUpdate {
+                            dismiss(animated: true, completion: nil)
+                            
                             TaskService.shared.updateTasks(forClass: theClassToUpdate)
                         }
                     } else {
                         realm.add(theClass, update: .modified)
                         let course = AllCoursesService.shared.getSelectedCourse()
                         course?.classes.append(theClass)
+                        dismiss(animated: true, completion: nil)
                         TaskService.shared.makeTasks(forClass: theClass)
                     }
                 } else {
@@ -871,10 +874,11 @@ class AddClassViewController: UIViewController {
                         routineToUpdate.color[0] = routine.color[0]
                         routineToUpdate.color[1] = routine.color[1]
                         routineToUpdate.color[2] = routine.color[2]
-                        
+                        dismiss(animated: true, completion: nil)
                         TaskService.shared.updateTasks(forRoutine: routineToUpdate)
                     } else {
                         realm.add(routine, update: .modified)
+                        dismiss(animated: true, completion: nil)
                         TaskService.shared.makeTasks(forRoutine: routine)
                     }
                 }

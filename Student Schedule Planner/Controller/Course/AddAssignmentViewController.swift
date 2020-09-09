@@ -189,10 +189,11 @@ class AddAssignmentViewController: UIViewController {
                     assignmentToUpdate.reminderDate = assignment.reminderDate
                     assignmentToUpdate.reminder = assignment.reminder
                     assignmentToUpdate.dateOrTime = assignment.dateOrTime
+                    presentNextVC()
                     TaskService.shared.updateTasks(forAssignment: assignmentToUpdate)
-                    
                 } else {
                     realm.add(assignment, update: .modified)
+                    presentNextVC()
                     TaskService.shared.makeTask(forAssignment: assignment)
                     if let course = AllCoursesService.shared.getSelectedCourse() {
                         course.assignments.append(assignment)
@@ -202,16 +203,19 @@ class AddAssignmentViewController: UIViewController {
         } catch {
             print("Error writing Class to realm \(error.localizedDescription)")
         }
+        presentNextVC()
+    }
+    
+   func presentNextVC() {
         if AllCoursesService.shared.getAddSummative() {
-            AllCoursesService.shared.setAddSummative(bool: false)
-            let vc = TabBarController()
-            vc.selectedIndex = 2
-            vc.modalPresentationStyle = .fullScreen
-            present(vc, animated: true, completion: nil)
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
-        
+                 AllCoursesService.shared.setAddSummative(bool: false)
+                 let vc = TabBarController()
+                 vc.selectedIndex = 2
+                 vc.modalPresentationStyle = .fullScreen
+                 present(vc, animated: true, completion: nil)
+             } else {
+                 dismiss(animated: true, completion: nil)
+             }
     }
     
     @objc func reminderButtonPressed() {

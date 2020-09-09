@@ -36,12 +36,15 @@ class TimelineViewController: SwipeCompleteViewController {
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didActivate), name: UIScene.didActivateNotification, object: nil)
+        
         super.viewDidLoad()
         setupViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         TaskService.shared.loadTasks()
         tableView.reloadData()
         calendar.select(TaskService.shared.getDateSelected())
@@ -55,8 +58,7 @@ class TimelineViewController: SwipeCompleteViewController {
     
     //MARK: - setup UI
     func setupViews() {
-        definesPresentationContext = true
-
+        checkForFirstLaunch()
         tableView.isScrollEnabled = true
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -129,6 +131,7 @@ class TimelineViewController: SwipeCompleteViewController {
         tableView.register(TaskCell.self, forCellReuseIdentifier: reuseIdentifer)
         tableView.delegate = self
         tableView.dataSource = self
+        
     }
     
     override func updateModel(index: Int, section: Int) {
@@ -146,6 +149,34 @@ class TimelineViewController: SwipeCompleteViewController {
     }
     
     //MARK: - Actions
+    func checkForFirstLaunch() {
+        let defaults = UserDefaults.standard
+        if !defaults.bool(forKey: "Not First Launch"){
+            
+            let task1 = Task()
+            task1.title = "Swipe left on tasks to delete"
+            let rgb = UIColor.lightAlizarin.components
+            task1.color[0] = Double(rgb.red)
+            task1.color[1] = Double(rgb.green)
+            task1.color[2] = Double(rgb.blue)
+            
+            let task2 = Task()
+            task2.title = "Swipe right on tasks to complete"
+            task2.isComplete = true
+            task2.color[0] = Double(rgb.red)
+            task2.color[1] = Double(rgb.green)
+            task2.color[2] = Double(rgb.blue)
+            do {
+                try realm.write {
+                    realm.add(task1)
+                    realm.add(task2)
+                }
+            } catch {
+                print("ERROR writing first launch tasks to Realm: \(error.localizedDescription)")
+            }
+            defaults.set(true, forKey: "Not First Launch")
+        }
+    }
     @objc func weekButtonTapped() {
         
         if let nav = navigationController {
@@ -184,6 +215,14 @@ class TimelineViewController: SwipeCompleteViewController {
         let vc = AddTaskViewController()
         vc.modalPresentationStyle = .fullScreen 
         self.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func didActivate() {
+        TaskService.shared.setNotifications()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 

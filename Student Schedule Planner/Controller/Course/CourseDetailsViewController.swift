@@ -107,12 +107,14 @@ class CourseDetailsViewController: SwipeCompleteViewController {
     //MARK: - Actions
     @objc func AddClassButtonPressed() {
         RoutineService.shared.setIsRoutine(bool: false)
+        TaskService.shared.setIsClass(bool: true)
         let vc = AddClassViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
     }
     
     @objc func AddAssignmentButtonPressed(button: UIButton? = nil) {
+        TaskService.shared.setIsClass(bool: true)
         if button != nil {
             CourseService.shared.setSelectedAssignment(assignment: nil)
         }

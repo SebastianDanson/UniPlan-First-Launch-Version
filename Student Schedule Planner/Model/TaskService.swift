@@ -27,7 +27,6 @@ class TaskService {
     private var isClass = false //If the task is associated with a class
     private var frequencyNum = 1 //Number or days, weeks, or week days
     private var frequencyLength = 0 //0 -> weeks, 1 -> days, 2-> weekdays
-    private var pageController = 1 //0 -> before, 1->current, 2->After
     
     let realm =  try! Realm()
     init() {
@@ -226,7 +225,6 @@ class TaskService {
                     if skipDays == 0 {
                         let task = makeTaskForAClass(theClass: theClass, numDays: numDays)
                         realm.add(task, update: .modified)
-                        scheduleNotification(forTask: task, type: "class")
                         skipDays = theClass.repeats[0] == 1 ? 0:1
                     } else if skipDays < theClass.repeats[0]-1 {
                         skipDays += 1
@@ -238,6 +236,10 @@ class TaskService {
             }
             numDays+=1
             dayIncrementor.addTimeInterval(86400)
+        }
+        
+        if(theClass.reminder) {
+            setNotifications()
         }
     }
     
@@ -262,8 +264,9 @@ class TaskService {
         task.color[1] = Double(rgb.green)
         task.color[2] = Double(rgb.blue)
         
-        scheduleNotification(forTask: task, type: "Class")
-        
+        if(task.reminder) {
+            addNotification(task: task, type: "class")
+        }
         return task
     }
     
@@ -288,7 +291,6 @@ class TaskService {
                 if routine.days[dayIncrementor.dayNumberOfWeek()! - 1] == 1 {
                     let task = makeTaskForARoutine(routine: routine, numDays: numDays)
                     realm.add(task, update: .modified)
-                    scheduleNotification(forTask: task, type: "routine")
                     sameWeekIterations+=1
                     if sameWeekIterations >= daysPerWeek {
                         //the * routine.repeats[0]-1 * 7 multiplies by number of weeks
@@ -313,11 +315,14 @@ class TaskService {
                     } else {
                         skipDays = 0
                     }
-                    
                 }
             }
             numDays+=1
             dayIncrementor.addTimeInterval(86400)
+        }
+        
+        if routine.reminder {
+            setNotifications()
         }
     }
     
@@ -339,7 +344,9 @@ class TaskService {
         task.color[1] = Double(rgb.green)
         task.color[2] = Double(rgb.blue)
         
-        scheduleNotification(forTask: task, type: "routine")
+        if(task.reminder) {
+            addNotification(task: task, type: "routine")
+        }
         
         return task
     }
@@ -347,7 +354,7 @@ class TaskService {
         let course = AllCoursesService.shared.getSelectedCourse()
         let task = Task()
         task.title = ("\(course?.title ?? "") Quiz")
-        task.dateOrTime = 0
+        task.dateOrTime = quiz.dateOrTime
         task.startDate = quiz.startDate
         task.endDate = quiz.endDate
         task.location = quiz.location
@@ -363,8 +370,10 @@ class TaskService {
         task.color[2] = course?.color[2] ?? 0
         
         task.summativeId = quiz.id
-        
-        scheduleNotification(forTask: task, type: "quiz")
+        if(task.reminder) {
+            addNotification(task: task, type: "quiz")
+            setNotifications()
+        }
         realm.add(task, update: .modified)
     }
     
@@ -372,7 +381,7 @@ class TaskService {
         let course = AllCoursesService.shared.getSelectedCourse()
         let task = Task()
         task.title = assignment.title
-        task.dateOrTime = 0
+        task.dateOrTime = assignment.dateOrTime
         task.startDate = assignment.dueDate
         task.endDate = assignment.dueDate
         task.reminder = assignment.reminder
@@ -387,8 +396,11 @@ class TaskService {
         task.color[1] = course?.color[1] ?? 0
         task.color[2] = course?.color[2] ?? 0
         
+        if(task.reminder) {
+            addNotification(task: task, type: "assignment")
+            setNotifications()
+        }
         
-        scheduleNotification(forTask: task, type: "assignment")
         realm.add(task, update: .modified)
     }
     
@@ -411,7 +423,11 @@ class TaskService {
         task.color[2] = course?.color[2] ?? 0
         task.summativeId = exam.id
         
-        scheduleNotification(forTask: task, type: "exam")
+        if(task.reminder) {
+            addNotification(task: task, type: "exam")
+            setNotifications()
+        }
+        
         realm.add(task, update: .modified)
     }
     
@@ -439,7 +455,10 @@ class TaskService {
         taskToUpdate?.isComplete = quiz.isComplete
         
         if let taskToUpdate = taskToUpdate {
-            scheduleNotification(forTask: taskToUpdate, type: "quiz")
+            if(taskToUpdate.reminder) {
+                addNotification(task: taskToUpdate, type: "quiz")
+                setNotifications()
+            }
         }
     }
     
@@ -456,7 +475,10 @@ class TaskService {
         taskToUpdate?.isComplete = assignment.isComplete
         
         if let taskToUpdate = taskToUpdate {
-            scheduleNotification(forTask: taskToUpdate, type: "assignment")
+            if(taskToUpdate.reminder) {
+                addNotification(task: taskToUpdate, type: "assignment")
+                setNotifications()
+            }
         }
     }
     
@@ -473,27 +495,36 @@ class TaskService {
         taskToUpdate?.isComplete = exam.isComplete
         
         if let taskToUpdate = taskToUpdate {
-            scheduleNotification(forTask: taskToUpdate, type: "exam")
+            if(taskToUpdate.reminder) {
+                addNotification(task: taskToUpdate, type: "exam")
+                setNotifications()
+            }
         }
     }
     
     func deleteTasks(forClass theClass: SingleClass) {
         let tasksToDelete = realm.objects(Task.self).filter("summativeId == %@", theClass.id)
-        let center = UNUserNotificationCenter.current()
         
         for task in tasksToDelete {
-            center.removePendingNotificationRequests(withIdentifiers: [task.id])
+            deleteNotification(forTask: task, update: false)
             realm.delete(task)
+        }
+        
+        if(theClass.reminder){
+            setNotifications()
         }
     }
     
     func deleteTasks(forRoutine routine: Routine) {
         let tasksToDelete = realm.objects(Task.self).filter("summativeId == %@", routine.id)
-        let center = UNUserNotificationCenter.current()
         
         for task in tasksToDelete {
-            center.removePendingNotificationRequests(withIdentifiers: [task.id])
+            deleteNotification(forTask: task, update: false)
             realm.delete(task)
+        }
+        
+        if(routine.reminder){
+            setNotifications()
         }
     }
     
@@ -501,8 +532,7 @@ class TaskService {
         let taskToDelete = realm.objects(Task.self).filter("summativeId == %@", quiz.id).first
         
         if let taskToDelete = taskToDelete {
-            let center = UNUserNotificationCenter.current()
-            center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
+            deleteNotification(forTask: taskToDelete, update: true)
             realm.delete(taskToDelete)
         }
     }
@@ -511,8 +541,7 @@ class TaskService {
         let taskToDelete = realm.objects(Task.self).filter("summativeId == %@", assignment.id).first
         
         if let taskToDelete = taskToDelete {
-            let center = UNUserNotificationCenter.current()
-            center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
+            deleteNotification(forTask: taskToDelete, update: true)
             realm.delete(taskToDelete)
         }
     }
@@ -521,10 +550,10 @@ class TaskService {
         let taskToDelete = realm.objects(Task.self).filter("summativeId == %@", exam.id).first
         
         if let taskToDelete = taskToDelete {
-            let center = UNUserNotificationCenter.current()
-            center.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id])
+            deleteNotification(forTask: taskToDelete, update: true)
             realm.delete(taskToDelete)
         }
+        
     }
     
     func deleteSummativeForTask(taskToDelete: Task, type: String) {
@@ -550,7 +579,8 @@ class TaskService {
                 default:
                     break
                 }
-                deleteNotification(forTask: taskToDelete)
+                
+                deleteNotification(forTask: taskToDelete, update: true)
                 self.realm.delete(taskToDelete)
             }
             
@@ -584,7 +614,7 @@ class TaskService {
                 }
             }
         }catch{
-            print("Error setting isComplete to tru \(error.localizedDescription)")
+            print("Error setting isComplete to true \(error.localizedDescription)")
         }
     }
     //MARK: - Push notification methods
@@ -593,20 +623,24 @@ class TaskService {
         center.requestAuthorization(options: [.alert, .badge, .sound], completionHandler: {_,_ in })
     }
     
-    func deleteNotification(forTask task: Task){
-        let center = UNUserNotificationCenter.current()
-        center.removePendingNotificationRequests(withIdentifiers: [task.id])
+    func deleteNotification(forTask task: Task, update: Bool){
+        let notificationToDelete = realm.objects(Notification.self).filter("taskId == %@", task.id).first
+        
+        if let notification = notificationToDelete {
+            self.realm.delete(notification)
+            if(update)  {
+                setNotifications()
+            }
+        }
     }
     
     @objc func scheduleNotification(forTask task: Task, type: String) {
         let center = UNUserNotificationCenter.current()
-        
         let content = UNMutableNotificationContent()
         center.removePendingNotificationRequests(withIdentifiers: [task.id])
         
         var dateComponents = DateComponents()
         let units: Set<Calendar.Component> = [.nanosecond, .second, .minute, .hour, .day, .month, .year]
-        
         //If user specified 'time before' the date for the reminder
         if task.dateOrTime == 0 {
             let reminderTime = task.reminderTime
@@ -616,14 +650,13 @@ class TaskService {
             if let hours = dateComponents.hour, let minutes = dateComponents.minute{
                 dateComponents.hour = hours - reminderTime[0]
                 dateComponents.minute = minutes - reminderTime[1]
-                
                 if reminderTime[0] == 0, reminderTime[1] == 0 {
                     if type == "assignment" {
                         content.body = "Your assignment is due now"
                     } else {
                         content.body = "Your \(type) starts now"
                     }
-                } else  {
+                } else {
                     if type == "assignment" {
                         content.body = "Your assignment is due in \(reminderTime[0]) hour(s) and \(reminderTime[1]) minutes"
                     } else {
@@ -637,7 +670,6 @@ class TaskService {
             comps.second = 0
             dateComponents = comps
             let date = formatDate(from: task.startDate)
-            
             if type == "assignment" {
                 content.body = "Your assignment is due on \(date)"
             } else {
@@ -654,10 +686,51 @@ class TaskService {
         content.categoryIdentifier = "alarm"
         content.userInfo = ["customData": "fizzbuzz"]
         content.sound = UNNotificationSound.default
-        
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let request = UNNotificationRequest(identifier: task.id, content: content, trigger: trigger)
         center.add(request)
+        
+    }
+    
+    //Adds notification to realm db
+    func addNotification(task: Task, type: String) {
+        //Check if a notification exists for that task and delete it if it does
+        let previousNotification = realm.objects(Notification.self).filter("taskId == %@", task.id).first
+        
+        if let previousNotification = previousNotification {
+            self.realm.delete(previousNotification)
+        }
+        
+        
+        let notification = Notification()
+        notification.type = type
+        notification.task = task
+        
+        var dateComponents = DateComponents()
+        let units: Set<Calendar.Component> = [.nanosecond, .second, .minute, .hour, .day, .month, .year]
+        let reminderTime = task.reminderTime
+        var comps = Calendar.current.dateComponents(units, from: task.startDate)
+        comps.second = 0 //ignores seconds -> reminder happens when the specified minute occurs
+        dateComponents = comps
+        if let hours = dateComponents.hour, let minutes = dateComponents.minute{
+            dateComponents.hour = hours - reminderTime[0]
+            dateComponents.minute = minutes - reminderTime[1]
+        }
+        let calendar = Calendar.current
+        notification.date = calendar.date(from: dateComponents) ?? Date()
+        notification.taskId = task.id
+        self.realm.add(notification, update: .modified)
+    }
+    
+    func setNotifications() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        let notification = realm.objects(Notification.self).filter("date > %@", Date()).sorted(byKeyPath: "date", ascending: true)
+        let count = notification.count > 64 ? 64 : notification.count
+        for i in 0..<count {
+            if let task = notification[i].task {
+                TaskService.shared.scheduleNotification(forTask: task, type: notification[i].type)
+            }
+        }
     }
     
     //MARK: - isClass
@@ -694,15 +767,6 @@ class TaskService {
     
     func setFrequencyNum(frequency: Int) {
         frequencyNum = frequency
-    }
-    
-    //MARK: - pageController
-    func getPageController() -> Int {
-        return pageController
-    }
-    
-    func setPageController(Int: Int) {
-        pageController = Int
     }
     
     //MARK: - frequencyNum

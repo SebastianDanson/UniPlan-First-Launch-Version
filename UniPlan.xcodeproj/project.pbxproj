@@ -28,6 +28,7 @@
 		3F59239C24A17677008F45D6 /* PentagonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F59239B24A17677008F45D6 /* PentagonView.swift */; };
 		3F5923BE24AA9FCC008F45D6 /* SummativesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */; };
 		3F5923C424AC0C13008F45D6 /* SelectSummativeTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5923C324AC0C13008F45D6 /* SelectSummativeTypeViewController.swift */; };
+		3F5B48F92506924A008ECB3A /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5B48F82506924A008ECB3A /* Notification.swift */; };
 		3F63BF9524B7CB0B00404806 /* ColorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F63BF9424B7CB0B00404806 /* ColorsViewController.swift */; };
 		3F67BBF124872A4C00BFD6E5 /* AddTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */; };
 		3F67BBF324880F1B00BFD6E5 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */; };
@@ -48,9 +49,8 @@
 		3F94E32724968FED00B0F958 /* QuizAndExamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */; };
 		3F94E3292496A90500B0F958 /* AddClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E3282496A90500B0F958 /* AddClassViewController.swift */; };
 		3F94E32D2496E15E00B0F958 /* ClassTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */; };
-		3F9AF36F24DD921500457A74 /* WeekTableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9AF36E24DD921500457A74 /* WeekTableTableViewController.swift */; };
+		3F9AF36F24DD921500457A74 /* AfterWeekViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9AF36E24DD921500457A74 /* AfterWeekViewController.swift */; };
 		3F9AF37324DDCEF100457A74 /* WeekPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9AF37224DDCEF100457A74 /* WeekPageViewController.swift */; };
-		3FA87E3A24BFA09200FEC176 /* WeekViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA87E3924BFA09200FEC176 /* WeekViewController.swift */; };
 		3FA87E3C24BFA53800FEC176 /* WeekCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA87E3B24BFA53800FEC176 /* WeekCell.swift */; };
 		3FA87E3E24C1272E00FEC176 /* SetFrequencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA87E3D24C1272E00FEC176 /* SetFrequencyViewController.swift */; };
 		3FA87E4024C12B6A00FEC176 /* FrequencyPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA87E3F24C12B6A00FEC176 /* FrequencyPickerViewController.swift */; };
@@ -85,6 +85,7 @@
 		3F59239B24A17677008F45D6 /* PentagonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PentagonView.swift; sourceTree = "<group>"; };
 		3F5923BD24AA9FCC008F45D6 /* SummativesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummativesViewController.swift; sourceTree = "<group>"; };
 		3F5923C324AC0C13008F45D6 /* SelectSummativeTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSummativeTypeViewController.swift; sourceTree = "<group>"; };
+		3F5B48F82506924A008ECB3A /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		3F63BF9424B7CB0B00404806 /* ColorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsViewController.swift; sourceTree = "<group>"; };
 		3F67BBF024872A4C00BFD6E5 /* AddTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskViewController.swift; sourceTree = "<group>"; };
 		3F67BBF224880F1B00BFD6E5 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
@@ -104,9 +105,8 @@
 		3F94E32624968FED00B0F958 /* QuizAndExamCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizAndExamCell.swift; sourceTree = "<group>"; };
 		3F94E3282496A90500B0F958 /* AddClassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClassViewController.swift; sourceTree = "<group>"; };
 		3F94E32C2496E15E00B0F958 /* ClassTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassTypeViewController.swift; sourceTree = "<group>"; };
-		3F9AF36E24DD921500457A74 /* WeekTableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekTableTableViewController.swift; sourceTree = "<group>"; };
+		3F9AF36E24DD921500457A74 /* AfterWeekViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterWeekViewController.swift; sourceTree = "<group>"; };
 		3F9AF37224DDCEF100457A74 /* WeekPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekPageViewController.swift; sourceTree = "<group>"; };
-		3FA87E3924BFA09200FEC176 /* WeekViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewController.swift; sourceTree = "<group>"; };
 		3FA87E3B24BFA53800FEC176 /* WeekCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekCell.swift; sourceTree = "<group>"; };
 		3FA87E3D24C1272E00FEC176 /* SetFrequencyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetFrequencyViewController.swift; sourceTree = "<group>"; };
 		3FA87E3F24C12B6A00FEC176 /* FrequencyPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyPickerViewController.swift; sourceTree = "<group>"; };
@@ -181,6 +181,7 @@
 				3F67BC04248C7B9E00BFD6E5 /* TaskService.swift */,
 				3F0AEB2324BBBBC7001501F3 /* Routine.swift */,
 				3F0AEB2824BBC295001501F3 /* RoutineService.swift */,
+				3F5B48F82506924A008ECB3A /* Notification.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -205,13 +206,12 @@
 			children = (
 				3F94E2D62492FDD100B0F958 /* TabBarController.swift */,
 				3FA87E3F24C12B6A00FEC176 /* FrequencyPickerViewController.swift */,
-				3F9AF36E24DD921500457A74 /* WeekTableTableViewController.swift */,
+				3F9AF36E24DD921500457A74 /* AfterWeekViewController.swift */,
 				3F095C0024E181E4000E2473 /* BeforeWeekTableViewController.swift */,
 				3F9AF37224DDCEF100457A74 /* WeekPageViewController.swift */,
 				3F67BC28248EE6AA00BFD6E5 /* PickerViewController.swift */,
 				3F94E2D42492E3B700B0F958 /* SwipeCompleteViewController.swift */,
 				3F0AEB1B24BB617D001501F3 /* SwipeNoCompleteViewController.swift */,
-				3FA87E3924BFA09200FEC176 /* WeekViewController.swift */,
 				3FAEC8352497D524000ADD9D /* Course */,
 			);
 			path = Controller;
@@ -398,7 +398,6 @@
 			files = (
 				3F94E32724968FED00B0F958 /* QuizAndExamCell.swift in Sources */,
 				3F0AEB1624BA8284001501F3 /* Note.swift in Sources */,
-				3FA87E3A24BFA09200FEC176 /* WeekViewController.swift in Sources */,
 				3F94E2C72492963400B0F958 /* Course.swift in Sources */,
 				3F67BC27248EDE4200BFD6E5 /* SetReminderViewController.swift in Sources */,
 				3FA87E3C24BFA53800FEC176 /* WeekCell.swift in Sources */,
@@ -418,9 +417,10 @@
 				3F383E7A2486BD0600D2A5D1 /* Factories.swift in Sources */,
 				3F0AEB1824BA83C7001501F3 /* NoteCell.swift in Sources */,
 				3F9AF37324DDCEF100457A74 /* WeekPageViewController.swift in Sources */,
-				3F9AF36F24DD921500457A74 /* WeekTableTableViewController.swift in Sources */,
+				3F9AF36F24DD921500457A74 /* AfterWeekViewController.swift in Sources */,
 				3F383E782486B45B00D2A5D1 /* Extensions.swift in Sources */,
 				3FAEC83C2499242C000ADD9D /* AddAssignmentViewController.swift in Sources */,
+				3F5B48F92506924A008ECB3A /* Notification.swift in Sources */,
 				3FA87E3E24C1272E00FEC176 /* SetFrequencyViewController.swift in Sources */,
 				3F0AEB2B24BCD0AB001501F3 /* AddNotesViewController.swift in Sources */,
 				3F67BBFC24893AF100BFD6E5 /* Task.swift in Sources */,
@@ -589,7 +589,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.31;
+				MARKETING_VERSION = 1.33;
 				PRODUCT_BUNDLE_IDENTIFIER = com.SebastianDanson.UniPlan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -610,7 +610,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.31;
+				MARKETING_VERSION = 1.33;
 				PRODUCT_BUNDLE_IDENTIFIER = com.SebastianDanson.UniPlan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

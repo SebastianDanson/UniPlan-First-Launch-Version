@@ -15,7 +15,7 @@ class BeforeWeekViewController: UITableViewController {
        self.tableView.register(WeekCell.self, forCellReuseIdentifier: "Week")
 
         self.tableView.frame = CGRect(x:0, y: UIScreen.main.bounds.height/10, width: view.frame.width, height: view.frame.height - UIScreen.main.bounds.height/15)
-        self.tableView.rowHeight = UIScreen.main.bounds.height/9.52 + 10
+        self.tableView.rowHeight = UIScreen.main.bounds.height/9.2 + 7.6
 
     }
     

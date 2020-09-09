@@ -11,20 +11,11 @@ import UIKit
 
 class WeekPageViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate{
     
-//    override init(transitionStyle style: UIPageViewController.TransitionStyle, navigationOrientation: UIPageViewController.NavigationOrientation, options: [UIPageViewController.OptionsKey : Any]? = nil) {
-//        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal)
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-    
     let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
     let topView = makeTopView(height: UIScreen.main.bounds.height/12)
     let titleLabel = makeLabel(ofSize: 22, weight: .bold)
     var tableView1 = BeforeWeekViewController()
-    var tableView2 = WeekTableTableViewController()
-    let tableView3 = WeekTableTableViewController()
+    var tableView2 = AfterWeekViewController()
     let addButton = UIButton()
     var firstSwipe = 0
     var day = TaskService.shared.getfirstDayOfWeek()
@@ -41,11 +32,7 @@ class WeekPageViewController: UIViewController, UIPageViewControllerDataSource, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //MARK: - Properties
-        definesPresentationContext = true
-        
-        
+            
         //MARK: - UI setup
         
         view.backgroundColor = .backgroundColor
@@ -105,7 +92,7 @@ class WeekPageViewController: UIViewController, UIPageViewControllerDataSource, 
         isAfter = true
         isBefore = false
         
-        let vc = WeekTableTableViewController()
+        let vc = AfterWeekViewController()
         vc.tableView.reloadData()
         tableView2 = vc
         
@@ -122,7 +109,7 @@ class WeekPageViewController: UIViewController, UIPageViewControllerDataSource, 
             } else {
                 TaskService.shared.setfirstDayOfWeek(date: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(-7*86400))
             }
-        } else if let after = pendingViewControllers[0] as? WeekTableTableViewController {
+        } else if let after = pendingViewControllers[0] as? AfterWeekViewController {
             after.tableView.reloadData()
             if tableView2 != after && !isBefore{
                 TaskService.shared.setfirstDayOfWeek(date: TaskService.shared.getfirstDayOfWeek().addingTimeInterval(-7*86400))

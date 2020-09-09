@@ -87,6 +87,7 @@ class RoutinesViewController: SwipeNoCompleteViewController {
     @objc func addButtonPressed() {
         RoutineService.shared.setIsRoutine(bool: true)
         RoutineService.shared.setSelectedRoutine(routine: nil)
+        TaskService.shared.setIsClass(bool: true)
         let vc = AddClassViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)

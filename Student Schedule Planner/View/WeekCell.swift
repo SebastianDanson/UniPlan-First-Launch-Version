@@ -137,8 +137,6 @@ class WeekCell: UITableViewCell {
             checkImageView.centerY(in: overlay)
             checkImageView.setDimensions(width: 50, height: 50)
             
-            
-            
             if task.isComplete {
                 overlay.isHidden = false
             } else  {
@@ -148,7 +146,7 @@ class WeekCell: UITableViewCell {
             index += 1
         }
         
-        let size = CGSize(width: CGFloat(index*70), height:UIScreen.main.bounds.height/9.5 + 10)
+        let size = CGSize(width: CGFloat(index*70), height:UIScreen.main.bounds.height/9.2 + 7.6)
         
         self.scrollView.contentSize = size
     }
